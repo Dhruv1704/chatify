@@ -16,7 +16,7 @@ function Sidebar(props) {
 
     PropTypes.checkPropTypes(Sidebar.propTypes, props, "prop", "Sidebar");
 
-    const {setContactModel, setChatDisplay, setAiDisplay, chatDisplay, aiDisplay} = props;
+    const {setContactModel, setChatDisplay, setAiDisplay, chatDisplay, aiDisplay, setAiTextOrImage, aiTextOrImage} = props;
 
 
     const handleLogOut = () => {
@@ -50,15 +50,11 @@ function Sidebar(props) {
                 setAiDisplay(true)
         }
     }
-    // const handleChats = () => {
-    //     setTranslateVal(0)
-    // }
-    // const handleCalls = () => {
-    //     setTranslateVal(1)
-    // }
-    // const handleChatGPT = () => {
-    //     setTranslateVal(2)
-    // }
+
+    const handleAiChange = (val)=>{
+        if(val===1) setAiTextOrImage(true)
+        else setAiTextOrImage(false)
+    }
 
     return (
         <div className={"h-[90vh] bg-sky-100 w-2/3 lg:w-1/2 xl:w-1/3 my-auto rounded-3xl ml-4 p-6"}>
@@ -97,6 +93,11 @@ function Sidebar(props) {
                 </div>
                 {/*ai-sidebar*/}
                 <div className={`${aiDisplay?"block":"hidden"}`}>
+                    <div className={"border-b-2 border-sky-300 rounded-2xl mt-2"}></div>
+                    <div className={`${aiTextOrImage?"bg-sky-300":"bg-sky-200"} my-1 py-4 pl-4 cursor-pointer rounded-2xl text-lg`} onClick={()=>handleAiChange(1)}>AI Text Generator</div>
+                    <div className={"border-b-2 border-sky-300 rounded-2xl"}></div>
+                    <div className={`${!aiTextOrImage?"bg-sky-300":"bg-sky-200"} my-1 py-4 rounded-2xl pl-4 cursor-pointer text-lg`} onClick={()=>handleAiChange(2)}>AI Image Generator</div>
+                    <div className={"border-b-2 border-sky-300 rounded-2xl"}></div>
 
                 </div>
 
@@ -120,7 +121,11 @@ function Sidebar(props) {
 Sidebar.propTypes = {
     setContactModel: PropTypes.func.isRequired,
     setChatDisplay: PropTypes.func.isRequired,
-    setAiDisplay: PropTypes.func.isRequired
+    setAiDisplay: PropTypes.func.isRequired,
+    chatDisplay: PropTypes.bool.isRequired,
+    aiDisplay: PropTypes.bool.isRequired,
+    setAiTextOrImage: PropTypes.func.isRequired,
+    aiTextOrImage : PropTypes.bool.isRequired
 };
 
 

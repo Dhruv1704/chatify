@@ -34,6 +34,7 @@ function ChatComponent(props) {
 
     useEffect(() => {
         getMessage();
+        if(currentContact===null) return
         const currentContactChats = chats.filter(obj => obj.sender === currentContact._id || obj.receiver === currentContact._id);
         const sortedChat = currentContactChats.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
         updateMessages(sortedChat)

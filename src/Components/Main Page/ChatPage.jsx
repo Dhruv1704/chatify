@@ -1,6 +1,6 @@
 import Sidebar from "./Sidebar.jsx";
 import ChatComponent from "./ChatComponent.jsx";
-import {useEffect, useState, useContext, useRef} from "react";
+import {useEffect, useState, useContext} from "react";
 import {useNavigate} from "react-router-dom";
 import AddContact from "./AddContact.jsx";
 import {Realtime} from 'ably';
@@ -17,6 +17,8 @@ function ChatPage() {
 
     const [chatDisplay, setChatDisplay] = useState(true)
     const [aiDisplay, setAiDisplay] = useState(false)
+
+    const [aiTextOrImage, setAiTextOrImage] = useState(true)
 
     const ablyClient = new Realtime({key: import.meta.env.VITE_ABLY_API});
     useEffect(() => {
@@ -39,11 +41,11 @@ function ChatPage() {
             <div className={"bg-sky-300 h-[100vh] flex"}>
                 <AddContact contactModel={contactModel} setContactModel={setContactModel}/>
                 <Sidebar setContactModel={setContactModel} setAiDisplay={setAiDisplay}
-                         setChatDisplay={setChatDisplay} chatDisplay={chatDisplay} aiDisplay={aiDisplay}/>
+                         setChatDisplay={setChatDisplay} chatDisplay={chatDisplay} aiDisplay={aiDisplay} setAiTextOrImage={setAiTextOrImage} aiTextOrImage={aiTextOrImage}/>
                 <AblyProvider client={ablyClient}>
                     <ChatComponent chatDisplay={chatDisplay}/>
                 </AblyProvider>
-                <AiComponent aiDisplay={aiDisplay}/>
+                <AiComponent aiDisplay={aiDisplay} aiTextOrImage={aiTextOrImage}/>
             </div>
         </>
     );
