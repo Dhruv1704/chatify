@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import placeHolderImage from '/public/background-blur.jpg';
+import placeHolderImage from '/src/assets/background-blur.jpg';
 import {useState} from 'react'
 
 const AiImageBubble = (props) => {
