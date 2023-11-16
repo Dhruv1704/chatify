@@ -130,7 +130,13 @@ const ContextState = (props) => {
             }
         })
         const json = await res.json();
-        setChats(json.chats);
+        const chats = json.chats.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        const messages = {}
+        for (const chatElement of chats) {
+            const contactId = chatElement.sender===user.id?chatElement.receiver:chatElement.sender;
+            messages[contactId]===undefined? messages[contactId] = [chatElement] : messages[contactId].push(chatElement);
+        }
+        setChats(messages);
     }
 
     const addMessage = async (content, receiver, type)=>{

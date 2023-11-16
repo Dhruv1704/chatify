@@ -31,7 +31,7 @@ const AiImageBubble = (props) => {
                             className={"max-w-[500px] rounded-xl"} />
                         <img src={placeHolderImage} className={`${placeHolderImageDisplay?"inline-block":"hidden"} max-w-[500px] rounded-xl`}/>
                         <div className={"mt-2"}>
-                            <a href={item.url} className={"font-bold text-lg underline text-blue-500"}>Link</a>
+                            <a href={item.url} target={"_blank"} rel={"noreferrer"} className={"font-bold text-lg underline text-blue-500"}>Link</a>
                         </div>
                     </div>
             }

@@ -1,7 +1,6 @@
 import SendIcon from '@mui/icons-material/Send';
 import ChatBubble from "./ChatBubble.jsx";
 import {useState, useContext, useEffect, useRef} from "react";
-import {useChannel} from "ably/react";
 import Context from "../../context/Context.jsx";
 import PropTypes from "prop-types";
 import TextareaAutosize from 'react-textarea-autosize';
@@ -11,45 +10,33 @@ import TextareaAutosize from 'react-textarea-autosize';
 function ChatComponent(props) {
 
     PropTypes.checkPropTypes(ChatComponent.propTypes, props, "prop", "ChatComponent");
-    const {chatDisplay} = props;
+    const {chatDisplay, client} = props;
 
     const context = useContext(Context);
-    const {currentContact, user, addMessage, chats, setChats, getMessage} = context;
-    const [messages, updateMessages] = useState([]);
+    const {currentContact, user, addMessage, chats, setChats} = context;
     const [inputMessage, setInputMessage] = useState("");
-    const channelName = [user?.email, currentContact?.email].sort().join('-');
-    const {channel} = useChannel(channelName, (message) => {
-        setChats((prev) => [...prev, message.data]);
-        updateMessages((prev) => [...prev, message.data]);
-    });
-
     const messagesEndRef = useRef(null)
+
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
     }
     useEffect(() => {
         scrollToBottom()
-    }, [messages]);
-
-    useEffect(() => {
-        getMessage();
-        if(currentContact===null) return
-        const currentContactChats = chats.filter(obj => obj.sender === currentContact._id || obj.receiver === currentContact._id);
-        const sortedChat = currentContactChats.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-        updateMessages(sortedChat)
-
-        // eslint-disable-next-line
-    }, [currentContact]);
+    });
 
     const handleMessage = (e) => {
         e.preventDefault();
-        channel.publish('message', {
+        const message = {
             content: inputMessage,
             sender: user.id,
             reciever: currentContact._id,
             timestamp: new Date()
-        });
+        }
+        const newChats = chats;
+        newChats[currentContact._id]===undefined? newChats[currentContact._id] = [message] : newChats[currentContact._id].push(message);
+        setChats(newChats)
+        client.channels.get(currentContact._id).publish('message', message);
         addMessage(inputMessage, currentContact._id, "text")
         setInputMessage("")
     }
@@ -78,9 +65,9 @@ function ChatComponent(props) {
             </div>
             <div className={"bg-sky-200 h-[92.75%] rounded-2xl flex flex-col justify-between p-4"}>
                 <div className={"my-2 px-4 overflow-auto"}>
-                    {messages?.map((item, index) => (
+                    {chats[currentContact?._id]?.map((item, index) => (
                         <ChatBubble key={index} position={item.sender === user.id ? "right" : "left"} item={item}
-                                    continued={index === 0 ? false : messages[index - 1].sender === item.sender ? true : false}/>
+                                    continued={index === 0 ? false : chats[currentContact?._id][index - 1].sender === item.sender ? true : false}/>
                     ))}
                     <div ref={messagesEndRef} />
                 </div>
@@ -101,7 +88,8 @@ function ChatComponent(props) {
 }
 
 ChatComponent.propTypes = {
-    chatDisplay : PropTypes.bool.isRequired
+    chatDisplay : PropTypes.bool.isRequired,
+    client : PropTypes.object.isRequired
 };
 
 export default ChatComponent;

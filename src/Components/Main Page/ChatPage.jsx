@@ -3,24 +3,38 @@ import ChatComponent from "./ChatComponent.jsx";
 import {useEffect, useState, useContext} from "react";
 import {useNavigate} from "react-router-dom";
 import AddContact from "./AddContact.jsx";
-import {Realtime} from 'ably';
-import {AblyProvider} from 'ably/react';
 import LoadingBar from "react-top-loading-bar";
 import Context from "../../context/Context.jsx";
 import AiComponent from '../Main Page/AiComponent.jsx'
+import PropTypes from "prop-types";
+import {useChannel} from "ably/react";
 
-function ChatPage() {
+function ChatPage(props) {
+
+    PropTypes.checkPropTypes(ChatPage.propTypes, props, "prop", "ChatPage");
+
+    const {client} = props;
+
     const navigate = useNavigate();
     const [contactModel, setContactModel] = useState(false);
     const context = useContext(Context);
-    const {progress, setProgress, getContact} = context
+    const {progress, setProgress, getContact, user, setChats, getMessage, chats} = context
 
     const [chatDisplay, setChatDisplay] = useState(true)
     const [aiDisplay, setAiDisplay] = useState(false)
 
     const [aiTextOrImage, setAiTextOrImage] = useState(true)
 
-    const ablyClient = new Realtime({key: import.meta.env.VITE_ABLY_API});
+    useChannel(user?.id, (message)=>{
+        const senderId = message.data.sender;
+        const newChats = chats;
+        newChats[senderId]===undefined? newChats[senderId] = [message.data] : newChats[senderId].push(message.data);
+        setChats((prev)=>({
+            ...prev,
+           senderId : newChats[senderId]
+        }))
+    })
+
     useEffect(() => {
         const token = localStorage.getItem('web-token')
         if (!token) {
@@ -29,6 +43,13 @@ function ChatPage() {
         getContact();
         // eslint-disable-next-line
     }, []);
+
+    useEffect(() => {
+        if(user===undefined || user===null) return
+        getMessage();
+        // eslint-disable-next-line
+    }, [user]);
+
 
     return (
         <>
@@ -41,14 +62,18 @@ function ChatPage() {
             <div className={"bg-sky-300 h-[100vh] flex"}>
                 <AddContact contactModel={contactModel} setContactModel={setContactModel}/>
                 <Sidebar setContactModel={setContactModel} setAiDisplay={setAiDisplay}
-                         setChatDisplay={setChatDisplay} chatDisplay={chatDisplay} aiDisplay={aiDisplay} setAiTextOrImage={setAiTextOrImage} aiTextOrImage={aiTextOrImage}/>
-                <AblyProvider client={ablyClient}>
-                    <ChatComponent chatDisplay={chatDisplay}/>
-                </AblyProvider>
+                         setChatDisplay={setChatDisplay} chatDisplay={chatDisplay} aiDisplay={aiDisplay}
+                         setAiTextOrImage={setAiTextOrImage} aiTextOrImage={aiTextOrImage}/>
+                <ChatComponent chatDisplay={chatDisplay} client={client}/>
                 <AiComponent aiDisplay={aiDisplay} aiTextOrImage={aiTextOrImage}/>
             </div>
         </>
     );
 }
+
+
+ChatPage.propTypes = {
+    client : PropTypes.object.isRequired
+};
 
 export default ChatPage;
