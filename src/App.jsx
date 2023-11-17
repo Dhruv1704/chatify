@@ -11,7 +11,7 @@ import {AblyProvider} from 'ably/react';
 
 function App() {
 
-    const ablyClient = new Realtime({key: import.meta.env.VITE_ABLY_API});
+    const ablyClient = new Realtime({key: import.meta.env.VITE_ABLY_API, clientId:Math.floor(100000 + Math.random() * 900000).toString()});
 
     return (
         <>

@@ -7,7 +7,7 @@ import {useNavigate} from "react-router-dom";
 const ContextState = (props) => {
 
     PropTypes.checkPropTypes(ContextState.propTypes, props, "prop", "ContextState")
-    const [chats, setChats] = useState([]);
+    const [chats, setChats] = useState({});
     const [progress, setProgress] = useState(0);
     const [contact, setContact] = useState([]);
     const [currentContact, setCurrentContact] = useState(null);

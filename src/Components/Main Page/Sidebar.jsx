@@ -22,6 +22,7 @@ function Sidebar(props) {
     const handleLogOut = () => {
         localStorage.clear();
         navigate('/')
+        window.location.reload(); // to refresh cookies, solves problem showing offline for online contacts
     }
 
     const handleAddContacts = () => {

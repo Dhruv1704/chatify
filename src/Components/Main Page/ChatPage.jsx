@@ -25,15 +25,32 @@ function ChatPage(props) {
 
     const [aiTextOrImage, setAiTextOrImage] = useState(true)
 
-    useChannel(user?.id, (message)=>{
+    useChannel(user?.id, (message) => {
         const senderId = message.data.sender;
         const newChats = chats;
-        newChats[senderId]===undefined? newChats[senderId] = [message.data] : newChats[senderId].push(message.data);
-        setChats((prev)=>({
+        newChats[senderId] === undefined ? newChats[senderId] = [message.data] : newChats[senderId].push(message.data);
+        setChats((prev) => ({
             ...prev,
-           senderId : newChats[senderId]
+            senderId: newChats[senderId]
         }))
+        console.log(chats)
     })
+
+
+    useEffect(() => {
+        if (user) {
+            client.channels.get(user.id).presence.enter("hello", (err) => {
+                if (err) {
+                    return console.error("Error entering presence set.");
+                }
+                console.log("This client has entered the presence set.");
+            });
+        }
+
+        return () => client.channels.get(user?.id).presence.leave();
+        // eslint-disable-next-line
+    }, [user]);
+
 
     useEffect(() => {
         const token = localStorage.getItem('web-token')
@@ -45,7 +62,7 @@ function ChatPage(props) {
     }, []);
 
     useEffect(() => {
-        if(user===undefined || user===null) return
+        if (user === undefined || user === null) return
         getMessage();
         // eslint-disable-next-line
     }, [user]);
@@ -73,7 +90,7 @@ function ChatPage(props) {
 
 
 ChatPage.propTypes = {
-    client : PropTypes.object.isRequired
+    client: PropTypes.object.isRequired
 };
 
 export default ChatPage;
