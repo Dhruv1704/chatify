@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 function Sidebar(props) {
 
     const context = useContext(Context);
-    const {contact} = context
+    const {contact, mobileSidebar, setMobileAiComponent,setMobileSidebar} = context
     const navigate = useNavigate();
 
     PropTypes.checkPropTypes(Sidebar.propTypes, props, "prop", "Sidebar");
@@ -55,10 +55,14 @@ function Sidebar(props) {
     const handleAiChange = (val)=>{
         if(val===1) setAiTextOrImage(true)
         else setAiTextOrImage(false)
+        if(window.innerWidth<1024){
+            setMobileSidebar(false)
+            setMobileAiComponent(true)
+        }
     }
 
     return (
-        <div className={"h-[90vh] bg-sky-100 w-2/3 lg:w-1/2 xl:w-1/3 my-auto rounded-3xl ml-4 p-6"}>
+        <div className={`${mobileSidebar?"block":"hidden"} lg:block h-[90vh] bg-sky-100 w-full lg:w-1/2 xl:w-1/3 my-auto rounded-3xl mx-4 lg:mr-0 p-6`}>
             <div>
                 <div className={"relative flex justify-around font-semibold text-xl mb-5"}>
                     <div className={"cursor-pointer select-none"} id={"first-link"} onClick={(e) => handleBorder(e, 1)}>

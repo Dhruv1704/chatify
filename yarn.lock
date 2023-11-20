@@ -1054,6 +1054,11 @@ electron-to-chromium@^1.4.535:
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.581.tgz"
   integrity sha512-6uhqWBIapTJUxgPTCHH9sqdbxIMPt7oXl0VcAL1kOtlU6aECdcMncCrX5Z7sHQ/invtrC9jUQUef7+HhO8vVFw==
 
+emoji-picker-react@^4.5.15:
+  version "4.5.15"
+  resolved "https://registry.npmjs.org/emoji-picker-react/-/emoji-picker-react-4.5.15.tgz"
+  integrity sha512-BTqo+pNUE8kqX8BKFTbD4fhlxcA69qfie5En4PerReLaaPfXVyRlDJ1uf85nKj2u5esUQ999iUf8YyqcPsM2Qw==
+
 end-of-stream@^1.1.0:
   version "1.4.4"
   resolved "https://registry.npmjs.org/end-of-stream/-/end-of-stream-1.4.4.tgz"

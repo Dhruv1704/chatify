@@ -4,7 +4,9 @@ import {useState, useContext, useEffect, useRef} from "react";
 import Context from "../../context/Context.jsx";
 import PropTypes from "prop-types";
 import TextareaAutosize from 'react-textarea-autosize';
-
+import EmojiPicker from 'emoji-picker-react';
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
+import KeyboardIcon from '@mui/icons-material/Keyboard';
 
 function ChatComponent(props) {
 
@@ -12,10 +14,21 @@ function ChatComponent(props) {
     const {chatDisplay, client} = props;
 
     const context = useContext(Context);
-    const {currentContact, user, addMessage, chats, setChats} = context;
+    const {
+        currentContact,
+        user,
+        addMessage,
+        chats,
+        setChats,
+        mobileChatComponent,
+        setMobileChatComponent,
+        setMobileSidebar
+    } = context;
     const [inputMessage, setInputMessage] = useState("");
     const messagesEndRef = useRef(null)
     const [status, setStatus] = useState({});
+    const [emojiDisplay, setEmojiDisplay] = useState(false);
+
 
     const getPresence = async () => {
         await client.channels.get(currentContact._id).presence.subscribe((presenceMessage) => {
@@ -23,12 +36,12 @@ function ChatComponent(props) {
             const newStatus = status;
             if (action === 'enter' || action === 'present') {
                 newStatus[currentContact?._id] = "online"
-                setStatus(()=>({
+                setStatus(() => ({
                     ...newStatus
                 }))
             } else {
                 newStatus[currentContact?._id] = "offline"
-                setStatus(()=>({...newStatus}))
+                setStatus(() => ({...newStatus}))
             }
         })
     }
@@ -39,6 +52,23 @@ function ChatComponent(props) {
         }
         // eslint-disable-next-line
     }, [currentContact]);
+
+    useEffect(() => {
+        const handleGoBack = () => {
+            if (window.innerWidth < 1024) {
+                setMobileChatComponent(false)
+                setMobileSidebar(true)
+                history.forward();
+            }
+        };
+
+        window.addEventListener('popstate', handleGoBack);
+
+        return () => {
+            window.removeEventListener('popstate', handleGoBack);
+        };
+        // eslint-disable-next-line
+    }, []);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({behavior: "smooth"})
@@ -74,9 +104,18 @@ function ChatComponent(props) {
         }
     }
 
+    const handleEmoji = (emoji) => {
+        setInputMessage((prev) => prev + emoji.emoji)
+    }
+
+    const handleEmojiDisplay = () => {
+        setEmojiDisplay((prev) => !prev)
+    }
+
+
     return (
         <div
-            className={`${chatDisplay ? "block" : "hidden"} bg-sky-100 h-[90vh] my-auto rounded-3xl w-full mx-4 p-6 pt-4`}>
+            className={`${mobileChatComponent ? "block" : "hidden"} ${chatDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 h-[90vh] overflow-auto my-auto rounded-3xl w-full mx-4 p-6 pt-4`}>
             <div className={"flex justify-between"}>
                 <div className={"flex mb-4"}>
                     <div className={"bg-green-300 rounded-full p-2 px-3.5 flex"}>
@@ -85,11 +124,12 @@ function ChatComponent(props) {
                     </div>
                     <div className={`${currentContact === null ? "mt-2" : "mt-0"} ml-4`}>
                         <div>{currentContact === null ? user?.name : currentContact?.name}</div>
-                        <div className={`${currentContact === null ? "hidden" : "block"} text-xs`}>{status[currentContact?._id]===undefined?"offline":status[currentContact?._id]}</div>
+                        <div
+                            className={`${currentContact === null ? "hidden" : "block"} text-xs`}>{status[currentContact?._id] === undefined ? "offline" : status[currentContact?._id]}</div>
                     </div>
                 </div>
             </div>
-            <div className={"bg-sky-200 h-[92.75%] rounded-2xl flex flex-col justify-between p-4"}>
+            <div className={"bg-sky-200 h-[92.75%] rounded-2xl flex flex-col justify-between p-4 overflow-y-clip"}>
                 <div className={"my-2 px-4 overflow-auto"}>
                     {chats[currentContact?._id]?.map((item, index) => (
                         <ChatBubble key={index} position={item.sender === user.id ? "right" : "left"} item={item}
@@ -99,11 +139,24 @@ function ChatComponent(props) {
                 </div>
                 <form onSubmit={handleMessage} aria-disabled={currentContact == null}
                       className={`${currentContact == null ? "hidden" : "flex"} justify-center space-x-4`}>
-                    <TextareaAutosize placeholder={"Message"} disabled={currentContact == null} minLength={1}
-                                      value={inputMessage}
-                                      type={"text"} onKeyDown={handleKeyDown}
-                                      className={"bg-[#f5f6f7] disabled:cursor-not-allowed rounded-2xl p-3 h-14 max-h-36 resize-none font-semibold w-full"}
-                                      onChange={handleInputMessage}/>
+                    <div className={"w-full relative"}>
+                        <div onClick={handleEmojiDisplay}>
+                            <InsertEmoticonIcon
+                                className={`absolute top-3 left-2 cursor-pointer text-gray-400 ${emojiDisplay ? "opacity-0" : "opacity-100"}`}/>
+                            <KeyboardIcon
+                                className={`absolute top-3 left-2 cursor-pointer text-gray-400 ${emojiDisplay ? "opacity-100" : "opacity-0"}`}/>
+                        </div>
+                        <TextareaAutosize placeholder={"Message"} disabled={currentContact == null} minLength={1}
+                                          value={inputMessage}
+                                          type={"text"} onKeyDown={handleKeyDown}
+                                          className={"bg-[#f5f6f7] disabled:cursor-not-allowed rounded-2xl p-3 pl-10 h-14 max-h-36 resize-none font-semibold w-full"}
+                                          onChange={handleInputMessage}/>
+
+                        <div className={`${emojiDisplay ? "relative opacity-100 translate-x-0" : "absolute opacity-0 translate-y-[450px]"} transition-all w-full duration-300 ease-in-out transform-gpu`}>
+                            <EmojiPicker width={"100%"} height={"450px"} theme={"light"}
+                                         onEmojiClick={(emoji) => handleEmoji(emoji)}/>
+                        </div>
+                    </div>
                     <button type={"submit"} disabled={currentContact == null} id={'chat-submit-button'}
                             className={"self-center disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-full"}>
                         <SendIcon/>

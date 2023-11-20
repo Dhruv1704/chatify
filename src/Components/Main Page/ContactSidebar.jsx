@@ -6,12 +6,16 @@ function ContactSidebar(props) {
 
     const {item} = props;
     const context = useContext(Context);
-    const {setCurrentContact, currentContact} = context;
+    const {setCurrentContact, currentContact, setMobileChatComponent,setMobileSidebar} = context;
 
     PropTypes.checkPropTypes(ContactSidebar.propTypes, "prop", "ContactSidebar");
 
     const handleCurrentContact = (item)=>{
         setCurrentContact(item)
+        if(window.innerWidth<1024){
+            setMobileSidebar(false)
+            setMobileChatComponent(true)
+        }
     }
 
     return (

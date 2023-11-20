@@ -12,7 +12,11 @@ const ContextState = (props) => {
     const [contact, setContact] = useState([]);
     const [currentContact, setCurrentContact] = useState(null);
     const [user, setUser] = useState();
+    const [mobileChatComponent, setMobileChatComponent] = useState(false)
+    const [mobileAiComponent, setMobileAiComponent] = useState(false);
+    const [mobileSidebar, setMobileSidebar] = useState(true);
     const navigate = useNavigate();
+
 
     const tst = (msg, type) => {
         const data = {
@@ -203,7 +207,13 @@ const ContextState = (props) => {
             setChats,
             chats,
             aiQuestion,
-            aiImage
+            aiImage,
+            mobileChatComponent,
+            setMobileChatComponent,
+            mobileAiComponent,
+            setMobileAiComponent,
+            mobileSidebar,
+            setMobileSidebar
         }}>
             {props.children}
         </Context.Provider>

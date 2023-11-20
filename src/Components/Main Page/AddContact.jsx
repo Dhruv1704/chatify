@@ -29,8 +29,8 @@ function AddContact(props) {
     }
 
     return (
-        <div className={`${contactModel ? "block" : "hidden"} bg-[#ffffffcc] absolute top-0 w-full h-full z-10`}>
-            <div className={"rounded-lg absolute left-[40vw] top-[40vh] bg-white p-2 shadow-xl"}>
+        <div className={`${contactModel ? "block" : "hidden"} fixed bg-[#ffffffcc] left-0 top-0 w-full h-full z-10`}>
+            <div className={"relative rounded-lg w-fit mx-auto top-[40vh] bg-white p-2 shadow-xl"}>
                 <form onSubmit={handleAddContact}>
                     <label className={"font-semibold"}>Add Contact</label>
                     <br/>

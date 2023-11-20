@@ -33,7 +33,6 @@ function ChatPage(props) {
             ...prev,
             senderId: newChats[senderId]
         }))
-        console.log(chats)
     })
 
 

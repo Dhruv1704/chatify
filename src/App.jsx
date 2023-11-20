@@ -11,20 +11,23 @@ import {AblyProvider} from 'ably/react';
 
 function App() {
 
-    const ablyClient = new Realtime({key: import.meta.env.VITE_ABLY_API, clientId:Math.floor(100000 + Math.random() * 900000).toString()});
+    const ablyClient = new Realtime({
+        key: import.meta.env.VITE_ABLY_API,
+        clientId: Math.floor(100000 + Math.random() * 900000).toString()
+    });
 
     return (
         <>
             <BrowserRouter>
                 <ContextState>
-                    <Routes>
-                        <Route exact path={"/"} element={<LogIn/>}/>
-                        <Route exact path={"/chat"} element={
-                            <AblyProvider client={ablyClient}>
+                    <AblyProvider client={ablyClient}>
+                        <Routes>
+                            <Route exact path={"/"} element={<LogIn/>}/>
+                            <Route exact path={"/chat"} element={
                                 <ChatPage client={ablyClient}/>
-                            </AblyProvider>
-                        }/>
-                    </Routes>
+                            }/>
+                        </Routes>
+                    </AblyProvider>
                     <ToastContainer
                         position="bottom-right"
                         autoClose={3000}

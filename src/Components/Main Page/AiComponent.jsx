@@ -11,7 +11,7 @@ const AiComponent = (props) => {
     PropTypes.checkPropTypes(AiComponent.propTypes, props, "prop", "AiComponent");
     const {aiDisplay, aiTextOrImage} = props;
     const context = useContext(Context);
-    const {aiQuestion, aiImage} = context;
+    const {aiQuestion, aiImage, mobileAiComponent, setMobileAiComponent, setMobileSidebar} = context;
     const [inputAiMessage, setInputAiMessage] = useState("")
     const [textAiChat, setTextAiChat] = useState([]);
     const [imageAiChat, setImageAiChat] = useState();
@@ -31,6 +31,23 @@ const AiComponent = (props) => {
         setTextAiChat(textAi)
         setImageAiChat(imageAi)
     }, [aiTextOrImage]);
+
+    useEffect(() => {
+        const handleGoBack = () => {
+            if(window.innerWidth<1024){
+                setMobileAiComponent(false)
+                setMobileSidebar(true)
+                history.forward();
+            }
+        };
+
+        window.addEventListener('popstate', handleGoBack);
+
+        return () => {
+            window.removeEventListener('popstate', handleGoBack);
+        };
+        // eslint-disable-next-line
+    }, []);
 
 
     const handleInputAiMessage = (e) => {
@@ -90,11 +107,11 @@ const AiComponent = (props) => {
 
     return (
         <div
-            className={`${aiDisplay ? "block" : "hidden"} bg-sky-100 h-[90vh] my-auto rounded-3xl w-full mx-4 p-6 pt-4`}>
-            <div className={'font-semibold mt-2 mb-6 text-xl ml-2'}>
+            className={`${mobileAiComponent?"block":"hidden"} ${aiDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 h-[90vh] my-auto rounded-3xl w-full overflow-auto mx-4 p-6 pt-4`}>
+            <div className={'font-semibold mb-5 mt-2 text-xl ml-2'}>
                 {aiTextOrImage?"AI Text Generator (ChatGPT-4)":"AI Image Generator (Lexica)"}
             </div>
-            <div className={"bg-sky-200 h-[92%] rounded-2xl flex flex-col justify-between p-4"}>
+            <div className={"bg-sky-200 h-[92.75%] rounded-2xl flex flex-col justify-between p-4"}>
                 <div className={"my-2 px-4 overflow-auto"}>
                     <div className={`${aiTextOrImage?"block":"hidden"}`}>
                         {textAiChat?.map((item, index) => (
