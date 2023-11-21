@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 function Sidebar(props) {
 
     const context = useContext(Context);
-    const {contact, mobileSidebar, setMobileAiComponent,setMobileSidebar} = context
+    const {contact, mobileSidebar, setMobileAiComponent,setMobileSidebar, setCurrentContact} = context
     const navigate = useNavigate();
 
     PropTypes.checkPropTypes(Sidebar.propTypes, props, "prop", "Sidebar");
@@ -43,12 +43,14 @@ function Sidebar(props) {
                 break;
             case 2:
                 border.style.width = "45px";
+                setCurrentContact(null)
                 break;
             case 3:
                 border.style.width = "50px";
                 border.style.translate = "15px";
                 setChatDisplay(false)
                 setAiDisplay(true)
+                setCurrentContact(null)
         }
     }
 
@@ -82,7 +84,7 @@ function Sidebar(props) {
                                placeholder={"Search"}/>
                         <SearchIcon className={"absolute left-2 top-1"}/>
                     </div>
-                    {contact.length > 0 ?
+                    {contact && contact.length > 0 ?
                         <div>
                             <div className={"border-b-2 border-sky-300 rounded-2xl mt-6"}></div>
                             {contact.map((item, index) => {

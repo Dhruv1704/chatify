@@ -131,7 +131,7 @@ function ChatComponent(props) {
             </div>
             <div className={"bg-sky-200 h-[92.75%] rounded-2xl flex flex-col justify-between p-4 overflow-y-clip"}>
                 <div className={"my-2 px-4 overflow-auto"}>
-                    {chats[currentContact?._id]?.map((item, index) => (
+                    {chats===null?"":chats[currentContact?._id]?.map((item, index) => (
                         <ChatBubble key={index} position={item.sender === user.id ? "right" : "left"} item={item}
                                     continued={index === 0 ? false : chats[currentContact?._id][index - 1].sender === item.sender ? true : false}/>
                     ))}

@@ -15,6 +15,7 @@ const ContextState = (props) => {
     const [mobileChatComponent, setMobileChatComponent] = useState(false)
     const [mobileAiComponent, setMobileAiComponent] = useState(false);
     const [mobileSidebar, setMobileSidebar] = useState(true);
+    const [unreadChats, setUnreadChats] = useState({});
     const navigate = useNavigate();
 
 
@@ -34,6 +35,17 @@ const ContextState = (props) => {
         } else {
             toast.error(`${msg}`, data);
         }
+    }
+
+    const unreadMessages = (oldMessage, newMessage) => {
+        const unread = {};
+        if (oldMessage === null || oldMessage === undefined) oldMessage = {}
+        const keysNewMessage = Object.keys(newMessage);
+        for (const key of keysNewMessage) {
+            unread[key] = newMessage[key].length - (oldMessage[key] ? oldMessage[key].length : 0);
+        }
+        console.log(unread)
+        setUnreadChats(unread);
     }
 
     const logIn = async (email, password) => {
@@ -84,8 +96,17 @@ const ContextState = (props) => {
         setProgress(100)
     }
 
-    const getContact = async ()=>{
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/contact/getContact`,{
+    const getContact = async () => {
+        const contacts = JSON.parse(localStorage.getItem('contacts'));
+        const localUser = JSON.parse(localStorage.getItem('user'));
+        setContact(contacts)
+        setUser(localUser);
+        setProgress(25);
+        if (!navigator.onLine) {
+            setProgress(50);
+            return;
+        }
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/contact/getContact`, {
             method: "GET",
             headers: {
                 'content-Type': 'application/json',
@@ -93,14 +114,18 @@ const ContextState = (props) => {
             }
         })
         const json = await res.json();
-        if(json.type === "success"){
-            setUser({
-                name : json.name,
-                email : json.email,
-                id : json.id
-            })
+        if (json.type === "success") {
+            const user = {
+                name: json.name,
+                email: json.email,
+                id: json.id
+            }
+            setUser(user)
+            localStorage.setItem('user', JSON.stringify(user))
+            localStorage.setItem('contacts', JSON.stringify(json.contact));
             setContact(json.contact)
         }
+        setProgress(50);
     }
 
     const addContact = async (contact) => {
@@ -118,33 +143,46 @@ const ContextState = (props) => {
         setProgress(75)
         if (json.type === "success") {
             setContact(json.contact)
+            localStorage.setItem('contacts', JSON.stringify(json.contact));
             tst(json.message, json.type)
         } else {
             tst(json.message, json.type)
         }
         setProgress(100)
     }
-    
-    const getMessage = async ()=>{
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/chat/getMessage`,{
+
+    const getMessage = async () => {
+        setProgress(75);
+        const localChats = JSON.parse(localStorage.getItem('chats'));
+        setChats(localChats);
+        if (!navigator.onLine) {
+            setProgress(100);
+            return;
+        }
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/chat/getMessage`, {
             method: 'GET',
-            headers:{
+            headers: {
                 'content-Type': 'application/json',
                 'web-token': localStorage.getItem('web-token')
             }
         })
         const json = await res.json();
-        const chats = json.chats.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-        const messages = {}
-        for (const chatElement of chats) {
-            const contactId = chatElement.sender===user.id?chatElement.receiver:chatElement.sender;
-            messages[contactId]===undefined? messages[contactId] = [chatElement] : messages[contactId].push(chatElement);
+        if (json.type === "success") {
+            const chats = json.chats.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            const messages = {}
+            for (const chatElement of chats) {
+                const contactId = chatElement.sender === user.id ? chatElement.receiver : chatElement.sender;
+                messages[contactId] === undefined ? messages[contactId] = [chatElement] : messages[contactId].push(chatElement);
+            }
+            unreadMessages(localChats, messages);
+            setChats(messages);
+            localStorage.setItem('chats', JSON.stringify(messages));
         }
-        setChats(messages);
+        setProgress(100);
     }
 
-    const addMessage = async (content, receiver, type)=>{
-        await fetch(`${import.meta.env.VITE_BACKEND_API}/api/chat/addMessage`,{
+    const addMessage = async (content, receiver, type) => {
+        await fetch(`${import.meta.env.VITE_BACKEND_API}/api/chat/addMessage`, {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
@@ -158,8 +196,8 @@ const ContextState = (props) => {
         })
     }
 
-    const aiQuestion = async (question)=>{
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/ai/question`,{
+    const aiQuestion = async (question) => {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/ai/question`, {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
@@ -173,8 +211,8 @@ const ContextState = (props) => {
         return json;
     }
 
-    const aiImage = async (image)=>{
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/ai/drawImage`,{
+    const aiImage = async (image) => {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/ai/drawImage`, {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
@@ -213,7 +251,9 @@ const ContextState = (props) => {
             mobileAiComponent,
             setMobileAiComponent,
             mobileSidebar,
-            setMobileSidebar
+            setMobileSidebar,
+            unreadChats,
+            setUnreadChats
         }}>
             {props.children}
         </Context.Provider>

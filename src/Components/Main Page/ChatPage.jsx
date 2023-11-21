@@ -18,7 +18,7 @@ function ChatPage(props) {
     const navigate = useNavigate();
     const [contactModel, setContactModel] = useState(false);
     const context = useContext(Context);
-    const {progress, setProgress, getContact, user, setChats, getMessage, chats} = context
+    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact} = context
 
     const [chatDisplay, setChatDisplay] = useState(true)
     const [aiDisplay, setAiDisplay] = useState(false)
@@ -29,10 +29,15 @@ function ChatPage(props) {
         const senderId = message.data.sender;
         const newChats = chats;
         newChats[senderId] === undefined ? newChats[senderId] = [message.data] : newChats[senderId].push(message.data);
-        setChats((prev) => ({
-            ...prev,
-            senderId: newChats[senderId]
+        if(currentContact!=senderId){
+            const newUnread = unreadChats;
+            newUnread[senderId] = newUnread[senderId]?newUnread[senderId]+1:1;
+            setUnreadChats(newUnread);
+        }
+        setChats(() => ({
+            ...newChats
         }))
+        localStorage.setItem('chats', JSON.stringify(newChats));
     })
 
 

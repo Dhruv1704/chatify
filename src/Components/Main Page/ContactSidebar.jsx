@@ -6,11 +6,14 @@ function ContactSidebar(props) {
 
     const {item} = props;
     const context = useContext(Context);
-    const {setCurrentContact, currentContact, setMobileChatComponent,setMobileSidebar} = context;
+    const {setCurrentContact, currentContact, setMobileChatComponent,setMobileSidebar, unreadChats, setUnreadChats} = context;
 
     PropTypes.checkPropTypes(ContactSidebar.propTypes, "prop", "ContactSidebar");
 
     const handleCurrentContact = (item)=>{
+        const unread = unreadChats;
+        unread[item._id] = 0;
+        setUnreadChats(unread);
         setCurrentContact(item)
         if(window.innerWidth<1024){
             setMobileSidebar(false)
@@ -25,6 +28,9 @@ function ContactSidebar(props) {
                     <span className={"font-bold select-none text-xl mt-[-3px]"}>{item.name.charAt(0)}</span>
                 </div>
                 <div className={"mt-2 ml-4 select-none name"}>{item.name}</div>
+                <div className={`${(unreadChats[item._id] && unreadChats[item._id]!=0) ?"flex":"hidden"} h-[30px] w-[30px] justify-center items-center mt-1 ml-auto mr-7 text-white rounded-full bg-sky-400`}>
+                    {unreadChats[item._id]}
+                </div>
             </div>
             <div className={"border-b-2 border-sky-300 rounded-2xl"}></div>
         </div>
