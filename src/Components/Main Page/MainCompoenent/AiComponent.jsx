@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 import SendIcon from "@mui/icons-material/Send.js";
-import AiChatBubble from "./AiChatBubble.jsx";
+import AiChatBubble from "../MessageBubble/AiChatBubble.jsx";
 import {useEffect, useState, useContext, useRef} from "react";
-import Context from "../../context/Context.jsx";
+import Context from "../../../context/Context.jsx";
 import TextareaAutosize from 'react-textarea-autosize';
-import AiImageBubble from "./AiImageBubble.jsx";
+import AiImageBubble from "../MessageBubble/AiImageBubble.jsx";
 
 const AiComponent = (props) => {
 
@@ -107,7 +107,7 @@ const AiComponent = (props) => {
 
     return (
         <div
-            className={`${mobileAiComponent?"block":"hidden"} ${aiDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 h-[90vh] my-auto rounded-3xl w-full overflow-auto mx-4 p-6 pt-4`}>
+            className={`${mobileAiComponent?"block":"hidden"} ${aiDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 h-[90vh] my-auto rounded-3xl w-full overflow-clip mx-4 p-6 pt-4`}>
             <div className={'font-semibold mb-5 mt-2 text-xl ml-2'}>
                 {aiTextOrImage?"AI Text Generator (ChatGPT-4)":"AI Image Generator (Lexica)"}
             </div>

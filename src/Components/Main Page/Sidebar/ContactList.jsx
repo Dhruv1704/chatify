@@ -1,14 +1,14 @@
 import PropTypes from "prop-types";
 import {useContext} from "react";
-import Context from "../../context/Context.jsx";
+import Context from "../../../context/Context.jsx";
 
-function ContactSidebar(props) {
+function ContactList(props) {
 
     const {item} = props;
     const context = useContext(Context);
     const {setCurrentContact, currentContact, setMobileChatComponent,setMobileSidebar, unreadChats, setUnreadChats} = context;
 
-    PropTypes.checkPropTypes(ContactSidebar.propTypes, "prop", "ContactSidebar");
+    PropTypes.checkPropTypes(ContactList.propTypes, "prop", "ContactList");
 
     const handleCurrentContact = (item)=>{
         const unread = unreadChats;
@@ -37,8 +37,8 @@ function ContactSidebar(props) {
     );
 }
 
-ContactSidebar.propTypes = {
+ContactList.propTypes = {
     item : PropTypes.object
 };
 
-export default ContactSidebar;
+export default ContactList;

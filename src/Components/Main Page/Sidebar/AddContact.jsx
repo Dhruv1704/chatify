@@ -1,7 +1,7 @@
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import {useContext, useState} from "react";
-import Context from "../../context/Context.jsx";
+import Context from "../../../context/Context.jsx";
 import PropTypes from "prop-types";
 
 function AddContact(props) {

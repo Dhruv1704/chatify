@@ -1,11 +1,11 @@
-import Sidebar from "./Sidebar.jsx";
-import ChatComponent from "./ChatComponent.jsx";
+import Sidebar from "./Sidebar/Sidebar.jsx";
+import ChatComponent from "./MainCompoenent/ChatComponent.jsx";
 import {useEffect, useState, useContext} from "react";
 import {useNavigate} from "react-router-dom";
-import AddContact from "./AddContact.jsx";
+import AddContact from "./Sidebar/AddContact.jsx";
 import LoadingBar from "react-top-loading-bar";
 import Context from "../../context/Context.jsx";
-import AiComponent from '../Main Page/AiComponent.jsx'
+import AiComponent from './MainCompoenent/AiComponent.jsx'
 import PropTypes from "prop-types";
 import {useChannel} from "ably/react";
 
@@ -80,7 +80,7 @@ function ChatPage(props) {
                 progress={progress}
                 onLoaderFinished={() => setProgress(0)}
             />
-            <div className={"bg-sky-300 h-[100vh] flex"}>
+            <div className={"bg-sky-300 h-[100vh] flex px-4"}>
                 <AddContact contactModel={contactModel} setContactModel={setContactModel}/>
                 <Sidebar setContactModel={setContactModel} setAiDisplay={setAiDisplay}
                          setChatDisplay={setChatDisplay} chatDisplay={chatDisplay} aiDisplay={aiDisplay}

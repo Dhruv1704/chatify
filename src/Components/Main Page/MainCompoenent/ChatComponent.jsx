@@ -1,7 +1,7 @@
 import SendIcon from '@mui/icons-material/Send';
-import ChatBubble from "./ChatBubble.jsx";
+import ChatBubble from "../MessageBubble/ChatBubble.jsx";
 import {useState, useContext, useEffect, useRef} from "react";
-import Context from "../../context/Context.jsx";
+import Context from "../../../context/Context.jsx";
 import PropTypes from "prop-types";
 import TextareaAutosize from 'react-textarea-autosize';
 import EmojiPicker from 'emoji-picker-react';
@@ -115,7 +115,7 @@ function ChatComponent(props) {
 
     return (
         <div
-            className={`${mobileChatComponent ? "block" : "hidden"} ${chatDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 h-[90vh] overflow-auto my-auto rounded-3xl w-full mx-4 p-6 pt-4`}>
+            className={`${mobileChatComponent ? "block" : "hidden"} ${chatDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 h-[90vh] overflow-clip my-auto rounded-3xl w-full mx-4 p-6 pt-4`}>
             <div className={"flex justify-between"}>
                 <div className={"flex mb-4"}>
                     <div className={"bg-green-300 rounded-full p-2 px-3.5 flex"}>

@@ -44,7 +44,6 @@ const ContextState = (props) => {
         for (const key of keysNewMessage) {
             unread[key] = newMessage[key].length - (oldMessage[key] ? oldMessage[key].length : 0);
         }
-        console.log(unread)
         setUnreadChats(unread);
     }
 
@@ -97,15 +96,16 @@ const ContextState = (props) => {
     }
 
     const getContact = async () => {
+        setProgress(25)
         const contacts = JSON.parse(localStorage.getItem('contacts'));
         const localUser = JSON.parse(localStorage.getItem('user'));
         setContact(contacts)
         setUser(localUser);
-        setProgress(25);
         if (!navigator.onLine) {
-            setProgress(50);
+            setProgress(100);
             return;
         }
+        setProgress(50)
         const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/contact/getContact`, {
             method: "GET",
             headers: {
@@ -114,6 +114,7 @@ const ContextState = (props) => {
             }
         })
         const json = await res.json();
+        setProgress(75)
         if (json.type === "success") {
             const user = {
                 name: json.name,
@@ -125,7 +126,7 @@ const ContextState = (props) => {
             localStorage.setItem('contacts', JSON.stringify(json.contact));
             setContact(json.contact)
         }
-        setProgress(50);
+        setProgress(100);
     }
 
     const addContact = async (contact) => {
@@ -152,7 +153,7 @@ const ContextState = (props) => {
     }
 
     const getMessage = async () => {
-        setProgress(75);
+        setProgress(25)
         const localChats = JSON.parse(localStorage.getItem('chats'));
         setChats(localChats);
         if (!navigator.onLine) {
@@ -167,6 +168,7 @@ const ContextState = (props) => {
             }
         })
         const json = await res.json();
+        setProgress(75)
         if (json.type === "success") {
             const chats = json.chats.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
             const messages = {}
