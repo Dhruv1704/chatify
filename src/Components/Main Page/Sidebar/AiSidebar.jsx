@@ -1,7 +1,11 @@
 import SettingsIcon from "@mui/icons-material/Settings.js";
 import AddIcon from "@mui/icons-material/Add.js";
 import LogoutIcon from "@mui/icons-material/Logout.js";
-const AiSidebar = ({handleAddContacts , handleLogOut, handleAiChange, aiTextOrImage}) => {
+import PropTypes from "prop-types";
+const AiSidebar = (props) => {
+
+    const {handleAddContacts , handleLogOut, handleAiChange, aiTextOrImage} = props;
+    PropTypes.checkPropTypes(AiSidebar.propTypes, props, "prop", "AiSidebar");
 
     return (
         <div className={"bg-sky-200 p-6 flex flex-col rounded-3xl h-[93%]"}>
@@ -33,5 +37,13 @@ const AiSidebar = ({handleAddContacts , handleLogOut, handleAiChange, aiTextOrIm
         </div>
     )
 };
+
+AiSidebar.propTypes = {
+    handleAddContacts : PropTypes.func.isRequired,
+    handleLogOut : PropTypes.func.isRequired,
+    handleAiChange: PropTypes.func.isRequired,
+    aiTextOrImage : PropTypes.bool.isRequired
+};
+
 
 export default AiSidebar;

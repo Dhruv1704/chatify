@@ -5,10 +5,12 @@ import AddIcon from "@mui/icons-material/Add.js";
 import LogoutIcon from "@mui/icons-material/Logout.js";
 import {useContext} from "react";
 import Context from "../../../context/Context.jsx";
+import PropTypes from "prop-types";
 
-const ContactSidebar = ({handleAddContacts, handleLogOut}) => {
+const ContactSidebar = (props) => {
 
-
+    const {handleAddContacts, handleLogOut} = props
+    PropTypes.checkPropTypes(ContactSidebar.propTypes, props, "prop", "ContactSidebar");
 
     const context = useContext(Context)
     const {contact} = context;
@@ -51,6 +53,11 @@ const ContactSidebar = ({handleAddContacts, handleLogOut}) => {
             </div>
         </div>
     )
+};
+
+ContactSidebar.propTypes = {
+    handleAddContacts : PropTypes.func.isRequired,
+    handleLogOut : PropTypes.func.isRequired,
 };
 
 export default ContactSidebar;
