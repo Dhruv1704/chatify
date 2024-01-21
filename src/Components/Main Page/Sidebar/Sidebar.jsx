@@ -29,10 +29,10 @@ function Sidebar(props) {
     }
 
 
-    const handleBorder = (e, num) => {
-        const borderOffSet = document.getElementById("first-link").offsetLeft;
+    const handleBorder = (target, num) => {
+        const borderOffSet = document.getElementById("chat-link-border").offsetLeft;
         const border = document.getElementById("bottom-border");
-        border.style.left = (e.target.offsetLeft - borderOffSet) + "px";
+        border.style.left = (target.offsetLeft - borderOffSet) + "px";
         border.style.translate = "0"
         switch (num) {
             case 1:
@@ -65,18 +65,35 @@ function Sidebar(props) {
         }
     }
 
+    const carousalChange = (index)=>{
+        const chatBorder= document.getElementById("chat-link-border")
+        const callBorder= document.getElementById("call-link-border")
+        const chatgptBorder= document.getElementById("chatgpt-link-border")
+        switch (index) {
+            case 0:
+                handleBorder(chatBorder,1)
+                break;
+            case 1:
+                handleBorder(callBorder,2)
+                break;
+            case 2:
+                handleBorder(chatgptBorder,3)
+                break;
+        }
+    }
+
     return (
         <div
             className={`${mobileSidebar ? "block" : "hidden"} lg:block h-[90vh] bg-sky-100 w-full lg:w-1/3 xl:w-[23%] my-auto rounded-3xl p-6`}>
             <div>
                 <div className={"relative flex justify-around font-semibold text-xl mb-5"}>
-                    <div className={"cursor-pointer select-none"} id={"first-link"} onClick={(e) => handleBorder(e, 1)}>
+                    <div className={"cursor-pointer select-none"} id={"chat-link-border"} onClick={(e) => handleBorder(e.target, 1)}>
                         Chats
                         <div id={"bottom-border"}
                              className={`relative border-2 transition-all duration-300 ease-in-out rounded border-sky-300 transform-gpu w-[52px]`}></div>
                     </div>
-                    <div className={"cursor-pointer select-none"} onClick={(e) => handleBorder(e, 2)}>Calls</div>
-                    <div className={"cursor-pointer select-none"} onClick={(e) => handleBorder(e, 3)}>ChatGPT</div>
+                    <div className={"cursor-pointer select-none"} id={"call-link-border"} onClick={(e) => handleBorder(e.target, 2)}>Calls</div>
+                    <div className={"cursor-pointer select-none"} id={"chatgpt-link-border"} onClick={(e) => handleBorder(e.target, 3)}>ChatGPT</div>
                 </div>
             </div>
             {/*<div className={"bg-sky-200 p-6 flex flex-col rounded-3xl h-[93%]"}>*/}
@@ -125,7 +142,7 @@ function Sidebar(props) {
 
 
             <Carousel showArrows={false} showThumbs={false} emulateTouch={true}
-                      showIndicators={false} showStatus={false} selectedItem={carousalItem}>
+                      showIndicators={false} showStatus={false} selectedItem={carousalItem} onChange={(index)=>{carousalChange(index)}}>
                 <ContactSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut}/>
                 <ContactSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut}/>
                 <AiSidebar handleLogOut={handleLogOut} handleAiChange={handleAiChange}
