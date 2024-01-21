@@ -1,4 +1,4 @@
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Context from "../../../context/Context.jsx";
 import PropTypes from "prop-types";
@@ -16,7 +16,7 @@ function Sidebar(props) {
     PropTypes.checkPropTypes(Sidebar.propTypes, props, "prop", "Sidebar");
 
     const {setContactModel, setChatDisplay, setAiDisplay, setAiTextOrImage, aiTextOrImage} = props;
-
+    const [carousalItem, setCarousalItem] = useState(0)
 
     const handleLogOut = () => {
         localStorage.clear();
@@ -39,10 +39,12 @@ function Sidebar(props) {
                 border.style.width = "52px";
                 setAiDisplay(false)
                 setChatDisplay(true)
+                setCarousalItem(0)
                 break;
             case 2:
                 border.style.width = "45px";
                 setCurrentContact(null)
+                setCarousalItem(1)
                 break;
             case 3:
                 border.style.width = "50px";
@@ -50,6 +52,7 @@ function Sidebar(props) {
                 setChatDisplay(false)
                 setAiDisplay(true)
                 setCurrentContact(null)
+                setCarousalItem(2)
         }
     }
 
@@ -122,7 +125,7 @@ function Sidebar(props) {
 
 
             <Carousel showArrows={false} showThumbs={false} emulateTouch={true}
-                      showIndicators={false} showStatus={false}>
+                      showIndicators={false} showStatus={false} selectedItem={carousalItem}>
                 <ContactSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut}/>
                 <ContactSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut}/>
                 <AiSidebar handleLogOut={handleLogOut} handleAiChange={handleAiChange}

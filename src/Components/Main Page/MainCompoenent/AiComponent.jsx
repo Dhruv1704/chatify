@@ -109,7 +109,7 @@ const AiComponent = (props) => {
         <div
             className={`${mobileAiComponent?"block":"hidden"} ${aiDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 h-[90vh] my-auto rounded-3xl w-full overflow-clip mx-4 p-6 pt-4`}>
             <div className={'font-semibold mb-5 mt-2 text-xl ml-2'}>
-                {aiTextOrImage?"AI Text Generator (ChatGPT-4)":"AI Image Generator (Lexica)"}
+                {aiTextOrImage?"ChatGPT-4 (32k)":"AI Image Generator (Lexica)"}
             </div>
             <div className={"bg-sky-200 h-[92.75%] rounded-2xl flex flex-col justify-between p-4"}>
                 <div className={"my-2 px-4 overflow-auto"}>

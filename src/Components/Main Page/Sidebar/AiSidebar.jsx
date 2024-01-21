@@ -12,8 +12,8 @@ const AiSidebar = (props) => {
             <div>
                 <div className={"border-b-2 border-sky-300 rounded-2xl mt-2"}></div>
                 <div
-                    className={`${aiTextOrImage ? "bg-sky-300" : "bg-sky-200"} my-1 py-4 pl-4 cursor-pointer rounded-2xl text-lg`}
-                    onClick={() => handleAiChange(1)}>AI Text Generator
+                    className={`${aiTextOrImage ? "bg-sky-300" : "bg-sky-200"} my-1 py-4 cursor-pointer rounded-2xl text-lg`}
+                    onClick={() => handleAiChange(1)}>ChatGPT-4
                 </div>
                 <div className={"border-b-2 border-sky-300 rounded-2xl"}></div>
                 <div
