@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
-import {useContext, useState} from 'react'
+import {useContext, useState, useRef, useEffect} from 'react'
 import Context from "../../context/Context.jsx";
 
 function SignUp(props) {
+
+    const signRef = useRef();
 
     const {passwordHideShow, icon2, icon3} = props;
     const context = useContext(Context);
@@ -27,6 +29,23 @@ function SignUp(props) {
         document.getElementById("sign-div").style.display = "none";
     }
 
+    useEffect(() => {
+        const handleClickOutsideSign = (event) => {
+            // Check if the click is outside the modalattach-icon
+            if (signRef.current && !signRef.current.contains(event.target) && !event.target.classList.contains("create-account-btn")){
+                closeModal();
+            }
+        };
+
+        // Attach the event listener when the component mounts
+        document.addEventListener('click', handleClickOutsideSign);
+
+        // Detach the event listener when the component unmounts
+        return () => {
+            document.removeEventListener('click', handleClickOutsideSign);
+        };
+    }, []);
+
     const handleChange = (e) => {
         setCredentials({...credentials, [e.target.name]: e.target.value})
     }
@@ -40,7 +59,7 @@ function SignUp(props) {
         <div className={"hidden z-10 fixed top-0 w-full h-full bg-[#ffffffcc]"} id={"sign-div"}>
             <form onSubmit={handleSignUp}
                 className={"relative top-[20%] shadow-xl w-[350px] h-[382px] bg-white m-auto py-2 px-4 rounded-lg"}
-                id={"sign-form"} >
+                id={"sign-form"} ref={signRef}>
                 <div className={"border-b-[1px] pb-2 border-gray-300"}>
                         <span
                             className={"text-[#aaaaaa] float-right font-bold text-3xl cursor-pointer hover:text-black decoration-0"}

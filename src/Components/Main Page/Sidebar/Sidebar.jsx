@@ -96,50 +96,6 @@ function Sidebar(props) {
                     <div className={"cursor-pointer select-none"} id={"chatgpt-link-border"} onClick={(e) => handleBorder(e.target, 3)}>ChatGPT</div>
                 </div>
             </div>
-            {/*<div className={"bg-sky-200 p-6 flex flex-col rounded-3xl h-[93%]"}>*/}
-            {/*    /!*contacts-sidebar*!/*/}
-            {/*    <div className={`${chatDisplay?"block":"hidden"}`}>*/}
-            {/*        <div className={"relative"}>*/}
-            {/*            <input className={"rounded-2xl w-full p-1 pl-8 font-semibold bg-[#f5f6f7]"}*/}
-            {/*                   placeholder={"Search"}/>*/}
-            {/*            <SearchIcon className={"absolute left-2 top-1"}/>*/}
-            {/*        </div>*/}
-            {/*        {contact && contact.length > 0 ?*/}
-            {/*            <div>*/}
-            {/*                <div className={"border-b-2 border-sky-300 rounded-2xl mt-6"}></div>*/}
-            {/*                {contact.map((item, index) => {*/}
-            {/*                    return (*/}
-            {/*                        <ContactList key={index} item={item}/>*/}
-            {/*                    )*/}
-            {/*                })}*/}
-            {/*            </div> :*/}
-            {/*            <div className={"my-auto text-center"}>*/}
-            {/*                <strong>Use the add button below to add contacts.</strong>*/}
-            {/*            </div>*/}
-            {/*        }*/}
-            {/*    </div>*/}
-            {/*    /!*ai-sidebar*!/*/}
-            {/*    <div className={`${aiDisplay?"block":"hidden"}`}>*/}
-            {/*        <div className={"border-b-2 border-sky-300 rounded-2xl mt-2"}></div>*/}
-            {/*        <div className={`${aiTextOrImage?"bg-sky-300":"bg-sky-200"} my-1 py-4 pl-4 cursor-pointer rounded-2xl text-lg`} onClick={()=>handleAiChange(1)}>AI Text Generator</div>*/}
-            {/*        <div className={"border-b-2 border-sky-300 rounded-2xl"}></div>*/}
-            {/*        <div className={`${!aiTextOrImage?"bg-sky-300":"bg-sky-200"} my-1 py-4 rounded-2xl pl-4 cursor-pointer text-lg`} onClick={()=>handleAiChange(2)}>AI Image Generator</div>*/}
-            {/*        <div className={"border-b-2 border-sky-300 rounded-2xl"}></div>*/}
-            {/*    </div>*/}
-
-            {/*    <div className={"bg-[#f5f6f7] mt-auto mb-[-6px] rounded-2xl flex p-2 justify-around"}>*/}
-            {/*        <div className={"cursor-pointer mb-1 scale-110"}>*/}
-            {/*            <SettingsIcon/>*/}
-            {/*        </div>*/}
-            {/*        <div className={"cursor-pointer mb-1 scale-110"} onClick={handleAddContacts}>*/}
-            {/*            <AddIcon/>*/}
-            {/*        </div>*/}
-            {/*        <div className={"cursor-pointer mb-1 scale-110"} onClick={handleLogOut}>*/}
-            {/*            <LogoutIcon/>*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
-
 
             <Carousel showArrows={false} showThumbs={false} emulateTouch={true}
                       showIndicators={false} showStatus={false} selectedItem={carousalItem} onChange={(index)=>{carousalChange(index)}}>

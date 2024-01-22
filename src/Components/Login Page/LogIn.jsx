@@ -97,7 +97,7 @@ function LogIn() {
                     </button>
                     <hr/>
                     <button type={"button"}
-                            className={"bg-[#42b72a] text-white text-xl font-semibold mx-auto w-[210px] rounded-lg py-3 mt-2 active:scale-95"}
+                            className={"bg-[#42b72a] text-white text-xl font-semibold mx-auto w-[210px] rounded-lg py-3 mt-2 active:scale-95 create-account-btn"}
                             onClick={displaySign}>Create New Account
                     </button>
                 </form>

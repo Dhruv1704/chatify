@@ -5,6 +5,7 @@ import {useEffect, useState, useContext, useRef} from "react";
 import Context from "../../../context/Context.jsx";
 import TextareaAutosize from 'react-textarea-autosize';
 import AiImageBubble from "../MessageBubble/AiImageBubble.jsx";
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 
 const AiComponent = (props) => {
 
@@ -98,6 +99,16 @@ const AiComponent = (props) => {
         }
     }
 
+    const handleClearAi = ()=>{
+        if(aiTextOrImage){
+            setTextAiChat([])
+            localStorage.removeItem('text-ai');
+        }else{
+            setImageAiChat([])
+            localStorage.removeItem('image-ai');
+        }
+    }
+
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -128,9 +139,12 @@ const AiComponent = (props) => {
                 </div>
                 <form onSubmit={handleAi}
                       className={`flex justify-center space-x-4`}>
-                    <TextareaAutosize placeholder={"Talk to Ai"} minLength={1} value={inputAiMessage}
+                    <button type={"button"} id={"ai-delete-button"} className={"self-center scale-125 mb-1 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-full"} onClick={handleClearAi}>
+                        <DeleteSweepIcon/>
+                    </button>
+                    <TextareaAutosize placeholder={aiTextOrImage?"Talk to ChatGPT":"Enter a description or concept for the image you want AI to generate"} minLength={1} value={inputAiMessage}
                                       onKeyDown={handleKeyDown}
-                                      type={"text"}
+                                      type={"text"} required={true}
                                       className={"bg-[#f5f6f7] disabled:cursor-not-allowed rounded-2xl h-14 max-h-36 resize-none p-3 font-semibold w-full"}
                                       onChange={handleInputAiMessage}/>
                     <button type={"submit"} id={"ai-submit-button"}

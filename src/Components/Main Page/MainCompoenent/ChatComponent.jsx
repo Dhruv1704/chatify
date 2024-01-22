@@ -7,11 +7,16 @@ import TextareaAutosize from 'react-textarea-autosize';
 import EmojiPicker from 'emoji-picker-react';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import HeadphonesIcon from '@mui/icons-material/Headphones';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 function ChatComponent(props) {
 
     PropTypes.checkPropTypes(ChatComponent.propTypes, props, "prop", "ChatComponent");
     const {chatDisplay, client} = props;
+    const attachRef = useRef();
 
     const context = useContext(Context);
     const {
@@ -28,6 +33,24 @@ function ChatComponent(props) {
     const messagesEndRef = useRef(null)
     const [status, setStatus] = useState({});
     const [emojiDisplay, setEmojiDisplay] = useState(false);
+    const [attachDisplay, setAttachDisplay] = useState(false)
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            // Check if the click is outside the modalattach-icon
+            if (attachDisplay && attachRef.current && !attachRef.current.contains(event.target) && !event.target.classList.contains("attach-icon")){
+                setAttachDisplay(false)
+            }
+        };
+
+        // Attach the event listener when the component mounts
+        document.addEventListener('click', handleClickOutside);
+
+        // Detach the event listener when the component unmounts
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [attachDisplay,attachRef]);
 
 
     const getPresence = async () => {
@@ -112,6 +135,10 @@ function ChatComponent(props) {
         setEmojiDisplay((prev) => !prev)
     }
 
+    const handleAttachDisplay = ()=>{
+        if(attachDisplay) setAttachDisplay(false)
+        else setAttachDisplay(true)
+    }
 
     return (
         <div
@@ -131,7 +158,7 @@ function ChatComponent(props) {
             </div>
             <div className={"bg-sky-200 h-[92.75%] rounded-2xl flex flex-col justify-between p-4 overflow-y-clip"}>
                 <div className={"my-2 px-4 overflow-auto"}>
-                    {chats===null?"":chats[currentContact?._id]?.map((item, index) => (
+                    {chats === null ? "" : chats[currentContact?._id]?.map((item, index) => (
                         <ChatBubble key={index} position={item.sender === user.id ? "right" : "left"} item={item}
                                     continued={index === 0 ? false : chats[currentContact?._id][index - 1].sender === item.sender ? true : false}/>
                     ))}
@@ -139,6 +166,25 @@ function ChatComponent(props) {
                 </div>
                 <form onSubmit={handleMessage} aria-disabled={currentContact == null}
                       className={`${currentContact == null ? "hidden" : "flex"} justify-center space-x-4`}>
+                    <div className={"relative flex"}>
+                        <div className={`absolute ${attachDisplay?"block":"hidden"} space-x-5 flex text-center bg-sky-100 shadow-xl rounded-t-2xl rounded-br-2xl p-4 z-20 bottom-[70px] left-4`} ref={attachRef}>
+                            <div className={"cursor-pointer"}>
+                                <AddPhotoAlternateIcon/>
+                                Photo
+                            </div>
+                            <div className={"cursor-pointer"}>
+                                <DescriptionIcon/>
+                                Document
+                            </div>
+                            <div className={"cursor-pointer"}>
+                                <HeadphonesIcon/>
+                                Audio
+                            </div>
+                        </div>
+                        <button type={"button"} className={"mb-2 attach-icon"} onClick={handleAttachDisplay}>
+                            <AttachFileIcon className={"attach-icon"}/>
+                        </button>
+                    </div>
                     <div className={"w-full relative"}>
                         <div onClick={handleEmojiDisplay}>
                             <InsertEmoticonIcon
@@ -147,18 +193,19 @@ function ChatComponent(props) {
                                 className={`absolute top-3 left-2 cursor-pointer text-gray-400 ${emojiDisplay ? "opacity-100" : "opacity-0"}`}/>
                         </div>
                         <TextareaAutosize placeholder={"Message"} disabled={currentContact == null} minLength={1}
-                                          value={inputMessage}
+                                          value={inputMessage} required={true}
                                           type={"text"} onKeyDown={handleKeyDown}
                                           className={"bg-[#f5f6f7] disabled:cursor-not-allowed rounded-2xl p-3 pl-10 h-14 max-h-36 resize-none font-semibold w-full"}
                                           onChange={handleInputMessage}/>
 
-                        <div className={`${emojiDisplay ? "relative opacity-100 translate-x-0" : "absolute opacity-0 translate-y-[450px]"} transition-all w-full duration-300 ease-in-out transform-gpu`}>
+                        <div
+                            className={`${emojiDisplay ? "relative opacity-100 translate-x-0" : "absolute opacity-0 translate-y-[450px]"} transition-all w-full duration-300 ease-in-out transform-gpu`}>
                             <EmojiPicker width={"100%"} height={"450px"} theme={"light"}
                                          onEmojiClick={(emoji) => handleEmoji(emoji)}/>
                         </div>
                     </div>
                     <button type={"submit"} disabled={currentContact == null} id={'chat-submit-button'}
-                            className={"self-center disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-full"}>
+                            className={"self-center disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-full mb-2"}>
                         <SendIcon/>
                     </button>
                 </form>

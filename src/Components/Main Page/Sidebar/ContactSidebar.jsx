@@ -44,8 +44,8 @@ const ContactSidebar = (props) => {
                 <div className={"cursor-pointer mb-1 scale-110"}>
                     <SettingsIcon/>
                 </div>
-                <div className={"cursor-pointer mb-1 scale-110"} onClick={handleAddContacts}>
-                    <AddIcon/>
+                <div className={"cursor-pointer mb-1 scale-110 add-icon"} onClick={handleAddContacts}>
+                    <AddIcon className={"add-icon"}/>
                 </div>
                 <div className={"cursor-pointer mb-1 scale-110"} onClick={handleLogOut}>
                     <LogoutIcon/>
