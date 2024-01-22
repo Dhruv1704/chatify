@@ -7,9 +7,23 @@ import 'react-toastify/dist/ReactToastify.css';
 import ContextState from "./context/ContextState.jsx";
 import {Realtime} from "ably";
 import {AblyProvider} from 'ably/react';
-
+import { initializeApp } from "firebase/app";
 
 function App() {
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBu2lL5isgDhvO0ZJPs1oQ7bsMaiuXcglc",
+        authDomain: "chatify-17.firebaseapp.com",
+        projectId: "chatify-17",
+        storageBucket: "chatify-17.appspot.com",
+        messagingSenderId: "1003628190110",
+        appId: "1:1003628190110:web:ec602204b09eecf33a5e8f",
+        measurementId: "G-HHQVD5HJJE"
+    };
+
+// Initialize Firebase
+    initializeApp(firebaseConfig);
+
 
     const ablyClient = new Realtime({
         key: import.meta.env.VITE_ABLY_API,
