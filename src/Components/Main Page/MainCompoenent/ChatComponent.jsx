@@ -278,7 +278,7 @@ function ChatComponent(props) {
                         <input type={"file"} className={"hidden"} accept={acceptString} onChange={() => {
                             upload(event, "document")
                         }} ref={docInputRef}/>
-                        <button type={"button"} className={"mb-2 bg-sky-300 rounded-xl p-2 attach-icon"} onClick={handleAttachDisplay}>
+                        <button type={"button"} className={"mb-2 bg-sky-300 rounded-xl p-2 px-3 attach-icon"} onClick={handleAttachDisplay}>
                             <AttachFileIcon className={"attach-icon"}/>
                         </button>
                     </div>
