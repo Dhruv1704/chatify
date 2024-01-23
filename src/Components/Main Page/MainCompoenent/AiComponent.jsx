@@ -139,7 +139,7 @@ const AiComponent = (props) => {
                 </div>
                 <form onSubmit={handleAi}
                       className={`flex justify-center space-x-4`}>
-                    <button type={"button"} id={"ai-delete-button"} className={"self-center scale-125 mb-1 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-full"} onClick={handleClearAi}>
+                    <button type={"button"} id={"ai-delete-button"} className={"self-center bg-sky-300 p-2 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl"} onClick={handleClearAi}>
                         <DeleteSweepIcon/>
                     </button>
                     <TextareaAutosize placeholder={aiTextOrImage?"Talk to ChatGPT":"Enter a description or concept for the image you want AI to generate"} minLength={1} value={inputAiMessage}
@@ -148,7 +148,7 @@ const AiComponent = (props) => {
                                       className={"bg-[#f5f6f7] disabled:cursor-not-allowed rounded-2xl h-14 max-h-36 resize-none p-3 font-semibold w-full"}
                                       onChange={handleInputAiMessage}/>
                     <button type={"submit"} id={"ai-submit-button"}
-                            className={"self-center disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-full"}>
+                            className={"self-center disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl bg-sky-300 p-2 pl-3"}>
                         <SendIcon/>
                     </button>
                 </form>

@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import {PhotoView, PhotoProvider} from "react-photo-view";
 import DownloadIcon from "@mui/icons-material/Download.js";
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
 function ChatBubble(props) {
 
@@ -31,7 +32,7 @@ function ChatBubble(props) {
     return (
         <div
             className={`chat-bubble shadow-md ${item.type === "text" ? "p-3" : "p-2"} my-2 break-words w-fit max-w-[500px] ${position === "left" ? "rounded-tr-2xl bg-white" : "rounded-tl-2xl bg-sky-100 ml-auto"} ${continued ? "rounded-2xl" : "rounded-b-2xl"}`}>
-            {item.type === "text" ? <p>{item.content}</p> :
+            {item.type === "text" ? <p>{item.content}</p> : item.type === "image" ?
                 <PhotoProvider maskOpacity={0.9} toolbarRender={() => <a href={item.content} onClick={download}>
                     <DownloadIcon/>
                 </a>}>
@@ -39,7 +40,21 @@ function ChatBubble(props) {
                         <img src={item.content} key={item.content} alt={"chat-image"}
                              className={"max-w-[480px] cursor-pointer select-none rounded-2xl"}/>
                     </PhotoView>
-                </PhotoProvider>
+                </PhotoProvider> :
+
+                item.type === "audio"?
+                    <video controls className={"h-[50px] w-[320px]"}>
+                        <source src={item.content}/>
+                        Your browser does not support the audio element.
+                    </video> :
+
+                    item.type === "video" ?
+                        <video controls className={"rounded-2xl"}>
+                        <source src={item.content}/>
+                        Your browser does not support the video element.
+                        </video> :
+
+                        <DocViewer documents={{ uri: item.content }} pluginRenderers={DocViewerRenderers} />
             }
         </div>
     )

@@ -28,7 +28,7 @@ function ContactList(props) {
                     <span className={"font-bold select-none text-xl mt-[-3px]"}>{item.name.charAt(0)}</span>
                 </div>
                 <div className={"mt-2 ml-4 select-none name"}>{item.name}</div>
-                <div className={`${(unreadChats[item._id] && unreadChats[item._id]!=0) ?"flex":"hidden"} h-[30px] w-[30px] justify-center items-center mt-1 ml-auto mr-7 text-white rounded-full bg-sky-400`}>
+                <div className={`${(unreadChats[item._id] && unreadChats[item._id]>=0) ?"flex":"hidden"} h-[30px] w-[30px] justify-center items-center mt-1 ml-auto mr-7 text-white rounded-full bg-sky-400`}>
                     {unreadChats[item._id]}
                 </div>
             </div>

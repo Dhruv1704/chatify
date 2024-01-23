@@ -11,7 +11,8 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import HeadphonesIcon from '@mui/icons-material/Headphones';
 import DescriptionIcon from '@mui/icons-material/Description';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
+import MovieIcon from '@mui/icons-material/Movie';
+import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
 
 function ChatComponent(props) {
 
@@ -19,6 +20,9 @@ function ChatComponent(props) {
     const {chatDisplay, client} = props;
     const attachRef = useRef();
     const photoInputRef = useRef();
+    const audioInputRef = useRef();
+    const videoInputRef = useRef();
+    const docInputRef = useRef();
 
     const storage = getStorage();
 
@@ -42,7 +46,7 @@ function ChatComponent(props) {
     useEffect(() => {
         const handleClickOutside = (event) => {
             // Check if the click is outside the modalattach-icon
-            if (attachDisplay && attachRef.current && !attachRef.current.contains(event.target) && !event.target.classList.contains("attach-icon")){
+            if (attachDisplay && attachRef.current && !attachRef.current.contains(event.target) && !event.target.classList.contains("attach-icon")) {
                 setAttachDisplay(false)
             }
         };
@@ -54,7 +58,7 @@ function ChatComponent(props) {
         return () => {
             document.removeEventListener('click', handleClickOutside);
         };
-    }, [attachDisplay,attachRef]);
+    }, [attachDisplay, attachRef]);
 
 
     const getPresence = async () => {
@@ -99,8 +103,12 @@ function ChatComponent(props) {
 
 
     const upload = (event, type) => {
-        console.log("Hello")
         const file = event.target.files[0];
+        const maxSize = 50 * 1024 * 1024;
+        if (file.size > maxSize) {
+            console.error("File size exceeds 50 MB. Upload aborted.");
+            return;
+        }
         const storageRef = ref(storage, type + '/' + file.name);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -108,7 +116,8 @@ function ChatComponent(props) {
             (snapshot) => {
                 // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                if(progress==100) photoInputRef.current.value = null
+                console.log(progress)
+                if (progress == 100) photoInputRef.current.value = null
             },
             (error) => {
                 console.error("Error:", error);
@@ -117,7 +126,7 @@ function ChatComponent(props) {
                 // Upload completed successfully, now we can get the download URL
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     console.log('File available at', downloadURL);
-                    handleMessage(event, "image", downloadURL);
+                    handleMessage(event, type, downloadURL);
                 }).catch((error) => {
                     console.error("Error getting download URL:", error);
                 });
@@ -142,7 +151,7 @@ function ChatComponent(props) {
         console.log(message)
         const newChats = chats;
         newChats[currentContact._id] === undefined ? newChats[currentContact._id] = [message] : newChats[currentContact._id].push(message);
-        setChats(()=>({...newChats}))
+        setChats(() => ({...newChats}))
         client.channels.get(currentContact._id).publish('message', message);
         addMessage(content, currentContact._id, type)
         setInputMessage("")
@@ -167,14 +176,44 @@ function ChatComponent(props) {
         setEmojiDisplay((prev) => !prev)
     }
 
-    const handleAttachDisplay = ()=>{
-        if(attachDisplay) setAttachDisplay(false)
+    const handleAttachDisplay = () => {
+        if (attachDisplay) setAttachDisplay(false)
         else setAttachDisplay(true)
     }
 
-    const handlePhotoUpload = ()=>{
+    const handlePhotoUpload = () => {
         photoInputRef.current.click();
     }
+
+    const handleAudioUpload = () => {
+        audioInputRef.current.click();
+    }
+    
+    const handleVideoUpload = () => {
+        videoInputRef.current.click();
+    }
+
+    const handleDocUpload = () =>{
+        docInputRef.current.click();
+    }
+
+    const acceptMap = {
+        csv: 'text/csv',
+        odt: 'application/vnd.oasis.opendocument.text',
+        doc: 'application/msword',
+        docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        htm: 'text/htm',
+        html: 'text/html',
+        pdf: 'application/pdf',
+        ppt: 'application/vnd.ms-powerpoint',
+        pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        tiff: 'image/tiff',
+        txt: 'text/plain',
+        xls: 'application/vnd.ms-excel',
+        xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    };
+
+    const acceptString = Object.values(acceptMap).join(',');
 
     return (
         <div
@@ -200,29 +239,46 @@ function ChatComponent(props) {
                     ))}
                     <div ref={messagesEndRef}/>
                 </div>
-                <form onSubmit={(e)=>handleMessage(e, "text", inputMessage)} aria-disabled={currentContact == null}
+                <form onSubmit={(e) => handleMessage(e, "text", inputMessage)} aria-disabled={currentContact == null}
                       className={`${currentContact == null ? "hidden" : "flex"} justify-center space-x-4`}>
                     <div className={"relative flex"}>
                         <div
-                            className={`absolute ${attachDisplay ? "block" : "hidden"} space-x-5 flex text-center bg-sky-100 shadow-xl rounded-t-2xl rounded-br-2xl p-4 z-20 bottom-[70px] left-4`}
+                            className={`absolute ${attachDisplay ? "block" : "hidden"} space-x-8 flex text-center bg-sky-100 shadow-xl rounded-t-2xl rounded-br-2xl p-4 pl-6 z-20 bottom-[70px] left-4`}
                             ref={attachRef}>
-                            <div onClick={handlePhotoUpload} className={"cursor-pointer"}>
-                                <AddPhotoAlternateIcon/>
-                                Photo
+                            <div>
+                                <div onClick={handlePhotoUpload} className={"cursor-pointer mb-2"}>
+                                    <AddPhotoAlternateIcon/>
+                                    Photo
+                                </div>
+                                <div onClick={handleVideoUpload} className={"cursor-pointer"}>
+                                    <MovieIcon/>
+                                    Video
+                                </div>
                             </div>
-                            <div className={"cursor-pointer"}>
-                                <DescriptionIcon/>
-                                Document
-                            </div>
-                            <div className={"cursor-pointer"}>
-                                <HeadphonesIcon/>
-                                Audio
+                            <div>
+                                <div onClick={handleDocUpload} className={"cursor-pointer mb-2"}>
+                                    <DescriptionIcon/>
+                                    Document
+                                </div>
+                                <div onClick={handleAudioUpload} className={"cursor-pointer flex flex-col"}>
+                                    <HeadphonesIcon className={"ml-6"}/>
+                                    Audio
+                                </div>
                             </div>
                         </div>
                         <input type={"file"} className={"hidden"} accept="image/*" onChange={() => {
-                            upload(event, "images")
+                            upload(event, "image")
                         }} ref={photoInputRef}/>
-                        <button type={"button"} className={"mb-2 attach-icon"} onClick={handleAttachDisplay}>
+                        <input type={"file"} className={"hidden"} accept="audio/*" onChange={() => {
+                            upload(event, "audio")
+                        }} ref={audioInputRef}/>
+                        <input type={"file"} className={"hidden"} accept="video/*" onChange={() => {
+                            upload(event, "video")
+                        }} ref={videoInputRef}/>
+                        <input type={"file"} className={"hidden"} accept={acceptString} onChange={() => {
+                            upload(event, "document")
+                        }} ref={docInputRef}/>
+                        <button type={"button"} className={"mb-2 bg-sky-300 rounded-xl p-2 attach-icon"} onClick={handleAttachDisplay}>
                             <AttachFileIcon className={"attach-icon"}/>
                         </button>
                     </div>
@@ -246,7 +302,7 @@ function ChatComponent(props) {
                         </div>
                     </div>
                     <button type={"submit"} disabled={currentContact == null} id={'chat-submit-button'}
-                            className={"self-center disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-full mb-2"}>
+                            className={"self-center mb-1 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl bg-sky-300 p-2 pl-3"}>
                         <SendIcon/>
                     </button>
                 </form>
