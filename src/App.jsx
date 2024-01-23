@@ -8,6 +8,7 @@ import ContextState from "./context/ContextState.jsx";
 import {Realtime} from "ably";
 import {AblyProvider} from 'ably/react';
 import { initializeApp } from "firebase/app";
+import 'react-photo-view/dist/react-photo-view.css';
 
 function App() {
 

@@ -1,16 +1,16 @@
 import PropTypes from "prop-types";
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import {LazyLoadImage} from 'react-lazy-load-image-component';
 import placeHolderImage from '/src/assets/background-blur.jpg';
 import {useState} from 'react'
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import DownloadIcon from '@mui/icons-material/Download';
+import {PhotoProvider, PhotoView} from "react-photo-view";
 
 const AiImageBubble = (props) => {
     PropTypes.checkPropTypes(AiImageBubble.propTypes, props, "prop", "AiImageBubble")
     const [placeHolderImageDisplay, setPlaceHolderImageDisplay] = useState(true);
     const {item} = props;
 
-    const handlePlaceHolder = ()=>{
+    const handlePlaceHolder = () => {
         setPlaceHolderImageDisplay(false)
     }
 
@@ -21,7 +21,7 @@ const AiImageBubble = (props) => {
             headers: {}
         })
             .then(response => {
-                response.arrayBuffer().then(function(buffer) {
+                response.arrayBuffer().then(function (buffer) {
                     const url = window.URL.createObjectURL(new Blob([buffer]));
                     const link = document.createElement("a");
                     link.href = url;
@@ -47,20 +47,19 @@ const AiImageBubble = (props) => {
                     <div className={"loading"}>Loading...</div>
                     :
                     <div>
-                        <LazyLoadImage
-                            alt={item.question}
-                            src={item.url} // use normal <img> attributes as props
-                            afterLoad={handlePlaceHolder}
-                            className={"max-w-[500px] rounded-xl"} />
-                        <img src={placeHolderImage} className={`${placeHolderImageDisplay?"inline-block":"hidden"} max-w-[500px] rounded-xl`}/>
-                        <div className={"mt-2 flex ml-2 space-x-2"}>
-                            <a href={item.url} onClick={download}>
-                                <DownloadIcon/>
-                            </a>
-                            <a href={item.url} target={"_blank"} rel={"noreferrer"}>
-                                <OpenInNewIcon/>
-                            </a>
-                        </div>
+                        <PhotoProvider maskOpacity={0.9} toolbarRender={() => <a href={item.url} onClick={download}>
+                            <DownloadIcon/>
+                        </a>}>
+                            <PhotoView src={item.url}>
+                                <LazyLoadImage
+                                    alt={item.question}
+                                    src={item.url} // use normal <img> attributes as props
+                                    afterLoad={handlePlaceHolder}
+                                    className={"max-w-[500px] rounded-xl"}/>
+                            </PhotoView>
+                        </PhotoProvider>
+                        <img src={placeHolderImage} key={placeHolderImage} alt={"ai-image"}
+                             className={`${placeHolderImageDisplay ? "inline-block" : "hidden"} cursor-pointer max-w-[500px] rounded-xl`}/>
                     </div>
             }
             </div>
