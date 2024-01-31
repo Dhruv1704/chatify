@@ -38,11 +38,11 @@ const AiImageBubble = (props) => {
     return (
         <>
             <div
-                className={`p-3 my-2 break-words w-fit max-w-[500px] shadow-md ml-auto rounded-b-2xl rounded-tl-2xl bg-sky-100`}>
+                className={`p-3 my-2 break-words w-fit lg:max-w-[500px] max-w-[260px] shadow-md ml-auto rounded-b-2xl rounded-tl-2xl bg-sky-100`}>
                 {item.question}
             </div>
             <div
-                className={`p-3 my-2 break-words w-fit max-w-[600px] shadow-md rounded-b-2xl rounded-tr-2xl bg-white`}>{
+                className={`p-3 my-2 break-words w-fit lg:max-w-[600px] max-w-[280px] shadow-md rounded-b-2xl rounded-tr-2xl bg-white`}>{
                 item.url === null ?
                     <div className={"loading"}>Loading...</div>
                     :
@@ -55,11 +55,11 @@ const AiImageBubble = (props) => {
                                     alt={item.question}
                                     src={item.url} // use normal <img> attributes as props
                                     afterLoad={handlePlaceHolder}
-                                    className={"max-w-[500px] rounded-xl"}/>
+                                    className={"lg:max-w-[500px] max-w-[260px] rounded-xl"}/>
                             </PhotoView>
                         </PhotoProvider>
                         <img src={placeHolderImage} key={placeHolderImage} alt={"ai-image"}
-                             className={`${placeHolderImageDisplay ? "inline-block" : "hidden"} cursor-pointer max-w-[500px] rounded-xl`}/>
+                             className={`${placeHolderImageDisplay ? "inline-block" : "hidden"} cursor-pointer lg:max-w-[500px] max-w-[260px] rounded-xl`}/>
                     </div>
             }
             </div>

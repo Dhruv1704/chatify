@@ -50,19 +50,19 @@ function ChatBubble(props) {
 
     return (
         <div
-            className={`chat-bubble shadow-md ${item.type === "text" ? "p-3" : "p-2"} my-2 break-words w-fit max-w-[500px] ${position === "left" ? "rounded-tr-2xl bg-white" : "rounded-tl-2xl bg-sky-100 ml-auto"} ${continued ? "rounded-2xl" : "rounded-b-2xl"}`}>
+            className={`chat-bubble shadow-md ${item.type === "text" ? "p-3" : "p-2"} my-2 break-words text-sm lg:text-base w-fit w-[100px] lg:max-w-[500px] max-w-[280px] ${position === "left" ? "rounded-tr-2xl bg-white" : "rounded-tl-2xl bg-sky-100 ml-auto"} ${continued ? "rounded-2xl" : "rounded-b-2xl"}`}>
             {item.type === "text" ? <p>{item.content}</p> : item.type === "image" ?
                 <PhotoProvider maskOpacity={0.9} toolbarRender={() => <a href={item.content} onClick={download}>
                     <DownloadIcon/>
-                </a>} overlayRender={()=> <div className={"text-white text-3xl pl-4 py-2 z-50 bottom-0 absolute bg-black/50 w-full"}>{fileName}</div>}>
+                </a>} overlayRender={()=> <div className={"text-white text-3xl pl-4 py-2 z-50 bottom-0 absolute bg-black/50 lg:max-w-[500px] max-w-[300px]"}>{fileName}</div>}>
                     <PhotoView src={item.content}>
                         <img src={item.content} key={item.content} alt={"chat-image"}
-                             className={"max-w-[480px] cursor-pointer select-none rounded-2xl"}/>
+                             className={"lg:max-w-[480px] max-w-[260px] cursor-pointer select-none rounded-2xl"}/>
                     </PhotoView>
                 </PhotoProvider> :
 
                 item.type === "audio" ?
-                    <video controls className={"h-[50px] w-[320px]"}>
+                    <video controls className={"h-[50px] w-[300px]"}>
                         <source src={item.content}/>
                         Your browser does not support the audio element.
                     </video> :
@@ -74,8 +74,8 @@ function ChatBubble(props) {
                         </video> : item.type === "document" ?
 
                             <div onClick={openDocumentInNewTab}>
-                                <iframe className={"cursor-pointer select-none h-32"} src={item.content}/>
-                                <div className={"pl-3 text-lg py-2 select-none"}>
+                                <iframe className={"cursor-pointer select-none h-32 rounded-2xl w-[260px]"} src={item.content}/>
+                                <div className={"pl-3 lg:text-lg text-base py-2 select-none"}>
                                     {fileName}
                                 </div>
                             </div>

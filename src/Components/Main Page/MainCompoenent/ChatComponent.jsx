@@ -231,7 +231,7 @@ function ChatComponent(props) {
                     </div>
                 </div>
             </div>
-            <div className={"bg-sky-200 h-[92.75%] rounded-3xl flex flex-col justify-between p-4 overflow-y-clip"}>
+            <div className={"bg-sky-200 h-[92.75%] rounded-3xl lg:rounded-2xl flex flex-col justify-between p-4 overflow-y-clip"}>
                 <div className={"my-2 px-4 custom-scrollbar overflow-auto"}>
                     {chats === null ? "" : chats[currentContact?._id]?.map((item, index) => (
                         <ChatBubble key={index} position={item.sender === user.id ? "right" : "left"} item={item}
@@ -240,7 +240,7 @@ function ChatComponent(props) {
                     <div ref={messagesEndRef}/>
                 </div>
                 <form onSubmit={(e) => handleMessage(e, "text", inputMessage)} aria-disabled={currentContact == null}
-                      className={`${currentContact == null ? "hidden" : "flex"} justify-center space-x-4`}>
+                      className={`${currentContact == null ? "hidden" : "flex"} justify-center space-x-1.5 lg:space-x-4`}>
                     <div className={"relative flex"}>
                         <div
                             className={`absolute ${attachDisplay ? "block" : "hidden"} space-x-8 flex text-center bg-sky-100 shadow-xl rounded-t-2xl rounded-br-2xl p-4 pl-6 z-20 bottom-[70px] left-4`}

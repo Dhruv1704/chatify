@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import SendIcon from "@mui/icons-material/Send.js";
 import AiChatBubble from "../MessageBubble/AiChatBubble.jsx";
-import {useEffect, useState, useContext, useRef} from "react";
+import {useEffect, useState, useContext, useRef, useMemo} from "react";
 import Context from "../../../context/Context.jsx";
 import TextareaAutosize from 'react-textarea-autosize';
 import AiImageBubble from "../MessageBubble/AiImageBubble.jsx";
@@ -11,6 +11,7 @@ const AiComponent = (props) => {
 
     PropTypes.checkPropTypes(AiComponent.propTypes, props, "prop", "AiComponent");
     const {aiDisplay, aiTextOrImage} = props;
+    const [width, setWidth] = useState(window.innerWidth);
     const context = useContext(Context);
     const {aiQuestion, aiImage, mobileAiComponent, setMobileAiComponent, setMobileSidebar} = context;
     const [inputAiMessage, setInputAiMessage] = useState("")
@@ -44,11 +45,23 @@ const AiComponent = (props) => {
 
         window.addEventListener('popstate', handleGoBack);
 
+        const handleResize = () => setWidth(window.innerWidth);
+
+        window.addEventListener("resize", handleResize);
+
         return () => {
             window.removeEventListener('popstate', handleGoBack);
+            window.removeEventListener("resize", handleResize)
         };
         // eslint-disable-next-line
     }, []);
+
+    const placeholder = useMemo(() => {
+        if (width < 1024) {
+            return 'Sketch your vision...'
+        }
+        return 'Enter a description or concept for the image you want AI to generate'
+    }, [width]);
 
 
     const handleInputAiMessage = (e) => {
@@ -118,11 +131,11 @@ const AiComponent = (props) => {
 
     return (
         <div
-            className={`${mobileAiComponent?"block":"hidden"} ${aiDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 h-[90vh] my-auto rounded-3xl w-full overflow-clip mx-4 p-6 pt-4`}>
+            className={`${mobileAiComponent?"block":"hidden"} ${aiDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 lg:h-[90vh] h-[100vh] my-auto lg:rounded-3xl w-full overflow-clip lg:mx-4 p-6 pt-4`}>
             <div className={'font-semibold mb-5 mt-2 text-xl ml-2'}>
                 {aiTextOrImage?"ChatGPT-4 (32k)":"AI Image Generator (Lexica)"}
             </div>
-            <div className={"bg-sky-200 h-[92.75%] rounded-2xl flex flex-col justify-between p-4"}>
+            <div className={"bg-sky-200 h-[92.75%] lg:rounded-2xl rounded-3xl flex flex-col justify-between p-4"}>
                 <div className={"my-2 px-4 overflow-auto"}>
                     <div className={`${aiTextOrImage?"block":"hidden"}`}>
                         {textAiChat?.map((item, index) => (
@@ -138,14 +151,14 @@ const AiComponent = (props) => {
                     <div ref={aiMessagesEndRef}/>
                 </div>
                 <form onSubmit={handleAi}
-                      className={`flex justify-center space-x-4`}>
+                      className={`flex justify-center space-x-1.5 lg:space-x-4`}>
                     <button type={"button"} id={"ai-delete-button"} className={"self-center bg-sky-300 p-2 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl"} onClick={handleClearAi}>
                         <DeleteSweepIcon/>
                     </button>
-                    <TextareaAutosize placeholder={aiTextOrImage?"Talk to ChatGPT":"Enter a description or concept for the image you want AI to generate"} minLength={1} value={inputAiMessage}
+                    <TextareaAutosize placeholder={aiTextOrImage?"Talk to ChatGPT":placeholder} minLength={1} value={inputAiMessage}
                                       onKeyDown={handleKeyDown}
                                       type={"text"} required={true}
-                                      className={"bg-[#f5f6f7] disabled:cursor-not-allowed rounded-2xl h-14 max-h-36 resize-none p-3 font-semibold w-full"}
+                                      className={"bg-[#f5f6f7] disabled:cursor-not-allowed rounded-2xl h-14 max-h-36 resize-none p-3 font-semibold w-full ai-image-input"}
                                       onChange={handleInputAiMessage}/>
                     <button type={"submit"} id={"ai-submit-button"}
                             className={"self-center disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl bg-sky-300 p-2 pl-3"}>
