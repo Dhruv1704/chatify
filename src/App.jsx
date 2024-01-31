@@ -9,6 +9,7 @@ import {Realtime} from "ably";
 import {AblyProvider} from 'ably/react';
 import { initializeApp } from "firebase/app";
 import 'react-photo-view/dist/react-photo-view.css';
+import {useState} from "react";
 
 function App() {
 
@@ -31,6 +32,8 @@ function App() {
         clientId: Math.floor(100000 + Math.random() * 900000).toString()
     });
 
+    const [chatDisplay, setChatDisplay] = useState(true) //
+
     return (
         <>
             <BrowserRouter>
@@ -39,7 +42,7 @@ function App() {
                         <Routes>
                             <Route exact path={"/"} element={<LogIn/>}/>
                             <Route exact path={"/chat"} element={
-                                <ChatPage client={ablyClient}/>
+                                <ChatPage chatDisplay={chatDisplay} setChatDisplay={setChatDisplay} client={ablyClient}/>
                             }/>
                         </Routes>
                     </AblyProvider>

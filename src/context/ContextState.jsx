@@ -12,10 +12,9 @@ const ContextState = (props) => {
     const [contact, setContact] = useState([]);
     const [currentContact, setCurrentContact] = useState(null);
     const [user, setUser] = useState();
-    const [mobileChatComponent, setMobileChatComponent] = useState(false)
-    const [mobileAiComponent, setMobileAiComponent] = useState(false);
-    const [mobileSidebar, setMobileSidebar] = useState(true);
     const [unreadChats, setUnreadChats] = useState({});
+    const [mobileChatDisplay, setMobileChatDisplay] = useState(false)
+    const [mobileAiDisplay, setMobileAiDisplay] = useState(false)
     const navigate = useNavigate();
 
 
@@ -248,14 +247,12 @@ const ContextState = (props) => {
             chats,
             aiQuestion,
             aiImage,
-            mobileChatComponent,
-            setMobileChatComponent,
-            mobileAiComponent,
-            setMobileAiComponent,
-            mobileSidebar,
-            setMobileSidebar,
             unreadChats,
-            setUnreadChats
+            setUnreadChats,
+            mobileChatDisplay,
+            setMobileChatDisplay,
+            mobileAiDisplay,
+            setMobileAiDisplay
         }}>
             {props.children}
         </Context.Provider>

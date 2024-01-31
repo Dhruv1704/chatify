@@ -6,7 +6,8 @@ function ContactList(props) {
 
     const {item} = props;
     const context = useContext(Context);
-    const {setCurrentContact, currentContact, setMobileChatComponent,setMobileSidebar, unreadChats, setUnreadChats} = context;
+    const {setCurrentContact, currentContact, unreadChats, setUnreadChats, setMobileChatDisplay} = context;
+
 
     PropTypes.checkPropTypes(ContactList.propTypes, "prop", "ContactList");
 
@@ -15,9 +16,8 @@ function ContactList(props) {
         unread[item._id] = 0;
         setUnreadChats(unread);
         setCurrentContact(item)
-        if(window.innerWidth<1024){
-            setMobileSidebar(false)
-            setMobileChatComponent(true)
+        if(window.innerWidth<=1024){
+            setMobileChatDisplay(true)
         }
     }
 

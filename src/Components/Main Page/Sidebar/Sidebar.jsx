@@ -10,7 +10,7 @@ import AiSidebar from "./AiSidebar.jsx";
 function Sidebar(props) {
 
     const context = useContext(Context);
-    const {mobileSidebar, setMobileAiComponent, setMobileSidebar, setCurrentContact} = context
+    const {setCurrentContact, mobileChatDisplay, setMobileAiDisplay, mobileAiDisplay} = context
     const navigate = useNavigate();
 
     PropTypes.checkPropTypes(Sidebar.propTypes, props, "prop", "Sidebar");
@@ -60,9 +60,8 @@ function Sidebar(props) {
     const handleAiChange = (val) => {
         if (val === 1) setAiTextOrImage(true)
         else setAiTextOrImage(false)
-        if (window.innerWidth < 1024) {
-            setMobileSidebar(false)
-            setMobileAiComponent(true)
+        if(window.innerWidth<=1024){
+            setMobileAiDisplay(true)
         }
     }
 
@@ -85,7 +84,7 @@ function Sidebar(props) {
 
     return (
         <div
-            className={`${mobileSidebar ? "block" : "hidden"} lg:block lg:h-[90vh] bg-sky-100 w-full lg:w-1/3 xl:w-[23%] lg:my-auto lg:rounded-3xl p-6`}>
+            className={`${mobileChatDisplay || mobileAiDisplay?"hidden":"block"} lg:block lg:h-[90vh] bg-sky-100 w-full lg:w-1/3 xl:w-[23%] lg:my-auto lg:rounded-3xl p-6`}>
             <div>
                 <div className={"relative flex justify-around font-semibold text-xl mb-5"}>
                     <div className={"cursor-pointer select-none"} id={"chat-link-border"} onClick={(e) => handleBorder(e.target, 1)}>

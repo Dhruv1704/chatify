@@ -13,14 +13,13 @@ function ChatPage(props) {
 
     PropTypes.checkPropTypes(ChatPage.propTypes, props, "prop", "ChatPage");
 
-    const {client} = props;
+    const {client, chatDisplay, setChatDisplay} = props;
 
     const navigate = useNavigate();
     const [contactModel, setContactModel] = useState(false);
     const context = useContext(Context);
     const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact} = context
 
-    const [chatDisplay, setChatDisplay] = useState(true)
     const [aiDisplay, setAiDisplay] = useState(false)
 
     const [aiTextOrImage, setAiTextOrImage] = useState(true)
@@ -71,6 +70,19 @@ function ChatPage(props) {
         // eslint-disable-next-line
     }, [user]);
 
+    useEffect(() => {
+        const backHandler = () => {
+            if(window.innerWidth<=1024){
+                history.pushState(null, null, location.href);
+            }
+        }
+        window.addEventListener('popstate', backHandler);
+        return () => {
+            window.removeEventListener('popstate', backHandler);
+        }
+    }, []);
+
+
 
     return (
         <>
@@ -94,7 +106,9 @@ function ChatPage(props) {
 
 
 ChatPage.propTypes = {
-    client: PropTypes.object.isRequired
+    client: PropTypes.object.isRequired,
+    chatDisplay: PropTypes.bool.isRequired,
+    setChatDisplay: PropTypes.func.isRequired
 };
 
 export default ChatPage;

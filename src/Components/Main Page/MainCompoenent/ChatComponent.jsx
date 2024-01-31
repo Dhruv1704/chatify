@@ -27,15 +27,15 @@ function ChatComponent(props) {
     const storage = getStorage();
 
     const context = useContext(Context);
+
     const {
         currentContact,
         user,
         addMessage,
         chats,
         setChats,
-        mobileChatComponent,
-        setMobileChatComponent,
-        setMobileSidebar
+        mobileChatDisplay,
+        setMobileChatDisplay
     } = context;
     const [inputMessage, setInputMessage] = useState("");
     const messagesEndRef = useRef(null)
@@ -83,23 +83,6 @@ function ChatComponent(props) {
         }
         // eslint-disable-next-line
     }, [currentContact]);
-
-    useEffect(() => {
-        const handleGoBack = () => {
-            if (window.innerWidth < 1024) {
-                setMobileChatComponent(false)
-                setMobileSidebar(true)
-                history.forward();
-            }
-        };
-
-        window.addEventListener('popstate', handleGoBack);
-
-        return () => {
-            window.removeEventListener('popstate', handleGoBack);
-        };
-        // eslint-disable-next-line
-    }, []);
 
 
     const upload = (event, type) => {
@@ -156,6 +139,19 @@ function ChatComponent(props) {
         addMessage(content, currentContact._id, type)
         setInputMessage("")
     }
+
+    useEffect(() => {
+        const backHandlerChat = () => {
+            if(window.innerWidth<=1024 && mobileChatDisplay){
+                history.pushState(null, null, location.href);
+                setMobileChatDisplay(false);
+            }
+        }
+        window.addEventListener('popstate', backHandlerChat);
+        return () => {
+            window.removeEventListener('popstate', backHandlerChat);
+        }
+    }, [mobileChatDisplay, setMobileChatDisplay]);
 
     const handleInputMessage = (e) => {
         setInputMessage(e.target.value)
@@ -217,7 +213,7 @@ function ChatComponent(props) {
 
     return (
         <div
-            className={`${mobileChatComponent ? "block" : "hidden"} ${chatDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 lg:h-[90vh] h-[100vh] overflow-clip my-auto lg:rounded-3xl w-full lg:mx-4 p-6 pt-4`}>
+            className={`${mobileChatDisplay? "block":"hidden"} ${chatDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 lg:h-[90vh] h-[100vh] overflow-clip my-auto lg:rounded-3xl w-full lg:mx-4 p-6 pt-4`}>
             <div className={"flex justify-between"}>
                 <div className={"flex mb-4"}>
                     <div className={"bg-green-300 rounded-full p-2 px-3.5 flex"}>
