@@ -217,7 +217,7 @@ function ChatComponent(props) {
 
     return (
         <div
-            className={`${mobileChatComponent ? "block" : "hidden"} ${chatDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 h-[90vh] overflow-clip my-auto rounded-3xl w-full mx-4 p-6 pt-4`}>
+            className={`${mobileChatComponent ? "block" : "hidden"} ${chatDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 lg:h-[90vh] h-[100vh] overflow-clip my-auto lg:rounded-3xl w-full lg:mx-4 p-6 pt-4`}>
             <div className={"flex justify-between"}>
                 <div className={"flex mb-4"}>
                     <div className={"bg-green-300 rounded-full p-2 px-3.5 flex"}>
@@ -231,8 +231,8 @@ function ChatComponent(props) {
                     </div>
                 </div>
             </div>
-            <div className={"bg-sky-200 h-[92.75%] rounded-2xl flex flex-col justify-between p-4 overflow-y-clip"}>
-                <div className={"my-2 px-4 overflow-auto"}>
+            <div className={"bg-sky-200 h-[92.75%] rounded-3xl flex flex-col justify-between p-4 overflow-y-clip"}>
+                <div className={"my-2 px-4 custom-scrollbar overflow-auto"}>
                     {chats === null ? "" : chats[currentContact?._id]?.map((item, index) => (
                         <ChatBubble key={index} position={item.sender === user.id ? "right" : "left"} item={item}
                                     continued={index === 0 ? false : chats[currentContact?._id][index - 1].sender === item.sender ? true : false}/>
@@ -279,7 +279,7 @@ function ChatComponent(props) {
                             upload(event, "document")
                         }} ref={docInputRef}/>
                         <button type={"button"} className={"mb-2 bg-sky-300 rounded-xl p-2 px-3 attach-icon"} onClick={handleAttachDisplay}>
-                            <AttachFileIcon className={"attach-icon"}/>
+                            <AttachFileIcon className={"attach-icon pointer-events-none"}/>
                         </button>
                     </div>
                     <div className={"w-full relative"}>

@@ -25,6 +25,7 @@ function Sidebar(props) {
     }
 
     const handleAddContacts = () => {
+        console.log("hello")
         setContactModel(true)
     }
 
@@ -84,7 +85,7 @@ function Sidebar(props) {
 
     return (
         <div
-            className={`${mobileSidebar ? "block" : "hidden"} lg:block h-[90vh] bg-sky-100 w-full lg:w-1/3 xl:w-[23%] my-auto rounded-3xl p-6`}>
+            className={`${mobileSidebar ? "block" : "hidden"} lg:block lg:h-[90vh] bg-sky-100 w-full lg:w-1/3 xl:w-[23%] lg:my-auto lg:rounded-3xl p-6`}>
             <div>
                 <div className={"relative flex justify-around font-semibold text-xl mb-5"}>
                     <div className={"cursor-pointer select-none"} id={"chat-link-border"} onClick={(e) => handleBorder(e.target, 1)}>

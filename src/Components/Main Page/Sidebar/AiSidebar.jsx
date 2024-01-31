@@ -8,7 +8,7 @@ const AiSidebar = (props) => {
     PropTypes.checkPropTypes(AiSidebar.propTypes, props, "prop", "AiSidebar");
 
     return (
-        <div className={"bg-sky-200 p-6 flex flex-col rounded-3xl h-[93%]"}>
+        <div className={"bg-sky-200 p-6 flex flex-col rounded-3xl lg:h-[93%] h-[97%]"}>
             <div>
                 <div className={"border-b-2 border-sky-300 rounded-2xl mt-2"}></div>
                 <div
@@ -28,7 +28,7 @@ const AiSidebar = (props) => {
                     <SettingsIcon/>
                 </div>
                 <div className={"cursor-pointer mb-1 scale-110"} onClick={handleAddContacts}>
-                    <AddIcon/>
+                    <AddIcon className={"add-icon"}/>
                 </div>
                 <div className={"cursor-pointer mb-1 scale-110"} onClick={handleLogOut}>
                     <LogoutIcon/>

@@ -36,3 +36,18 @@ pre{
 .carousel-root, .carousel, .slider-wrapper, ul, .slider{
     height: 100%;
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.custom-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+@media screen and (max-width: 1023px){
+    .carousel-root{
+        height: 91vh!important;
+    }
+}

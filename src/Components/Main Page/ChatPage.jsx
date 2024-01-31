@@ -80,7 +80,7 @@ function ChatPage(props) {
                 progress={progress}
                 onLoaderFinished={() => setProgress(0)}
             />
-            <div className={"bg-sky-300 h-[100vh] flex px-4"}>
+            <div className={"bg-sky-300 h-[100vh] flex lg:px-4"}>
                 <AddContact contactModel={contactModel} setContactModel={setContactModel}/>
                 <Sidebar setContactModel={setContactModel} setAiDisplay={setAiDisplay}
                          setChatDisplay={setChatDisplay} chatDisplay={chatDisplay} aiDisplay={aiDisplay}

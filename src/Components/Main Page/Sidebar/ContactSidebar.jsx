@@ -15,10 +15,10 @@ const ContactSidebar = (props) => {
     const context = useContext(Context)
     const {contact} = context;
 
-    return(
-        <div className={"bg-sky-200 p-6 flex flex-col rounded-3xl h-[93%]"}>
+    return (
+        <div className={"bg-sky-200 p-6 flex flex-col rounded-3xl lg:h-[93%] h-[97%]"}>
             {/*contacts-sidebar*/}
-            <div>
+            <div className={"mb-5 overflow-scroll custom-scrollbar"}>
                 <div className={"relative"}>
                     <input className={"rounded-2xl w-full p-1 pl-8 font-semibold bg-[#f5f6f7]"}
                            placeholder={"Search"}/>
@@ -40,12 +40,12 @@ const ContactSidebar = (props) => {
             </div>
 
 
-            <div className={"bg-[#f5f6f7] mt-auto mb-[-6px] rounded-2xl flex p-2 justify-around"}>
+            <div className={"bg-[#f5f6f7] mt-auto mb-[-6px] rounded-2xl flex p-2  justify-around"}>
                 <div className={"cursor-pointer mb-1 scale-110"}>
                     <SettingsIcon/>
                 </div>
                 <div className={"cursor-pointer mb-1 scale-110 add-icon"} onClick={handleAddContacts}>
-                    <AddIcon className={"add-icon"}/>
+                    <AddIcon className={"add-icon pointer-events-none"}/>
                 </div>
                 <div className={"cursor-pointer mb-1 scale-110"} onClick={handleLogOut}>
                     <LogoutIcon/>
@@ -56,8 +56,8 @@ const ContactSidebar = (props) => {
 };
 
 ContactSidebar.propTypes = {
-    handleAddContacts : PropTypes.func.isRequired,
-    handleLogOut : PropTypes.func.isRequired,
+    handleAddContacts: PropTypes.func.isRequired,
+    handleLogOut: PropTypes.func.isRequired,
 };
 
 export default ContactSidebar;
