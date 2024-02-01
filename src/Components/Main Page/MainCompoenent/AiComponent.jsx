@@ -37,7 +37,6 @@ const AiComponent = (props) => {
     useEffect(() => {
         const backHandlerAI = () => {
             if(window.innerWidth<=1024 && mobileAiDisplay){
-                history.pushState(null, null, location.href);
                 setMobileAiDisplay(false);
             }
         }

@@ -13,16 +13,13 @@ function ChatPage(props) {
 
     PropTypes.checkPropTypes(ChatPage.propTypes, props, "prop", "ChatPage");
 
-    const {client, chatDisplay, setChatDisplay} = props;
+    const {client, chatDisplay, setChatDisplay, aiTextOrImage, aiDisplay, setAiDisplay, setAiTextOrImage} = props;
 
     const navigate = useNavigate();
     const [contactModel, setContactModel] = useState(false);
     const context = useContext(Context);
-    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact} = context
+    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact} = context;
 
-    const [aiDisplay, setAiDisplay] = useState(false)
-
-    const [aiTextOrImage, setAiTextOrImage] = useState(true)
 
     useChannel(user?.id, (message) => {
         const senderId = message.data.sender;
@@ -49,7 +46,6 @@ function ChatPage(props) {
                 console.log("This client has entered the presence set.");
             });
         }
-
         return () => client.channels.get(user?.id).presence.leave();
         // eslint-disable-next-line
     }, [user]);
@@ -69,18 +65,6 @@ function ChatPage(props) {
         getMessage();
         // eslint-disable-next-line
     }, [user]);
-
-    useEffect(() => {
-        const backHandler = () => {
-            if(window.innerWidth<=1024){
-                history.pushState(null, null, location.href);
-            }
-        }
-        window.addEventListener('popstate', backHandler);
-        return () => {
-            window.removeEventListener('popstate', backHandler);
-        }
-    }, []);
 
 
 
@@ -108,7 +92,11 @@ function ChatPage(props) {
 ChatPage.propTypes = {
     client: PropTypes.object.isRequired,
     chatDisplay: PropTypes.bool.isRequired,
-    setChatDisplay: PropTypes.func.isRequired
+    setChatDisplay: PropTypes.func.isRequired,
+    aiTextOrImage: PropTypes.bool.isRequired,
+    aiDisplay: PropTypes.bool.isRequired,
+    setAiDisplay: PropTypes.func.isRequired,
+    setAiTextOrImage: PropTypes.func.isRequired
 };
 
 export default ChatPage;

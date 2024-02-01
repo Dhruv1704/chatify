@@ -10,6 +10,8 @@ import {AblyProvider} from 'ably/react';
 import { initializeApp } from "firebase/app";
 import 'react-photo-view/dist/react-photo-view.css';
 import {useState} from "react";
+import ChatComponent from "./Components/Main Page/MainCompoenent/ChatComponent.jsx";
+import AiComponent from "./Components/Main Page/MainCompoenent/AiComponent.jsx";
 
 function App() {
 
@@ -32,7 +34,9 @@ function App() {
         clientId: Math.floor(100000 + Math.random() * 900000).toString()
     });
 
-    const [chatDisplay, setChatDisplay] = useState(true) //
+    const [chatDisplay, setChatDisplay] = useState(true)
+    const [aiDisplay, setAiDisplay] = useState(false)
+    const [aiTextOrImage, setAiTextOrImage] = useState(true)
 
     return (
         <>
@@ -42,8 +46,11 @@ function App() {
                         <Routes>
                             <Route exact path={"/"} element={<LogIn/>}/>
                             <Route exact path={"/chat"} element={
-                                <ChatPage chatDisplay={chatDisplay} setChatDisplay={setChatDisplay} client={ablyClient}/>
-                            }/>
+                                <ChatPage chatDisplay={chatDisplay} setChatDisplay={setChatDisplay} client={ablyClient} aiDisplay={aiDisplay} setAiDisplay={setAiDisplay} aiTextOrImage={aiTextOrImage} setAiTextOrImage={setAiTextOrImage}/>
+                            }>
+                                <Route path={"chatComponent"} element={<ChatComponent chatDisplay={chatDisplay} client={ablyClient}/>}/>
+                                <Route path={"aiComponent"} element={<AiComponent aiDisplay={aiDisplay} aiTextOrImage={aiTextOrImage}/>}/>
+                            </Route>
                         </Routes>
                     </AblyProvider>
                     <ToastContainer

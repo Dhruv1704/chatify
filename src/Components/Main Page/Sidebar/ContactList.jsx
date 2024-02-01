@@ -1,9 +1,11 @@
 import PropTypes from "prop-types";
 import {useContext} from "react";
 import Context from "../../../context/Context.jsx";
+import {useNavigate} from "react-router-dom";
 
 function ContactList(props) {
 
+    const navigate = useNavigate();
     const {item} = props;
     const context = useContext(Context);
     const {setCurrentContact, currentContact, unreadChats, setUnreadChats, setMobileChatDisplay} = context;
@@ -18,6 +20,7 @@ function ContactList(props) {
         setCurrentContact(item)
         if(window.innerWidth<=1024){
             setMobileChatDisplay(true)
+            navigate("chatComponent")
         }
     }
 

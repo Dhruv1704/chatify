@@ -143,7 +143,6 @@ function ChatComponent(props) {
     useEffect(() => {
         const backHandlerChat = () => {
             if(window.innerWidth<=1024 && mobileChatDisplay){
-                history.pushState(null, null, location.href);
                 setMobileChatDisplay(false);
             }
         }

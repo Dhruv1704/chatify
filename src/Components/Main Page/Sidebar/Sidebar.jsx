@@ -62,6 +62,7 @@ function Sidebar(props) {
         else setAiTextOrImage(false)
         if(window.innerWidth<=1024){
             setMobileAiDisplay(true)
+            navigate("aiComponent")
         }
     }
 
