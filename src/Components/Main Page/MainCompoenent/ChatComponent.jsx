@@ -13,6 +13,8 @@ import HeadphonesIcon from '@mui/icons-material/Headphones';
 import DescriptionIcon from '@mui/icons-material/Description';
 import MovieIcon from '@mui/icons-material/Movie';
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import {useNavigate} from "react-router-dom";
 
 function ChatComponent(props) {
 
@@ -23,6 +25,8 @@ function ChatComponent(props) {
     const audioInputRef = useRef();
     const videoInputRef = useRef();
     const docInputRef = useRef();
+
+    const navigate = useNavigate();
 
     const storage = getStorage();
 
@@ -121,7 +125,7 @@ function ChatComponent(props) {
     }
     useEffect(() => {
         scrollToBottom()
-    });
+    },[chats, currentContact, mobileChatDisplay, chatDisplay]);
 
     const handleMessage = (e, type, content) => {
         e.preventDefault();
@@ -192,6 +196,11 @@ function ChatComponent(props) {
         docInputRef.current.click();
     }
 
+    const handleChatBack = ()=>{
+        setMobileChatDisplay(false);
+        navigate("./")
+    }
+
     const acceptMap = {
         csv: 'text/csv',
         odt: 'application/vnd.oasis.opendocument.text',
@@ -215,9 +224,14 @@ function ChatComponent(props) {
             className={`${mobileChatDisplay? "block":"hidden"} ${chatDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 lg:h-[90vh] h-[100vh] overflow-clip my-auto lg:rounded-3xl w-full lg:mx-4 p-6 pt-4`}>
             <div className={"flex justify-between"}>
                 <div className={"flex mb-4"}>
-                    <div className={"bg-green-300 rounded-full p-2 px-3.5 flex"}>
+                    <div className={`${mobileChatDisplay?"block":"hidden"} lg:hidden bg-sky-300 rounded-xl px-2 mr-2 flex content-center`} onClick={handleChatBack}>
+                        <button>
+                            <ArrowBackIcon/>
+                        </button>
+                    </div>
+                    <div className={"bg-green-300 rounded-full p-2 px-4 content-center flex"}>
                         <span
-                            className={"font-bold text-xl mt-[-3px]"}>{currentContact == null ? user?.name.split(" ")[0].charAt(0) : currentContact?.name.charAt(0)}</span>
+                            className={"font-bold text-xl"}>{currentContact == null ? user?.name.split(" ")[0].charAt(0) : currentContact?.name.charAt(0)}</span>
                     </div>
                     <div className={`${currentContact === null ? "mt-2" : "mt-0"} ml-4`}>
                         <div>{currentContact === null ? user?.name : currentContact?.name}</div>

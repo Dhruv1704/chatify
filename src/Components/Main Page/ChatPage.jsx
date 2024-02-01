@@ -61,6 +61,27 @@ function ChatPage(props) {
     }, []);
 
     useEffect(() => {
+        const themeColorMeta = document.getElementById('theme-color');
+        console.log(themeColorMeta)
+        const handleResize = () =>
+        {
+            if(themeColorMeta && window.innerWidth<=1024){
+                themeColorMeta.setAttribute('content', "#E0F2FE");
+            }else if(themeColorMeta){
+                themeColorMeta.setAttribute('content', "#7DD3FC");
+            }
+        }
+
+        handleResize();
+
+        window.addEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("resize", handleResize)
+        };
+    }, []);
+
+
+    useEffect(() => {
         if (user === undefined || user === null) return
         getMessage();
         // eslint-disable-next-line

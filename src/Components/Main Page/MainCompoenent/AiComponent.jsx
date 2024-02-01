@@ -6,6 +6,8 @@ import Context from "../../../context/Context.jsx";
 import TextareaAutosize from 'react-textarea-autosize';
 import AiImageBubble from "../MessageBubble/AiImageBubble.jsx";
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import {useNavigate} from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack.js";
 
 const AiComponent = (props) => {
 
@@ -20,12 +22,14 @@ const AiComponent = (props) => {
 
     const aiMessagesEndRef = useRef(null)
 
+    const navigate = useNavigate();
+
     const scrollToBottom = () => {
         aiMessagesEndRef.current?.scrollIntoView({behavior: "smooth"})
     }
     useEffect(() => {
         scrollToBottom()
-    });
+    }, [textAiChat, imageAiChat, aiDisplay, aiTextOrImage, mobileAiDisplay]);
 
     useEffect(() => {
         const textAi = JSON.parse(localStorage.getItem("text-ai")) || [];
@@ -36,7 +40,7 @@ const AiComponent = (props) => {
 
     useEffect(() => {
         const backHandlerAI = () => {
-            if(window.innerWidth<=1024 && mobileAiDisplay){
+            if (window.innerWidth <= 1024 && mobileAiDisplay) {
                 setMobileAiDisplay(false);
             }
         }
@@ -118,6 +122,11 @@ const AiComponent = (props) => {
         }
     }
 
+    const handleAIBack = () => {
+        setMobileAiDisplay(false);
+        navigate("./")
+    }
+
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -128,8 +137,17 @@ const AiComponent = (props) => {
     return (
         <div
             className={`${mobileAiDisplay ? "block" : "hidden"} ${aiDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 lg:h-[90vh] h-[100vh] my-auto lg:rounded-3xl w-full overflow-clip lg:mx-4 p-6 pt-4`}>
-            <div className={'font-semibold mb-5 mt-2 text-xl ml-2'}>
-                {aiTextOrImage ? "ChatGPT-4 (32k)" : "AI Image Generator (Lexica)"}
+            <div className={"flex content-center"}>
+                <div
+                    className={`${mobileAiDisplay ? "block" : "hidden"} self-start mb-3 lg:hidden bg-sky-300 rounded-xl p-2 mr-2 flex content-center`}
+                    onClick={handleAIBack}>
+                    <button>
+                        <ArrowBackIcon/>
+                    </button>
+                </div>
+                <div className={'font-semibold mb-5 mt-2 self-center text-xl ml-2'}>
+                    {aiTextOrImage ? "ChatGPT-4 (32k)" : "AI Image Generator (Lexica)"}
+                </div>
             </div>
             <div className={"bg-sky-200 h-[92.75%] lg:rounded-2xl rounded-3xl flex flex-col justify-between p-4"}>
                 <div className={"my-2 px-4 overflow-auto"}>
