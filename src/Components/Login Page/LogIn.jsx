@@ -16,6 +16,8 @@ function LogIn() {
 
 
     useEffect(() => {
+        const themeColorMeta = document.getElementById('theme-color');
+        themeColorMeta.setAttribute('content', "#ffffff");
         if (localStorage.getItem("web-token")) {
             navigate("/chat")
         }

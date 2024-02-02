@@ -19,43 +19,43 @@ export default defineConfig({
                 icons: [
                     {
                         src: 'icons/maskable_icon_x512.png',
-                        sizes: '512x512',
+                        sizes: '550x550',
                         type: 'image/png',
                         purpose: 'any maskable',
                     },
                     {
                         src: 'icons/icon_x512-modified.png',
-                        sizes: '512x512',
+                        sizes: '409x409',
                         type: 'image/png',
                     },
                     {
                         src: 'icons/icon_x384-modified.png',
-                        sizes: '384x384',
+                        sizes: '307x307',
                         type: 'image/png',
                     },
                     {
                         src: 'icons/icon_x192-modified.png',
-                        sizes: '192x192',
+                        sizes: '153x153',
                         type: 'image/png',
                     },
                     {
                         src: 'icons/icon_x128-modified.png',
-                        sizes: '128x128',
+                        sizes: '102x102',
                         type: 'image/png',
                     },
                     {
                         src: 'icons/icon_x96-modified.png',
-                        sizes: '96x96',
+                        sizes: '76x76',
                         type: 'image/png',
                     },
                     {
                         src: 'icons/icon_x72-modified.png',
-                        sizes: '72x72',
+                        sizes: '57x57',
                         type: 'image/png',
                     },
                     {
                         src: 'icons/icon_x48-modified.png',
-                        sizes: '48x48',
+                        sizes: '38x38',
                         type: 'image/png',
                     }
                 ],

@@ -131,6 +131,7 @@ function ChatComponent(props) {
         e.preventDefault();
         const message = {
             content,
+            type,
             sender: user.id,
             reciever: currentContact._id,
             timestamp: new Date()
@@ -138,6 +139,7 @@ function ChatComponent(props) {
         console.log(message)
         const newChats = chats;
         newChats[currentContact._id] === undefined ? newChats[currentContact._id] = [message] : newChats[currentContact._id].push(message);
+        console.log(newChats)
         setChats(() => ({...newChats}))
         client.channels.get(currentContact._id).publish('message', message);
         addMessage(content, currentContact._id, type)

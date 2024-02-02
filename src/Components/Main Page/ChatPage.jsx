@@ -62,7 +62,6 @@ function ChatPage(props) {
 
     useEffect(() => {
         const themeColorMeta = document.getElementById('theme-color');
-        console.log(themeColorMeta)
         const handleResize = () =>
         {
             if(themeColorMeta && window.innerWidth<=1024){
