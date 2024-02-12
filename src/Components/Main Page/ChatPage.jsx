@@ -8,6 +8,7 @@ import Context from "../../context/Context.jsx";
 import AiComponent from './MainCompoenent/AiComponent.jsx'
 import PropTypes from "prop-types";
 import {useChannel} from "ably/react";
+import {getMessaging, getToken} from "firebase/messaging";
 
 function ChatPage(props) {
 
@@ -38,6 +39,32 @@ function ChatPage(props) {
 
 
     useEffect(() => {
+
+        const handleFCM = ()=>{
+            const messaging = getMessaging();
+            getToken(messaging, { vapidKey: import.meta.env.VITE_FCM_VAPID_KEY }).then((currentToken) => {
+                if (currentToken) {
+                    // Send the token to your server and update the UI if necessary
+                    console.log(currentToken)
+                    console.log("Hello")
+                    // ...
+                } else {
+                    // Show permission request UI
+                    console.log('No registration token available. Request permission to generate one.');
+                    // ...
+                }
+            }).catch((err) => {
+                console.log('An error occurred while retrieving token. ', err);
+                // Add more detailed error logging
+                if (err.code) {
+                    console.log('Error code: ', err.code);
+                }
+                if (err.message) {
+                    console.log('Error message: ', err.message);
+                }
+            });
+        }
+
         if (user) {
             client.channels.get(user.id).presence.enter("hello", (err) => {
                 if (err) {
@@ -45,6 +72,8 @@ function ChatPage(props) {
                 }
                 console.log("This client has entered the presence set.");
             });
+
+            handleFCM();
         }
         return () => client.channels.get(user?.id).presence.leave();
         // eslint-disable-next-line
@@ -75,6 +104,7 @@ function ChatPage(props) {
 
         window.addEventListener("resize", handleResize);
         return () => {
+            themeColorMeta.setAttribute('content', "#ffffff");
             window.removeEventListener("resize", handleResize)
         };
     }, []);

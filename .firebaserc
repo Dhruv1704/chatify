@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "chatify-17"
-  }
+    "default": "chatify-17",
+    "chatify": "chatify-17"
+  },
+  "targets": {},
+  "etags": {}
 }

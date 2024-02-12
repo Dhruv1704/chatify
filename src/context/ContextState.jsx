@@ -3,7 +3,6 @@ import {toast} from 'react-toastify';
 import {useState} from "react";
 import PropTypes from "prop-types";
 import {useNavigate} from "react-router-dom";
-
 const ContextState = (props) => {
 
     PropTypes.checkPropTypes(ContextState.propTypes, props, "prop", "ContextState")

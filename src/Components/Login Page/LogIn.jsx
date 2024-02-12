@@ -13,13 +13,14 @@ function LogIn() {
     const context = useContext(Context);
     const {progress, setProgress, logIn} = context;
     const navigate = useNavigate();
-
+    const [shouldRenderLogin, setShouldRenderLogin] = useState(false);
 
     useEffect(() => {
-        const themeColorMeta = document.getElementById('theme-color');
-        themeColorMeta.setAttribute('content', "#ffffff");
         if (localStorage.getItem("web-token")) {
             navigate("/chat")
+            setShouldRenderLogin(false);
+        }else {
+            setShouldRenderLogin(true);
         }
         // eslint-disable-next-line
     }, []);
@@ -76,7 +77,7 @@ function LogIn() {
                 progress={progress}
                 onLoaderFinished={() => setProgress(0)}
             />
-            <div
+            {shouldRenderLogin && <div
                 className={"md:flex md:items-center md:justify-around md:max-w-5xl md:mx-auto md:h-[100vh] mt-6 md:mt-0"}>
                 <div>
                     <h1 className={"mt-0 pb-2.5 text-center bg-gradient-to-r from-sky-400 to-indigo-700 bg-clip-text text-transparent text-6xl font-bold text-[#1877f2] select-none md:text-left"}>chatify</h1>
@@ -104,7 +105,7 @@ function LogIn() {
                     </button>
                 </form>
                 <SignUp passwordHideShow={passwordHideShow} icon2={icon2} icon3={icon3}/>
-            </div>
+            </div>}
         </>
     );
 }

@@ -7,11 +7,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import ContextState from "./context/ContextState.jsx";
 import {Realtime} from "ably";
 import {AblyProvider} from 'ably/react';
-import { initializeApp } from "firebase/app";
 import 'react-photo-view/dist/react-photo-view.css';
 import {useState} from "react";
 import ChatComponent from "./Components/Main Page/MainCompoenent/ChatComponent.jsx";
 import AiComponent from "./Components/Main Page/MainCompoenent/AiComponent.jsx";
+import {initializeApp} from "firebase/app";
 
 function App() {
 
@@ -25,7 +25,6 @@ function App() {
         measurementId: "G-HHQVD5HJJE"
     };
 
-// Initialize Firebase
     initializeApp(firebaseConfig);
 
 
