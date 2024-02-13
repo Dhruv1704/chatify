@@ -40,13 +40,23 @@ function ChatPage(props) {
 
     useEffect(() => {
 
+        const requestNotificationPermission = ()=>{
+            Notification.requestPermission().then((permission) => {
+                    if (permission === 'granted') {
+                        handleFCM()
+                    } else {
+                        console.log('Unable to get permission to notify.');
+                    }
+                }
+            )
+        }
+
         const handleFCM = ()=>{
             const messaging = getMessaging();
             getToken(messaging, { vapidKey: import.meta.env.VITE_FCM_VAPID_KEY }).then((currentToken) => {
                 if (currentToken) {
                     // Send the token to your server and update the UI if necessary
                     console.log(currentToken)
-                    console.log("Hello")
                     // ...
                 } else {
                     // Show permission request UI
@@ -73,7 +83,7 @@ function ChatPage(props) {
                 console.log("This client has entered the presence set.");
             });
 
-            handleFCM();
+            requestNotificationPermission();
         }
         return () => client.channels.get(user?.id).presence.leave();
         // eslint-disable-next-line
