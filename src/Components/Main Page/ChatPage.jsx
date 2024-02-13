@@ -19,7 +19,7 @@ function ChatPage(props) {
     const navigate = useNavigate();
     const [contactModel, setContactModel] = useState(false);
     const context = useContext(Context);
-    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact} = context;
+    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, subscribeToTopicFCM} = context;
 
 
     useChannel(user?.id, (message) => {
@@ -57,6 +57,8 @@ function ChatPage(props) {
                 if (currentToken) {
                     // Send the token to your server and update the UI if necessary
                     console.log(currentToken)
+                    localStorage.setItem("fcm-token", currentToken)
+                    subscribeToTopicFCM(currentToken)
                     // ...
                 } else {
                     // Show permission request UI
@@ -85,7 +87,9 @@ function ChatPage(props) {
 
             requestNotificationPermission();
         }
-        return () => client.channels.get(user?.id).presence.leave();
+        return () => {
+            client.channels.get(user?.id).presence.leave();
+        }
         // eslint-disable-next-line
     }, [user]);
 

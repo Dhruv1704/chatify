@@ -226,6 +226,33 @@ const ContextState = (props) => {
         return json;
     }
 
+    const subscribeToTopicFCM = async (token)=>{
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/fcm/subscribe`, {
+            method: "POST",
+            headers: {
+                'content-Type': 'application/json',
+                'web-token': localStorage.getItem('web-token')
+            },
+            body: JSON.stringify({ token})
+        })
+        const json = await res.json();
+        console.log(json)
+    }
+
+    const unSubscribeFromTopicFCM = async (token)=>{
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/fcm/unsubscribe`, {
+            method: "POST",
+            headers: {
+                'content-Type': 'application/json',
+                'web-token': localStorage.getItem('web-token')
+            },
+            body: JSON.stringify({ token})
+        })
+        const json = await res.json();
+        console.log(json)
+    }
+
+
     return (
         <Context.Provider value={{
             user,
@@ -251,7 +278,9 @@ const ContextState = (props) => {
             mobileChatDisplay,
             setMobileChatDisplay,
             mobileAiDisplay,
-            setMobileAiDisplay
+            setMobileAiDisplay,
+            subscribeToTopicFCM,
+            unSubscribeFromTopicFCM
         }}>
             {props.children}
         </Context.Provider>
