@@ -7,6 +7,7 @@ import {useEffect, useContext} from "react";
 import Context from "../../context/Context.jsx";
 
 import {useState} from "react";
+import {useCookies} from "react-cookie";
 
 function LogIn() {
 
@@ -14,10 +15,12 @@ function LogIn() {
     const {progress, setProgress, logIn} = context;
     const navigate = useNavigate();
     const [shouldRenderLogin, setShouldRenderLogin] = useState(false);
+    const [cookies] = useCookies(['web-token']);
 
     useEffect(() => {
-        if (localStorage.getItem("web-token")) {
+        if (cookies["web-token"]) {
             navigate("/chat")
+            console.log(cookies["web-token"])
             setShouldRenderLogin(false);
         }else {
             setShouldRenderLogin(true);

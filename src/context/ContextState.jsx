@@ -3,6 +3,8 @@ import {toast} from 'react-toastify';
 import {useState} from "react";
 import PropTypes from "prop-types";
 import {useNavigate} from "react-router-dom";
+import { useCookies } from 'react-cookie';
+
 const ContextState = (props) => {
 
     PropTypes.checkPropTypes(ContextState.propTypes, props, "prop", "ContextState")
@@ -16,6 +18,7 @@ const ContextState = (props) => {
     const [mobileAiDisplay, setMobileAiDisplay] = useState(false)
     const navigate = useNavigate();
 
+    const [cookies, setCookie] = useCookies(['web-token']);
 
     const tst = (msg, type) => {
         const data = {
@@ -63,7 +66,7 @@ const ContextState = (props) => {
         tst(json.message, json.type)
         setProgress(75)
         if (json.type === "success") {
-            localStorage.setItem("web-token", json.webToken);
+            setCookie("web-token", json.webToken, { path: '/' })
             navigate("/chat")
         }
         setProgress(100)
@@ -87,7 +90,7 @@ const ContextState = (props) => {
         const json = await response.json();
         tst(json.message, json.type)
         if (json.type === "success") {
-            localStorage.setItem("web-token", json.webToken);
+            setCookie("web-token", json.webToken, { path: '/' })
             navigate("/chat")
         }
         setProgress(100)
@@ -108,7 +111,7 @@ const ContextState = (props) => {
             method: "GET",
             headers: {
                 'content-Type': 'application/json',
-                'web-token': localStorage.getItem('web-token')
+                'web-token': cookies["web-token"]
             }
         })
         const json = await res.json();
@@ -133,7 +136,7 @@ const ContextState = (props) => {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
-                'web-token': localStorage.getItem('web-token')
+                'web-token': cookies["web-token"]
             },
             body: JSON.stringify({"contactEmail": contact})
         })
@@ -162,7 +165,7 @@ const ContextState = (props) => {
             method: 'GET',
             headers: {
                 'content-Type': 'application/json',
-                'web-token': localStorage.getItem('web-token')
+                'web-token': cookies["web-token"]
             }
         })
         const json = await res.json();
@@ -186,7 +189,7 @@ const ContextState = (props) => {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
-                'web-token': localStorage.getItem('web-token')
+                'web-token': cookies["web-token"]
             },
             body: JSON.stringify({
                 receiver,
@@ -202,7 +205,7 @@ const ContextState = (props) => {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
-                'web-token': localStorage.getItem('web-token')
+                'web-token': cookies["web-token"]
             },
             body: JSON.stringify({
                 question
@@ -217,7 +220,7 @@ const ContextState = (props) => {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
-                'web-token': localStorage.getItem('web-token')
+                'web-token': cookies["web-token"]
             },
             body: JSON.stringify({
                 image
@@ -232,7 +235,7 @@ const ContextState = (props) => {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
-                'web-token': localStorage.getItem('web-token')
+                'web-token': cookies["web-token"]
             },
             body: JSON.stringify({ token})
         })
@@ -245,7 +248,7 @@ const ContextState = (props) => {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
-                'web-token': localStorage.getItem('web-token')
+                'web-token': cookies["web-token"]
             },
             body: JSON.stringify({ token})
         })
@@ -258,7 +261,7 @@ const ContextState = (props) => {
             method: "PUT",
             headers: {
                 'content-Type': 'application/json',
-                'web-token': localStorage.getItem('web-token')
+                'web-token': cookies["web-token"]
             },
             body: JSON.stringify({token})
         })

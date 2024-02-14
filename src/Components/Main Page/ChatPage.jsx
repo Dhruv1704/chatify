@@ -9,6 +9,7 @@ import AiComponent from './MainCompoenent/AiComponent.jsx'
 import PropTypes from "prop-types";
 import {useChannel} from "ably/react";
 import {getMessaging, getToken} from "firebase/messaging";
+import {useCookies} from "react-cookie";
 
 function ChatPage(props) {
 
@@ -21,6 +22,7 @@ function ChatPage(props) {
     const context = useContext(Context);
     const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken} = context;
 
+    const [cookies] = useCookies(['web-token']);
 
     useChannel(user?.id, (message) => {
         const senderId = message.data.sender;
@@ -92,7 +94,7 @@ function ChatPage(props) {
 
 
     useEffect(() => {
-        const token = localStorage.getItem('web-token')
+        const token = cookies["web-token"]
         if (!token) {
             navigate('/')
         }

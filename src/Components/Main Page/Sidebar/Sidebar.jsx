@@ -6,6 +6,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import {Carousel} from 'react-responsive-carousel';
 import ContactSidebar from "./ContactSidebar.jsx";
 import AiSidebar from "./AiSidebar.jsx";
+import {useCookies} from "react-cookie";
 
 function Sidebar(props) {
 
@@ -18,10 +19,13 @@ function Sidebar(props) {
     const {setContactModel, setChatDisplay, setAiDisplay, setAiTextOrImage, aiTextOrImage} = props;
     const [carousalItem, setCarousalItem] = useState(0)
 
+    const [cookies, setCookie, removeCookie] = useCookies(['web-token']);
+
     const handleLogOut = () => {
         // const fcmToken = localStorage.getItem('fcm-token');
         // unSubscribeFromTopicFCM(fcmToken)
         localStorage.clear();
+        removeCookie('web-token', { path: '/' })
         navigate('/')
         window.location.reload(); // to refresh cookies, solves problem showing offline for online contacts
     }
