@@ -55,8 +55,8 @@ function ChatPage(props) {
             const messaging = getMessaging();
             getToken(messaging, { vapidKey: import.meta.env.VITE_FCM_VAPID_KEY }).then((currentToken) => {
                 if (currentToken) {
-                    console.log(currentToken)
-                    localStorage.setItem("fcm-token", currentToken)
+                    // console.log(currentToken)
+                    // localStorage.setItem("fcm-token", currentToken)
                     updateFCMToken(currentToken)
                     // subscribeToTopicFCM(currentToken)
                 } else {
