@@ -10,7 +10,7 @@ import AiSidebar from "./AiSidebar.jsx";
 function Sidebar(props) {
 
     const context = useContext(Context);
-    const {setCurrentContact, mobileChatDisplay, setMobileAiDisplay, mobileAiDisplay, unSubscribeFromTopicFCM} = context
+    const {setCurrentContact, mobileChatDisplay, setMobileAiDisplay, mobileAiDisplay} = context
     const navigate = useNavigate();
 
     PropTypes.checkPropTypes(Sidebar.propTypes, props, "prop", "Sidebar");
@@ -19,8 +19,8 @@ function Sidebar(props) {
     const [carousalItem, setCarousalItem] = useState(0)
 
     const handleLogOut = () => {
-        const fcmToken = localStorage.getItem('fcm-token');
-        unSubscribeFromTopicFCM(fcmToken)
+        // const fcmToken = localStorage.getItem('fcm-token');
+        // unSubscribeFromTopicFCM(fcmToken)
         localStorage.clear();
         navigate('/')
         window.location.reload(); // to refresh cookies, solves problem showing offline for online contacts

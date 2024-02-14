@@ -67,9 +67,22 @@ function ChatComponent(props) {
 
     const getPresence = async () => {
         await client.channels.get(currentContact._id).presence.subscribe((presenceMessage) => {
-            const {action} = presenceMessage;
+            const {action, data} = presenceMessage;
             const newStatus = status;
-            if (action === 'enter' || action === 'present') {
+            if(action === "update" && data.typing){
+                newStatus[data.user] = "...typing"
+                setStatus(() => ({
+                    ...newStatus
+                }))
+                console.log(status)
+            }else if(action==="update" && !data.typing){
+                newStatus[data.user] = "online"
+                setStatus(() => ({
+                    ...newStatus
+                }))
+                console.log(status)
+            }
+            else if (action === 'enter' || action === 'present') {
                 newStatus[currentContact?._id] = "online"
                 setStatus(() => ({
                     ...newStatus
@@ -81,9 +94,38 @@ function ChatComponent(props) {
         })
     }
 
+    const statusTyping = (val)=>{
+        const payload = val?{
+            user: user?.id,
+            typing: true
+        }:{
+            user: user?.id,
+            typing: false
+        };
+        client.channels.get(user.id).presence.update(payload, (err) => {
+            if (err) {
+                return console.error("Error updatign presence set.");
+            }
+            console.log("This client has updated the presence set.");
+        });
+    }
+    const handleChatOnBlur =()=>{
+        console.log("hi")
+        statusTyping(false)
+    }
+
+    const handleChatOnFocus = ()=>{
+        statusTyping(true)
+    }
+
+
     useEffect(() => {
         if (currentContact && client) {
             getPresence();
+        }
+        return () => {
+            client.channels.get(currentContact?._id).presence.unsubscribe();
+            console.log("Unsubscribed from presence", currentContact)
         }
         // eslint-disable-next-line
     }, [currentContact]);
@@ -136,13 +178,11 @@ function ChatComponent(props) {
             reciever: currentContact._id,
             timestamp: new Date()
         }
-        console.log(message)
         const newChats = chats;
         newChats[currentContact._id] === undefined ? newChats[currentContact._id] = [message] : newChats[currentContact._id].push(message);
-        console.log(newChats)
         setChats(() => ({...newChats}))
         client.channels.get(currentContact._id).publish('message', message);
-        addMessage(content, currentContact._id, type)
+        addMessage(content, currentContact._id, type, currentContact.name)
         setInputMessage("")
     }
 
@@ -238,7 +278,18 @@ function ChatComponent(props) {
                     <div className={`${currentContact === null ? "mt-2" : "mt-0"} ml-4`}>
                         <div>{currentContact === null ? user?.name : currentContact?.name}</div>
                         <div
-                            className={`${currentContact === null ? "hidden" : "block"} text-xs`}>{status[currentContact?._id] === undefined ? "offline" : status[currentContact?._id]}</div>
+                            className={`${currentContact === null ? "hidden" : "block"} text-xs`}>{status[currentContact?._id] === undefined ?
+                            <div className={"flex"}>
+                                <div className={"rounded-full -ml-0.5 mt-0.5 py-0.5 px-2 scale-50 bg-red-500"}></div>
+                                offline
+                            </div> :
+                            <div className={"flex"}>
+                                {status[currentContact?._id]==="online" || status[currentContact?._id]==="...typing"?
+                                <div className={"rounded-full -ml-0.5 mt-0.5 py-0.5 px-2 scale-50 bg-green-500"}></div>
+                                :<div className={"rounded-full -ml-0.5 mt-0.5 py-0.5 px-2 scale-50 bg-red-500"}></div>}
+                                {status[currentContact?._id]}
+                            </div>
+                        }</div>
                     </div>
                 </div>
             </div>
@@ -304,7 +355,7 @@ function ChatComponent(props) {
                                           value={inputMessage} required={true}
                                           type={"text"} onKeyDown={handleKeyDown}
                                           className={"bg-[#f5f6f7] disabled:cursor-not-allowed rounded-2xl p-3 pl-10 h-14 max-h-36 resize-none font-semibold w-full"}
-                                          onChange={handleInputMessage}/>
+                                          onChange={handleInputMessage} onFocus={handleChatOnFocus} onBlur={handleChatOnBlur}/>
 
                         <div
                             className={`${emojiDisplay ? "relative opacity-100 translate-x-0" : "absolute opacity-0 translate-y-[450px]"} transition-all w-full duration-300 ease-in-out transform-gpu`}>

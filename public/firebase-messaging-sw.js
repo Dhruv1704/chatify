@@ -1,6 +1,11 @@
-importScripts('https://www.gstatic.com/firebasejs/9.2.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/9.2.0/firebase-messaging-compat.js');
-importScripts('/__/firebase/init.js');
+// importScripts('https://www.gstatic.com/firebasejs/9.2.0/firebase-app-compat.js');
+// importScripts('https://www.gstatic.com/firebasejs/9.2.0/firebase-messaging-compat.js');
+// importScripts('/__/firebase/init.js');
+
+importScripts("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js");
+importScripts(
+    "https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"
+);
 
 // Initialize the Firebase app in the service worker by passing in
 // your app's Firebase config object.
@@ -8,16 +13,27 @@ importScripts('/__/firebase/init.js');
 
 // Retrieve an instance of Firebase Messaging so that it can handle background
 // messages.
+const firebaseConfig = {
+    apiKey: "AIzaSyBu2lL5isgDhvO0ZJPs1oQ7bsMaiuXcglc",
+    authDomain: "chatify-17.firebaseapp.com",
+    projectId: "chatify-17",
+    storageBucket: "chatify-17.appspot.com",
+    messagingSenderId: "1003628190110",
+    appId: "1:1003628190110:web:ec602204b09eecf33a5e8f",
+    measurementId: "G-HHQVD5HJJE"
+};
+
+firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function(payload) {
     console.log('[firebase-messaging-sw.js] Received background message ', payload);
     // Customize notification here
-    const notificationTitle = payload.notification.body;
+    const notificationTitle = payload.data.title;
     const notificationOptions = {
-        icon: payload.notification.image,
-        body: payload.notification.title,
-        badge: payload.notification.image,
+        icon: payload.data.image,
+        body: payload.data.body,
+        badge: payload.data.image,
     };
 
     self.registration.showNotification(notificationTitle,
@@ -25,20 +41,21 @@ messaging.onBackgroundMessage(function(payload) {
 
 });
 
-// addEventListener("notificationclick", (event) => {});
-//
-// onnotificationclick = (event) => {
-//     event.notification.close();
-//     event.waitUntil(
-//         clients
-//             .matchAll({
-//                 type: "window",
-//             })
-//             .then((clientList) => {
-//                 for (const client of clientList) {
-//                     if (client.url === "https://chatify-17.web.app/" && "focus" in client) return client.focus();
-//                 }
-//                 if (clients.openWindow) return clients.openWindow("https://chatify-17.web.app/chat");
-//             }),
-// };
+addEventListener("notificationclick", (event) => {onnotificationclick(event)});
+
+onnotificationclick = (event) => {
+    event.notification.close();
+    event.waitUntil(
+        clients
+            .matchAll({
+                type: "window",
+            })
+            .then((clientList) => {
+                for (const client of clientList) {
+                    if (client.url === "/" && "focus" in client) return client.focus();
+                }
+                if (clients.openWindow) return clients.openWindow("/chat");
+            })
+    )
+};
 

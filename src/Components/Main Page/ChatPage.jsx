@@ -19,7 +19,7 @@ function ChatPage(props) {
     const navigate = useNavigate();
     const [contactModel, setContactModel] = useState(false);
     const context = useContext(Context);
-    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, subscribeToTopicFCM} = context;
+    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken} = context;
 
 
     useChannel(user?.id, (message) => {
@@ -55,15 +55,12 @@ function ChatPage(props) {
             const messaging = getMessaging();
             getToken(messaging, { vapidKey: import.meta.env.VITE_FCM_VAPID_KEY }).then((currentToken) => {
                 if (currentToken) {
-                    // Send the token to your server and update the UI if necessary
                     console.log(currentToken)
                     localStorage.setItem("fcm-token", currentToken)
-                    subscribeToTopicFCM(currentToken)
-                    // ...
+                    updateFCMToken(currentToken)
+                    // subscribeToTopicFCM(currentToken)
                 } else {
-                    // Show permission request UI
                     console.log('No registration token available. Request permission to generate one.');
-                    // ...
                 }
             }).catch((err) => {
                 console.log('An error occurred while retrieving token. ', err);

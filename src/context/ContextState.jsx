@@ -181,7 +181,7 @@ const ContextState = (props) => {
         setProgress(100);
     }
 
-    const addMessage = async (content, receiver, type) => {
+    const addMessage = async (content, receiver, type, receiverName) => {
         await fetch(`${import.meta.env.VITE_BACKEND_API}/api/chat/addMessage`, {
             method: "POST",
             headers: {
@@ -191,7 +191,8 @@ const ContextState = (props) => {
             body: JSON.stringify({
                 receiver,
                 content,
-                type
+                type,
+                receiverName,
             })
         })
     }
@@ -252,6 +253,18 @@ const ContextState = (props) => {
         console.log(json)
     }
 
+    const updateFCMToken = async (token)=>{
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/fcm/updateToken`, {
+            method: "PUT",
+            headers: {
+                'content-Type': 'application/json',
+                'web-token': localStorage.getItem('web-token')
+            },
+            body: JSON.stringify({token})
+        })
+        const json = await res.json();
+        console.log(json)
+    }
 
     return (
         <Context.Provider value={{
@@ -280,7 +293,8 @@ const ContextState = (props) => {
             mobileAiDisplay,
             setMobileAiDisplay,
             subscribeToTopicFCM,
-            unSubscribeFromTopicFCM
+            unSubscribeFromTopicFCM,
+            updateFCMToken
         }}>
             {props.children}
         </Context.Provider>
