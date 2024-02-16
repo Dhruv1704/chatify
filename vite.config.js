@@ -9,6 +9,7 @@ export default defineConfig({
     plugins: [
         react(),
         VitePWA({
+            includeAssets: ['favicon.ico', 'robots.txt', 'icons', 'manifest.webmanifes'],
             manifest:{
                 name: 'Chatify',
                 short_name: 'Chatify',

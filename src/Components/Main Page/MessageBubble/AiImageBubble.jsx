@@ -4,6 +4,7 @@ import placeHolderImage from '/src/assets/background-blur.jpg';
 import {useState} from 'react'
 import DownloadIcon from '@mui/icons-material/Download';
 import {PhotoProvider, PhotoView} from "react-photo-view";
+import {BeatLoader} from "react-spinners";
 
 const AiImageBubble = (props) => {
     PropTypes.checkPropTypes(AiImageBubble.propTypes, props, "prop", "AiImageBubble")
@@ -44,7 +45,7 @@ const AiImageBubble = (props) => {
             <div
                 className={`p-3 my-2 break-words w-fit lg:max-w-[600px] max-w-[280px] shadow-md rounded-b-2xl rounded-tr-2xl bg-white`}>{
                 item.url === null ?
-                    <div className={"loading"}>Loading...</div>
+                    <BeatLoader size={9} margin={4} color={"#00ffe9"}/>
                     :
                     <div>
                         <PhotoProvider maskOpacity={0.9} toolbarRender={() => <a href={item.url} onClick={download}>

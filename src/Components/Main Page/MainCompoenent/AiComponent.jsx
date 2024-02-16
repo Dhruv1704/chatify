@@ -75,6 +75,7 @@ const AiComponent = (props) => {
     }
 
     const handleAiMessage = async () => {
+        document.getElementById("ai-input").disabled = true
         const arr = textAiChat;
         setTextAiChat((prev) => [...prev, {
             question: inputAiMessage,
@@ -91,9 +92,11 @@ const AiComponent = (props) => {
             setTextAiChat(arr)
             localStorage.setItem('text-ai', JSON.stringify(arr));
         }
+        document.getElementById("ai-input").disabled = false;
     }
 
     const handleAiImage = async () => {
+        document.getElementById("ai-input").disabled = true
         const arr = imageAiChat;
         setImageAiChat((prev) => [...prev, {
             question: inputAiMessage,
@@ -110,6 +113,7 @@ const AiComponent = (props) => {
             setImageAiChat(arr)
             localStorage.setItem('image-ai', JSON.stringify(arr));
         }
+        document.getElementById("ai-input").disabled = false
     }
 
     const handleClearAi = () => {
@@ -174,7 +178,7 @@ const AiComponent = (props) => {
                     <TextareaAutosize placeholder={aiTextOrImage ? "Talk to ChatGPT" : placeholder} minLength={1}
                                       value={inputAiMessage}
                                       onKeyDown={handleKeyDown}
-                                      type={"text"} required={true}
+                                      type={"text"} required={true} id={"ai-input"}
                                       className={"bg-[#f5f6f7] disabled:cursor-not-allowed rounded-2xl h-14 max-h-36 resize-none p-3 font-semibold w-full ai-image-input"}
                                       onChange={handleInputAiMessage}/>
                     <button type={"submit"} id={"ai-submit-button"}

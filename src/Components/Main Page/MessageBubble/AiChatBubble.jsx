@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import Markdown from 'markdown-to-jsx'
+import {BeatLoader} from "react-spinners";
 
 const AiChatBubble = (props) => {
 
@@ -9,16 +10,20 @@ const AiChatBubble = (props) => {
 
     return (
         <>
-            <div className={`p-3 my-2 break-words w-fit lg:max-w-[500px] max-w-[260px] text-sm lg:text-base shadow-md ml-auto rounded-b-2xl rounded-tl-2xl bg-sky-100`}>
+            <div
+                className={`p-3 my-2 break-words w-fit lg:max-w-[500px] max-w-[260px] text-sm lg:text-base shadow-md ml-auto rounded-b-2xl rounded-tl-2xl bg-sky-100`}>
                 {item.question}
             </div>
-            <div className={`p-3 my-2 break-words w-fit lg:max-w-[600px] max-w-[260px] shadow-md text-sm lg:text-base rounded-b-2xl rounded-tr-2xl bg-white`}>
-                {item.reply === null ?
-                    <div className={"loading"}>Loading...</div>
+            <div
+                className={`p-3 my-2 break-words w-fit lg:max-w-[600px] max-w-[260px] shadow-md text-sm lg:text-base rounded-b-2xl rounded-tr-2xl bg-white`}>
+                {item.reply===null ?
+                    <BeatLoader size={9} margin={4} color={"#00ffe9"}/>
                     :
+                    <>
                     <Markdown>
                         {item.reply}
                     </Markdown>
+                    </>
                 }
             </div>
         </>

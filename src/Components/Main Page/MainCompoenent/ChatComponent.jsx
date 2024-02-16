@@ -15,6 +15,7 @@ import MovieIcon from '@mui/icons-material/Movie';
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {useNavigate} from "react-router-dom";
+import UploadBubble from "../MessageBubble/UploadBubble.jsx";
 
 function ChatComponent(props) {
 
@@ -32,6 +33,8 @@ function ChatComponent(props) {
 
     const context = useContext(Context);
 
+    const [uploadProgress, setUploadProgress] = useState(0);
+
     const {
         currentContact,
         user,
@@ -46,6 +49,7 @@ function ChatComponent(props) {
     const [status, setStatus] = useState({});
     const [emojiDisplay, setEmojiDisplay] = useState(false);
     const [attachDisplay, setAttachDisplay] = useState(false)
+    const [displayUploadBubble, setDisplayUploadBubble] = useState(false);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -69,20 +73,19 @@ function ChatComponent(props) {
         await client.channels.get(currentContact._id).presence.subscribe((presenceMessage) => {
             const {action, data} = presenceMessage;
             const newStatus = status;
-            if(action === "update" && data.typing){
+            if (action === "update" && data.typing) {
                 newStatus[data.user] = "...typing"
                 setStatus(() => ({
                     ...newStatus
                 }))
                 console.log(status)
-            }else if(action==="update" && !data.typing){
+            } else if (action === "update" && !data.typing) {
                 newStatus[data.user] = "online"
                 setStatus(() => ({
                     ...newStatus
                 }))
                 console.log(status)
-            }
-            else if (action === 'enter' || action === 'present') {
+            } else if (action === 'enter' || action === 'present') {
                 newStatus[currentContact?._id] = "online"
                 setStatus(() => ({
                     ...newStatus
@@ -94,11 +97,11 @@ function ChatComponent(props) {
         })
     }
 
-    const statusTyping = (val)=>{
-        const payload = val?{
+    const statusTyping = (val) => {
+        const payload = val ? {
             user: user?.id,
             typing: true
-        }:{
+        } : {
             user: user?.id,
             typing: false
         };
@@ -109,12 +112,12 @@ function ChatComponent(props) {
             console.log("This client has updated the presence set.");
         });
     }
-    const handleChatOnBlur =()=>{
+    const handleChatOnBlur = () => {
         console.log("hi")
         statusTyping(false)
     }
 
-    const handleChatOnFocus = ()=>{
+    const handleChatOnFocus = () => {
         statusTyping(true)
     }
 
@@ -133,11 +136,12 @@ function ChatComponent(props) {
 
     const upload = (event, type) => {
         const file = event.target.files[0];
-        const maxSize = 50 * 1024 * 1024;
+        const maxSize = 100 * 1024 * 1024;
         if (file.size > maxSize) {
-            console.error("File size exceeds 50 MB. Upload aborted.");
+            console.error("File size exceeds 100 MB. Upload aborted.");
             return;
         }
+
         const storageRef = ref(storage, type + '/' + file.name);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -146,6 +150,7 @@ function ChatComponent(props) {
                 // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 console.log(progress)
+                setUploadProgress(() => (progress))
                 if (progress == 100) photoInputRef.current.value = null
             },
             (error) => {
@@ -155,6 +160,7 @@ function ChatComponent(props) {
                 // Upload completed successfully, now we can get the download URL
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     console.log('File available at', downloadURL);
+                    setUploadProgress(0);
                     handleMessage(event, type, downloadURL);
                 }).catch((error) => {
                     console.error("Error getting download URL:", error);
@@ -167,7 +173,7 @@ function ChatComponent(props) {
     }
     useEffect(() => {
         scrollToBottom()
-    },[chats, currentContact, mobileChatDisplay, chatDisplay]);
+    }, [chats, currentContact, mobileChatDisplay, chatDisplay]);
 
     const handleMessage = (e, type, content) => {
         e.preventDefault();
@@ -188,7 +194,7 @@ function ChatComponent(props) {
 
     useEffect(() => {
         const backHandlerChat = () => {
-            if(window.innerWidth<=1024 && mobileChatDisplay){
+            if (window.innerWidth <= 1024 && mobileChatDisplay) {
                 setMobileChatDisplay(false);
             }
         }
@@ -229,16 +235,16 @@ function ChatComponent(props) {
     const handleAudioUpload = () => {
         audioInputRef.current.click();
     }
-    
+
     const handleVideoUpload = () => {
         videoInputRef.current.click();
     }
 
-    const handleDocUpload = () =>{
+    const handleDocUpload = () => {
         docInputRef.current.click();
     }
 
-    const handleChatBack = ()=>{
+    const handleChatBack = () => {
         setMobileChatDisplay(false);
         navigate("./")
     }
@@ -263,10 +269,12 @@ function ChatComponent(props) {
 
     return (
         <div
-            className={`${mobileChatDisplay? "block":"hidden"} ${chatDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 lg:h-[90vh] h-[100vh] overflow-clip my-auto lg:rounded-3xl w-full lg:mx-4 p-6 pt-4`}>
+            className={`${mobileChatDisplay ? "block" : "hidden"} ${chatDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 lg:h-[90vh] h-[100vh] overflow-clip my-auto lg:rounded-3xl w-full lg:mx-4 p-6 pt-4`}>
             <div className={"flex justify-between"}>
                 <div className={"flex mb-4"}>
-                    <div className={`${mobileChatDisplay?"block":"hidden"} lg:hidden bg-sky-300 rounded-xl px-2 mr-2 flex content-center`} onClick={handleChatBack}>
+                    <div
+                        className={`${mobileChatDisplay ? "block" : "hidden"} lg:hidden bg-sky-300 rounded-xl px-2 mr-2 flex content-center`}
+                        onClick={handleChatBack}>
                         <button>
                             <ArrowBackIcon/>
                         </button>
@@ -284,16 +292,19 @@ function ChatComponent(props) {
                                 offline
                             </div> :
                             <div className={"flex"}>
-                                {status[currentContact?._id]==="online" || status[currentContact?._id]==="...typing"?
-                                <div className={"rounded-full -ml-0.5 mt-0.5 py-0.5 px-2 scale-50 bg-green-500"}></div>
-                                :<div className={"rounded-full -ml-0.5 mt-0.5 py-0.5 px-2 scale-50 bg-red-500"}></div>}
+                                {status[currentContact?._id] === "online" || status[currentContact?._id] === "...typing" ?
+                                    <div
+                                        className={"rounded-full -ml-0.5 mt-0.5 py-0.5 px-2 scale-50 bg-green-500"}></div>
+                                    : <div
+                                        className={"rounded-full -ml-0.5 mt-0.5 py-0.5 px-2 scale-50 bg-red-500"}></div>}
                                 {status[currentContact?._id]}
                             </div>
                         }</div>
                     </div>
                 </div>
             </div>
-            <div className={"bg-sky-200 h-[92.75%] rounded-3xl lg:rounded-2xl flex flex-col justify-between p-4 overflow-y-clip"}>
+            <div
+                className={"bg-sky-200 h-[92.75%] rounded-3xl lg:rounded-2xl flex flex-col justify-between p-4 overflow-y-clip"}>
                 <div className={"my-2 px-4 custom-scrollbar overflow-auto"}>
                     {chats === null ? "" : chats[currentContact?._id]?.map((item, index) => (
                         <ChatBubble key={index} position={item.sender === user.id ? "right" : "left"} item={item}
@@ -305,7 +316,7 @@ function ChatComponent(props) {
                       className={`${currentContact == null ? "hidden" : "flex"} justify-center space-x-1.5 lg:space-x-4`}>
                     <div className={"relative flex"}>
                         <div
-                            className={`absolute ${attachDisplay ? "block" : "hidden"} space-x-8 flex text-center bg-sky-100 shadow-xl rounded-t-2xl rounded-br-2xl p-4 pl-6 z-20 bottom-[70px] left-4`}
+                            className={`absolute ${attachDisplay ? "block" : "hidden"} ${emojiDisplay ? "bottom-[290px]" : "bottom-[70px]"} space-x-8 flex text-center bg-sky-100 shadow-xl rounded-t-2xl rounded-br-2xl p-4 pl-6 z-20 left-6`}
                             ref={attachRef}>
                             <div>
                                 <div onClick={handlePhotoUpload} className={"cursor-pointer mb-2"}>
@@ -340,23 +351,28 @@ function ChatComponent(props) {
                         <input type={"file"} className={"hidden"} accept={acceptString} onChange={() => {
                             upload(event, "document")
                         }} ref={docInputRef}/>
-                        <button type={"button"} className={"mb-2 bg-sky-300 rounded-xl p-2 px-3 attach-icon"} onClick={handleAttachDisplay}>
+                        <button type={"button"}
+                                className={"mb-2 self-center bg-sky-300 rounded-xl p-2 px-3 attach-icon"}
+                                onClick={handleAttachDisplay}>
                             <AttachFileIcon className={"attach-icon pointer-events-none"}/>
                         </button>
                     </div>
                     <div className={"w-full relative"}>
                         <div onClick={handleEmojiDisplay}>
                             <InsertEmoticonIcon
-                                className={`absolute top-3 left-2 cursor-pointer text-gray-400 ${emojiDisplay ? "opacity-0" : "opacity-100"}`}/>
+                                className={`absolute top-3 z-10 left-2 cursor-pointer text-gray-400 ${emojiDisplay ? "opacity-0" : "opacity-100"}`}/>
                             <KeyboardIcon
-                                className={`absolute top-3 left-2 cursor-pointer text-gray-400 ${emojiDisplay ? "opacity-100" : "opacity-0"}`}/>
+                                className={`absolute top-3 left-2 z-10 cursor-pointer text-gray-400 ${emojiDisplay ? "opacity-100" : "opacity-0"}`}/>
                         </div>
-                        <TextareaAutosize placeholder={"Message"} disabled={currentContact == null} minLength={1}
-                                          value={inputMessage} required={true}
-                                          type={"text"} onKeyDown={handleKeyDown}
-                                          className={"bg-[#f5f6f7] disabled:cursor-not-allowed rounded-2xl p-3 pl-10 h-14 max-h-36 resize-none font-semibold w-full"}
-                                          onChange={handleInputMessage} onFocus={handleChatOnFocus} onBlur={handleChatOnBlur}/>
-
+                        <div className={"relative"}>
+                            <UploadBubble progress={uploadProgress} display={displayUploadBubble}/>
+                            <TextareaAutosize placeholder={"Message"} disabled={currentContact == null} minLength={1}
+                                              value={inputMessage} required={true}
+                                              type={"text"} onKeyDown={handleKeyDown}
+                                              className={"bg-[#f5f6f7] disabled:cursor-not-allowed rounded-2xl p-3 pl-10 h-14 max-h-36 resize-none font-semibold w-full"}
+                                              onChange={handleInputMessage} onFocus={handleChatOnFocus}
+                                              onBlur={handleChatOnBlur}/>
+                        </div>
                         <div
                             className={`${emojiDisplay ? "relative opacity-100 translate-x-0" : "absolute opacity-0 translate-y-[450px]"} transition-all w-full duration-300 ease-in-out transform-gpu`}>
                             <EmojiPicker width={"100%"} height={"450px"} theme={"light"}
