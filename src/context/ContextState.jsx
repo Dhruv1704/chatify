@@ -4,10 +4,16 @@ import {useState} from "react";
 import PropTypes from "prop-types";
 import {useNavigate} from "react-router-dom";
 import { useCookies } from 'react-cookie';
+import Localbase from 'localbase'
+
 
 const ContextState = (props) => {
 
     PropTypes.checkPropTypes(ContextState.propTypes, props, "prop", "ContextState")
+
+    const db = new Localbase('chatify-db')
+    db.config.debug = false
+
     const [chats, setChats] = useState({});
     const [progress, setProgress] = useState(0);
     const [contact, setContact] = useState([]);
@@ -98,9 +104,10 @@ const ContextState = (props) => {
 
     const getContact = async () => {
         setProgress(25)
-        const contacts = JSON.parse(localStorage.getItem('contacts'));
+        await db.collection('contacts').get().then(contacts=>{
+            setContact(contacts)
+        })
         const localUser = JSON.parse(localStorage.getItem('user'));
-        setContact(contacts)
         setUser(localUser);
         if (!navigator.onLine) {
             setProgress(100);
@@ -124,8 +131,10 @@ const ContextState = (props) => {
             }
             setUser(user)
             localStorage.setItem('user', JSON.stringify(user))
-            localStorage.setItem('contacts', JSON.stringify(json.contact));
-            setContact(json.contact)
+            if(json!=null) await db.collection('contacts').set(json.contact)
+            await db.collection('contacts').get().then(contacts=>{
+                setContact(contacts)
+            })
         }
         setProgress(100);
     }
@@ -145,7 +154,7 @@ const ContextState = (props) => {
         setProgress(75)
         if (json.type === "success") {
             setContact(json.contact)
-            localStorage.setItem('contacts', JSON.stringify(json.contact));
+            await db.collection('contacts').set(json.contact)
             tst(json.message, json.type)
         } else {
             tst(json.message, json.type)
@@ -155,8 +164,11 @@ const ContextState = (props) => {
 
     const getMessage = async () => {
         setProgress(25)
-        const localChats = JSON.parse(localStorage.getItem('chats'));
-        setChats(localChats);
+        let localChats = null;
+        await db.collection('chats').get().then(chats=>{
+            setChats(chats[0]);
+            localChats = chats[0]
+        })
         if (!navigator.onLine) {
             setProgress(100);
             return;
@@ -179,7 +191,7 @@ const ContextState = (props) => {
             }
             unreadMessages(localChats, messages);
             setChats(messages);
-            localStorage.setItem('chats', JSON.stringify(messages));
+            await db.collection('chats').set([messages])
         }
         setProgress(100);
     }
@@ -297,7 +309,8 @@ const ContextState = (props) => {
             setMobileAiDisplay,
             subscribeToTopicFCM,
             unSubscribeFromTopicFCM,
-            updateFCMToken
+            updateFCMToken,
+            db
         }}>
             {props.children}
         </Context.Provider>

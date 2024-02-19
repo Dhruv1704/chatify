@@ -20,9 +20,13 @@ function ChatPage(props) {
     const navigate = useNavigate();
     const [contactModel, setContactModel] = useState(false);
     const context = useContext(Context);
-    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken} = context;
+    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken, db} = context;
 
     const [cookies] = useCookies(['web-token']);
+
+    const updateLocalChat = async (chats)=>{
+        await db.collection('chats').set([chats])
+    }
 
     useChannel(user?.id, (message) => {
         const senderId = message.data.sender;
@@ -36,8 +40,10 @@ function ChatPage(props) {
         setChats(() => ({
             ...newChats
         }))
-        localStorage.setItem('chats', JSON.stringify(newChats));
+        updateLocalChat(newChats)
     })
+
+
 
 
     useEffect(() => {
