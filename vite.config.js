@@ -9,6 +9,9 @@ export default defineConfig({
     plugins: [
         react(),
         VitePWA({
+            workbox: {
+                maximumFileSizeToCacheInBytes: 10*1024*1024,
+            },
             includeAssets: ['favicon.ico', 'robots.txt', 'icons', 'manifest.webmanifes'],
             manifest:{
                 name: 'Chatify',
@@ -60,7 +63,7 @@ export default defineConfig({
                         sizes: '38x38',
                         type: 'image/png',
                     }
-                ],
+                ]
             }
         }),
         eslint({lintOnStart: true, failOnError: false}),

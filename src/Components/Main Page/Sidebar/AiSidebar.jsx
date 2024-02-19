@@ -23,7 +23,7 @@ const AiSidebar = (props) => {
                 <div className={"border-b-2 border-sky-300 rounded-2xl"}></div>
             </div>
 
-            <div className={"bg-[#f5f6f7] mt-auto mb-[-6px] rounded-2xl flex p-2 justify-around"}>
+            <div className={"bg-[#f5f6f7] shadow-md mt-auto mb-[-6px] rounded-2xl flex p-2 justify-around"}>
                 <div className={"cursor-pointer mb-1 scale-110"}>
                     <SettingsIcon/>
                 </div>

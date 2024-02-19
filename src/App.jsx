@@ -12,6 +12,7 @@ import {useState} from "react";
 import ChatComponent from "./Components/Main Page/MainCompoenent/ChatComponent.jsx";
 import AiComponent from "./Components/Main Page/MainCompoenent/AiComponent.jsx";
 import {initializeApp} from "firebase/app";
+import VideoComponent from "./Components/Main Page/MainCompoenent/VideoComponent.jsx";
 
 function App() {
 
@@ -50,6 +51,7 @@ function App() {
                                 <Route path={"chatComponent"} element={<ChatComponent chatDisplay={chatDisplay} client={ablyClient}/>}/>
                                 <Route path={"aiComponent"} element={<AiComponent aiDisplay={aiDisplay} aiTextOrImage={aiTextOrImage}/>}/>
                             </Route>
+                            <Route exact path={"videoCall/:roomCode"} element={<VideoComponent/>}/>
                         </Routes>
                     </AblyProvider>
                     <ToastContainer

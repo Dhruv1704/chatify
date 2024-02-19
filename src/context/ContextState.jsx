@@ -66,7 +66,7 @@ const ContextState = (props) => {
         tst(json.message, json.type)
         setProgress(75)
         if (json.type === "success") {
-            setCookie("web-token", json.webToken, { path: '/' })
+            setCookie("web-token", json.webToken, { path: '/' , maxAge: 60*60*24*10, secure: true})
             navigate("/chat")
         }
         setProgress(100)
@@ -90,7 +90,7 @@ const ContextState = (props) => {
         const json = await response.json();
         tst(json.message, json.type)
         if (json.type === "success") {
-            setCookie("web-token", json.webToken, { path: '/' })
+            setCookie("web-token", json.webToken, { path: '/' , maxAge: 60*60*24*10, secure: true})
             navigate("/chat")
         }
         setProgress(100)

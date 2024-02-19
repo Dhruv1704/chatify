@@ -1,13 +1,19 @@
 import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import CloseIcon from '@mui/icons-material/Close';
+import PropTypes from "prop-types";
 
-const UploadBubble = ({progress, display}) => {
+const UploadBubble = (props) => {
+
+    const {progress, display, cancelUpload, currentUploadTask} = props;
+
+    PropTypes.checkPropTypes(UploadBubble.propTypes, props, "prop", "UploadBubble");
+
     return (
-        <div className={"w-20 absolute right-0 bottom-14 p-3 bg-[#f5f6f7] z-30 rounded-2xl"}>
+        <div className={`${display?"block":"hidden"} w-20 absolute right-0 bottom-14 p-3 bg-[#f5f6f7] z-30 rounded-2xl shadow-md`}>
             <div className={"relative"}>
-                <CloseIcon clasName={"absolute left-12 top-0"}/>
-                <CircularProgressbar value={60} text={`${parseInt(progress)}%`} background={true} backgroundPadding={8}
+                <CloseIcon className={"absolute left-12 bottom-12 bg-gray-300 rounded-full p-1 cursor-pointer"} onClick={()=>cancelUpload(currentUploadTask)}/>
+                <CircularProgressbar value={progress} text={`${parseInt(progress)}%`} background={true} backgroundPadding={8}
                                      styles={{
                                          // Customize the root svg element
                                          root: {},
@@ -51,5 +57,11 @@ const UploadBubble = ({progress, display}) => {
     )
 }
 
-export default UploadBubble;
+UploadBubble.propTypes = {
+    progress: PropTypes.number.isRequired,
+    display: PropTypes.bool.isRequired,
+    cancelUpload: PropTypes.func.isRequired,
+    currentUploadTask: PropTypes.object,
+};
 
+export default UploadBubble;

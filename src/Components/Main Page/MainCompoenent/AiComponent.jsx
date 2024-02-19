@@ -171,7 +171,7 @@ const AiComponent = (props) => {
                 <form onSubmit={handleAi}
                       className={`flex justify-center space-x-1.5 lg:space-x-4`}>
                     <button type={"button"} id={"ai-delete-button"}
-                            className={"self-center bg-sky-300 p-2 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl"}
+                            className={"self-center shadow-md bg-sky-300 p-2 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl"}
                             onClick={handleClearAi}>
                         <DeleteSweepIcon/>
                     </button>
@@ -179,10 +179,10 @@ const AiComponent = (props) => {
                                       value={inputAiMessage}
                                       onKeyDown={handleKeyDown}
                                       type={"text"} required={true} id={"ai-input"}
-                                      className={"bg-[#f5f6f7] disabled:cursor-not-allowed rounded-2xl h-14 max-h-36 resize-none p-3 font-semibold w-full ai-image-input"}
+                                      className={"bg-[#f5f6f7] shadow-md disabled:cursor-not-allowed rounded-2xl h-14 max-h-36 resize-none p-3 font-semibold w-full ai-image-input"}
                                       onChange={handleInputAiMessage}/>
                     <button type={"submit"} id={"ai-submit-button"}
-                            className={"self-center disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl bg-sky-300 p-2 pl-3"}>
+                            className={"self-center shadow-md disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl bg-sky-300 p-2 pl-3"}>
                         <SendIcon/>
                     </button>
                 </form>

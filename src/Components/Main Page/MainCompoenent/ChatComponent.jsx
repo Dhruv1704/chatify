@@ -50,6 +50,7 @@ function ChatComponent(props) {
     const [emojiDisplay, setEmojiDisplay] = useState(false);
     const [attachDisplay, setAttachDisplay] = useState(false)
     const [displayUploadBubble, setDisplayUploadBubble] = useState(false);
+    const [currentUploadTask, setCurrentUploadTask] = useState();
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -126,47 +127,83 @@ function ChatComponent(props) {
         if (currentContact && client) {
             getPresence();
         }
-        return () => {
-            client.channels.get(currentContact?._id).presence.unsubscribe();
-            console.log("Unsubscribed from presence", currentContact)
-        }
+        // return () => {
+        //     client.channels.get(currentContact?._id).presence.unsubscribe();
+        //     console.log("Unsubscribed from presence", currentContact)
+        // }
         // eslint-disable-next-line
     }, [currentContact]);
 
+    const cancelUpload = (uploadTask) => {
+        uploadTask.cancel();
+        setUploadProgress(0);
+        setDisplayUploadBubble(false);
+    }
 
-    const upload = (event, type) => {
+    async function checkExistingFile(storageRef, event, type) {
+        const textarea = document.getElementById('chat-input');
+        try {
+            const url = await getDownloadURL(storageRef);
+            console.log("File already exists at", url);
+            handleMessage(event, type, url);
+            textarea.disabled = false;
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    const upload = async (event, type) => {
+        const textarea = document.getElementById('chat-input');
+        textarea.disabled = true;
         const file = event.target.files[0];
         const maxSize = 100 * 1024 * 1024;
         if (file.size > maxSize) {
             console.error("File size exceeds 100 MB. Upload aborted.");
+            textarea.disabled = false;
             return;
         }
 
         const storageRef = ref(storage, type + '/' + file.name);
-        const uploadTask = uploadBytesResumable(storageRef, file);
 
-        uploadTask.on('state_changed',
-            (snapshot) => {
-                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log(progress)
-                setUploadProgress(() => (progress))
-                if (progress == 100) photoInputRef.current.value = null
-            },
-            (error) => {
-                console.error("Error:", error);
-            },
-            () => {
-                // Upload completed successfully, now we can get the download URL
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log('File available at', downloadURL);
+        const existingFile = await checkExistingFile(storageRef, event, type);
+        if(!existingFile) {
+            const uploadTask = uploadBytesResumable(storageRef, file);
+            setCurrentUploadTask(() => (uploadTask));
+            setDisplayUploadBubble(true);
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log(progress)
+                    setUploadProgress(() => (progress))
+                    if (progress === 100) photoInputRef.current.value = null
+                },
+                (error) => {
+                    console.error("Error:", error);
                     setUploadProgress(0);
-                    handleMessage(event, type, downloadURL);
-                }).catch((error) => {
-                    console.error("Error getting download URL:", error);
-                });
-            }
-        );
+                    textarea.disabled = true;
+                    setDisplayUploadBubble(false)
+                },
+                () => {
+                    // Upload completed successfully, now we can get the download URL
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        console.log('File available at', downloadURL);
+                        setUploadProgress(0);
+                        setDisplayUploadBubble(false)
+                        textarea.disabled = true;
+                        handleMessage(event, type, downloadURL);
+
+                    }).catch((error) => {
+                        console.error("Error getting download URL:", error);
+                        setUploadProgress(0);
+                        textarea.disabled = true;
+                        setDisplayUploadBubble(false)
+                    });
+                }
+            );
+        }
     }
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({behavior: "smooth"})
@@ -304,7 +341,7 @@ function ChatComponent(props) {
                 </div>
             </div>
             <div
-                className={"bg-sky-200 h-[92.75%] rounded-3xl lg:rounded-2xl flex flex-col justify-between p-4 overflow-y-clip"}>
+                className={"bg-sky-200 h-[92.75%]  rounded-3xl lg:rounded-2xl flex flex-col justify-between p-4 overflow-y-clip"}>
                 <div className={"my-2 px-4 custom-scrollbar overflow-auto"}>
                     {chats === null ? "" : chats[currentContact?._id]?.map((item, index) => (
                         <ChatBubble key={index} position={item.sender === user.id ? "right" : "left"} item={item}
@@ -316,7 +353,7 @@ function ChatComponent(props) {
                       className={`${currentContact == null ? "hidden" : "flex"} justify-center space-x-1.5 lg:space-x-4`}>
                     <div className={"relative flex"}>
                         <div
-                            className={`absolute ${attachDisplay ? "block" : "hidden"} ${emojiDisplay ? "bottom-[290px]" : "bottom-[70px]"} space-x-8 flex text-center bg-sky-100 shadow-xl rounded-t-2xl rounded-br-2xl p-4 pl-6 z-20 left-6`}
+                            className={`absolute ${attachDisplay ? "block" : "hidden"} ${emojiDisplay ? "bottom-[290px]" : "bottom-[70px]"} space-x-8 flex text-center bg-sky-100 shadow-md rounded-t-2xl rounded-br-2xl p-4 pl-6 z-20 left-6`}
                             ref={attachRef}>
                             <div>
                                 <div onClick={handlePhotoUpload} className={"cursor-pointer mb-2"}>
@@ -352,7 +389,7 @@ function ChatComponent(props) {
                             upload(event, "document")
                         }} ref={docInputRef}/>
                         <button type={"button"}
-                                className={"mb-2 self-center bg-sky-300 rounded-xl p-2 px-3 attach-icon"}
+                                className={"mb-2 shadow-md self-center bg-sky-300 rounded-xl p-2 px-3 attach-icon"}
                                 onClick={handleAttachDisplay}>
                             <AttachFileIcon className={"attach-icon pointer-events-none"}/>
                         </button>
@@ -365,11 +402,12 @@ function ChatComponent(props) {
                                 className={`absolute top-3 left-2 z-10 cursor-pointer text-gray-400 ${emojiDisplay ? "opacity-100" : "opacity-0"}`}/>
                         </div>
                         <div className={"relative"}>
-                            <UploadBubble progress={uploadProgress} display={displayUploadBubble}/>
+                            <UploadBubble progress={uploadProgress} display={displayUploadBubble}
+                                          cancelUpload={cancelUpload} currentUploadTask={currentUploadTask}/>
                             <TextareaAutosize placeholder={"Message"} disabled={currentContact == null} minLength={1}
-                                              value={inputMessage} required={true}
+                                              value={inputMessage} required={true} id={"chat-input"}
                                               type={"text"} onKeyDown={handleKeyDown}
-                                              className={"bg-[#f5f6f7] disabled:cursor-not-allowed rounded-2xl p-3 pl-10 h-14 max-h-36 resize-none font-semibold w-full"}
+                                              className={"bg-[#f5f6f7] shadow-md disabled:cursor-not-allowed rounded-2xl p-3 pl-10 h-14 max-h-36 resize-none font-semibold w-full"}
                                               onChange={handleInputMessage} onFocus={handleChatOnFocus}
                                               onBlur={handleChatOnBlur}/>
                         </div>
@@ -380,7 +418,7 @@ function ChatComponent(props) {
                         </div>
                     </div>
                     <button type={"submit"} disabled={currentContact == null} id={'chat-submit-button'}
-                            className={"self-center mb-1 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl bg-sky-300 p-2 pl-3"}>
+                            className={"self-center shadow-md mb-1 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl bg-sky-300 p-2 pl-3"}>
                         <SendIcon/>
                     </button>
                 </form>
