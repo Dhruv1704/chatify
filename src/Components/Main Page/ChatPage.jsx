@@ -104,7 +104,9 @@ function ChatPage(props) {
         if (!token) {
             navigate('/')
         }
-        getContact();
+        if(db.dbName==='chatify-db'){
+            getContact();
+        }
         // eslint-disable-next-line
     }, []);
 

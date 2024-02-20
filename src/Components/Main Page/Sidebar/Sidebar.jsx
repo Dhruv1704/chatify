@@ -11,7 +11,7 @@ import {useCookies} from "react-cookie";
 function Sidebar(props) {
 
     const context = useContext(Context);
-    const {setCurrentContact, mobileChatDisplay, setMobileAiDisplay, mobileAiDisplay} = context
+    const {setCurrentContact, mobileChatDisplay, setMobileAiDisplay, mobileAiDisplay, db} = context
     const navigate = useNavigate();
 
     PropTypes.checkPropTypes(Sidebar.propTypes, props, "prop", "Sidebar");
@@ -21,10 +21,11 @@ function Sidebar(props) {
 
     const [cookies, setCookie, removeCookie] = useCookies(['web-token']);
 
-    const handleLogOut = () => {
+    const handleLogOut =async () => {
         // const fcmToken = localStorage.getItem('fcm-token');
         // unSubscribeFromTopicFCM(fcmToken)
         localStorage.clear();
+        await db.delete()
         removeCookie('web-token', { path: '/' })
         navigate('/')
         window.location.reload(); // to refresh cookies, solves problem showing offline for online contacts
@@ -104,7 +105,7 @@ function Sidebar(props) {
                 </div>
             </div>
 
-            <Carousel showArrows={false} showThumbs={false} emulateTouch={true}
+            <Carousel showArrows={false} showThumbs={false} emulateTouch={false}
                       showIndicators={false} showStatus={false} selectedItem={carousalItem} onChange={(index)=>{carousalChange(index)}}>
                 <ContactSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut}/>
                 <ContactSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut}/>

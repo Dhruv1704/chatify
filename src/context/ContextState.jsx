@@ -3,15 +3,15 @@ import {toast} from 'react-toastify';
 import {useState} from "react";
 import PropTypes from "prop-types";
 import {useNavigate} from "react-router-dom";
-import { useCookies } from 'react-cookie';
-import Localbase from 'localbase'
+import {useCookies} from 'react-cookie';
+import Localbase from "localbase-samuk";
 
 
 const ContextState = (props) => {
 
     PropTypes.checkPropTypes(ContextState.propTypes, props, "prop", "ContextState")
 
-    const db = new Localbase('chatify-db')
+    const db =new Localbase('chatify-db')
     db.config.debug = false
 
     const [chats, setChats] = useState({});
@@ -72,7 +72,7 @@ const ContextState = (props) => {
         tst(json.message, json.type)
         setProgress(75)
         if (json.type === "success") {
-            setCookie("web-token", json.webToken, { path: '/' , maxAge: 60*60*24*10, secure: true})
+            setCookie("web-token", json.webToken, {path: '/', maxAge: 60 * 60 * 24 * 10, secure: true})
             navigate("/chat")
         }
         setProgress(100)
@@ -96,7 +96,7 @@ const ContextState = (props) => {
         const json = await response.json();
         tst(json.message, json.type)
         if (json.type === "success") {
-            setCookie("web-token", json.webToken, { path: '/' , maxAge: 60*60*24*10, secure: true})
+            setCookie("web-token", json.webToken, {path: '/', maxAge: 60 * 60 * 24 * 10, secure: true})
             navigate("/chat")
         }
         setProgress(100)
@@ -104,9 +104,13 @@ const ContextState = (props) => {
 
     const getContact = async () => {
         setProgress(25)
-        await db.collection('contacts').get().then(contacts=>{
-            setContact(contacts)
-        })
+        try {
+            await db.collection('contacts').get().then(contacts => {
+                setContact(contacts)
+            })
+        } catch (e) {
+            console.log(e)
+        }
         const localUser = JSON.parse(localStorage.getItem('user'));
         setUser(localUser);
         if (!navigator.onLine) {
@@ -131,10 +135,12 @@ const ContextState = (props) => {
             }
             setUser(user)
             localStorage.setItem('user', JSON.stringify(user))
-            if(json!=null) await db.collection('contacts').set(json.contact)
-            await db.collection('contacts').get().then(contacts=>{
-                setContact(contacts)
-            })
+            setContact(json.contact)
+            try {
+                await db.collection('contacts').set(json.contact)
+            } catch (e) {
+                console.log(e)
+            }
         }
         setProgress(100);
     }
@@ -154,7 +160,11 @@ const ContextState = (props) => {
         setProgress(75)
         if (json.type === "success") {
             setContact(json.contact)
-            await db.collection('contacts').set(json.contact)
+            try {
+                await db.collection('contacts').set(json.contact)
+            }catch (e){
+                console.log(e)
+            }
             tst(json.message, json.type)
         } else {
             tst(json.message, json.type)
@@ -165,10 +175,14 @@ const ContextState = (props) => {
     const getMessage = async () => {
         setProgress(25)
         let localChats = null;
-        await db.collection('chats').get().then(chats=>{
-            setChats(chats[0]);
-            localChats = chats[0]
-        })
+        try {
+            await db.collection('chats').get().then(chats => {
+                setChats(chats[0]);
+                localChats = chats[0]
+            })
+        }catch (e){
+            console.log(e)
+        }
         if (!navigator.onLine) {
             setProgress(100);
             return;
@@ -191,7 +205,11 @@ const ContextState = (props) => {
             }
             unreadMessages(localChats, messages);
             setChats(messages);
-            await db.collection('chats').set([messages])
+            try {
+                await db.collection('chats').set([messages])
+            } catch (e) {
+                console.log(e)
+            }
         }
         setProgress(100);
     }
@@ -242,33 +260,33 @@ const ContextState = (props) => {
         return json;
     }
 
-    const subscribeToTopicFCM = async (token)=>{
+    const subscribeToTopicFCM = async (token) => {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/fcm/subscribe`, {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
                 'web-token': cookies["web-token"]
             },
-            body: JSON.stringify({ token})
+            body: JSON.stringify({token})
         })
         const json = await res.json();
         console.log(json)
     }
 
-    const unSubscribeFromTopicFCM = async (token)=>{
+    const unSubscribeFromTopicFCM = async (token) => {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/fcm/unsubscribe`, {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
                 'web-token': cookies["web-token"]
             },
-            body: JSON.stringify({ token})
+            body: JSON.stringify({token})
         })
         const json = await res.json();
         console.log(json)
     }
 
-    const updateFCMToken = async (token)=>{
+    const updateFCMToken = async (token) => {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/fcm/updateToken`, {
             method: "PUT",
             headers: {
