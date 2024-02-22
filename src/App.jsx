@@ -13,6 +13,7 @@ import ChatComponent from "./Components/Main Page/MainCompoenent/ChatComponent.j
 import AiComponent from "./Components/Main Page/MainCompoenent/AiComponent.jsx";
 import {initializeApp} from "firebase/app";
 import VideoComponent from "./Components/Main Page/MainCompoenent/VideoComponent.jsx";
+import {GoogleOAuthProvider} from "@react-oauth/google"
 
 function App() {
 
@@ -43,16 +44,22 @@ function App() {
             <BrowserRouter>
                 <ContextState>
                     <AblyProvider client={ablyClient}>
-                        <Routes>
-                            <Route exact path={"/"} element={<LogIn/>}/>
-                            <Route exact path={"/chat"} element={
-                                <ChatPage chatDisplay={chatDisplay} setChatDisplay={setChatDisplay} client={ablyClient} aiDisplay={aiDisplay} setAiDisplay={setAiDisplay} aiTextOrImage={aiTextOrImage} setAiTextOrImage={setAiTextOrImage}/>
-                            }>
-                                <Route path={"chatComponent"} element={<ChatComponent chatDisplay={chatDisplay} client={ablyClient}/>}/>
-                                <Route path={"aiComponent"} element={<AiComponent aiDisplay={aiDisplay} aiTextOrImage={aiTextOrImage}/>}/>
-                            </Route>
-                            <Route exact path={"videoCall/:roomCode"} element={<VideoComponent/>}/>
-                        </Routes>
+                        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+                            <Routes>
+                                <Route exact path={"/"} element={<LogIn/>}/>
+                                <Route exact path={"/chat"} element={
+                                    <ChatPage chatDisplay={chatDisplay} setChatDisplay={setChatDisplay}
+                                              client={ablyClient} aiDisplay={aiDisplay} setAiDisplay={setAiDisplay}
+                                              aiTextOrImage={aiTextOrImage} setAiTextOrImage={setAiTextOrImage}/>
+                                }>
+                                    <Route path={"chatComponent"}
+                                           element={<ChatComponent chatDisplay={chatDisplay} client={ablyClient}/>}/>
+                                    <Route path={"aiComponent"} element={<AiComponent aiDisplay={aiDisplay}
+                                                                                      aiTextOrImage={aiTextOrImage}/>}/>
+                                </Route>
+                                <Route exact path={"videoCall/:roomCode"} element={<VideoComponent/>}/>
+                            </Routes>
+                        </GoogleOAuthProvider>
                     </AblyProvider>
                     <ToastContainer
                         position="bottom-right"

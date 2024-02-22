@@ -29,22 +29,22 @@ function SignUp(props) {
         document.getElementById("sign-div").style.display = "none";
     }
 
-    useEffect(() => {
-        const handleClickOutsideSign = (event) => {
-            // Check if the click is outside the modalattach-icon
-            if (signRef.current && !signRef.current.contains(event.target) && !event.target.classList.contains("create-account-btn")){
-                closeModal();
-            }
-        };
-
-        // Attach the event listener when the component mounts
-        document.addEventListener('click', handleClickOutsideSign);
-
-        // Detach the event listener when the component unmounts
-        return () => {
-            document.removeEventListener('click', handleClickOutsideSign);
-        };
-    }, []);
+    // useEffect(() => {
+    //     const handleClickOutsideSign = (event) => {
+    //         // Check if the click is outside the modalattach-icon
+    //         if (signRef.current && !signRef.current.contains(event.target) && !event.target.classList.contains("create-account-btn") && ){
+    //             closeModal();
+    //         }
+    //     };
+    //
+    //     // Attach the event listener when the component mounts
+    //     document.addEventListener('click', handleClickOutsideSign);
+    //
+    //     // Detach the event listener when the component unmounts
+    //     return () => {
+    //         document.removeEventListener('click', handleClickOutsideSign);
+    //     };
+    // }, []);
 
     const handleChange = (e) => {
         setCredentials({...credentials, [e.target.name]: e.target.value})
@@ -81,13 +81,13 @@ function SignUp(props) {
                 <input type={"password"} placeholder={"New Password"} name={"password"} id="password2" onChange={handleChange}
                        className={"border-[1px] border-[#dddfe2] mb-4 p-2 rounded-md w-full"}
                        minLength={5} required/>
-                <i className="cursor-pointer absolute top-[215px] right-7 text-[#7A7A85]" id="eye2"
+                <i className="cursor-pointer absolute top-[215px] right-7 text-[#7A7A85] eye" id="eye2"
                    onClick={() => passwordHideShow(2)}>{icon2}</i>
                 <input type={"password"} placeholder={"Confirm Password"} name={"cpassword"} id="password3" onChange={handleChange}
                        className={"border-[1px] border-[#dddfe2] mb-4 p-2 rounded-md w-full"}
                        onKeyUp={validatePassword} minLength={5}
                        required/>
-                <i className="cursor-pointer absolute top-[272px] right-7 text-[#7A7A85]" id="eye3"
+                <i className="cursor-pointer absolute top-[272px] right-7 text-[#7A7A85] eye" id="eye3"
                    onClick={() => passwordHideShow(3)}>{icon3}</i>
                 <div className={"flex justify-center"}>
                     <button type={"submit"}

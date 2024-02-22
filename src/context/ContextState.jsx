@@ -11,9 +11,6 @@ const ContextState = (props) => {
 
     PropTypes.checkPropTypes(ContextState.propTypes, props, "prop", "ContextState")
 
-    const db =new Localbase('chatify-db')
-    db.config.debug = false
-
     const [chats, setChats] = useState({});
     const [progress, setProgress] = useState(0);
     const [contact, setContact] = useState([]);
@@ -52,6 +49,30 @@ const ContextState = (props) => {
             unread[key] = newMessage[key].length - (oldMessage[key] ? oldMessage[key].length : 0);
         }
         setUnreadChats(unread);
+    }
+
+    const googleLogin = async  (googleAccessToken) => {
+        if (!navigator.onLine) {
+            tst("You're offline", "error")
+            return;
+        }
+        setProgress(30);
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/authen/google/login`, {
+            method: "POST",
+            headers: {
+                'content-Type': 'application/json'
+            },
+            body: JSON.stringify({"googleAccessToken": googleAccessToken.access_token})
+        });
+        setProgress(50)
+        const json = await response.json();
+        tst(json.message, json.type)
+        setProgress(75)
+        if (json.type === "success") {
+            setCookie("web-token", json.webToken, {path: '/', maxAge: 60 * 60 * 24 * 10, secure: true})
+            navigate("/chat")
+        }
+        setProgress(100)
     }
 
     const logIn = async (email, password) => {
@@ -103,6 +124,8 @@ const ContextState = (props) => {
     }
 
     const getContact = async () => {
+        const db =new Localbase('chatify-db')
+        db.config.debug = false
         setProgress(25)
         try {
             await db.collection('contacts').get().then(contacts => {
@@ -145,7 +168,9 @@ const ContextState = (props) => {
         setProgress(100);
     }
 
-    const addContact = async (contact) => {
+    const addContact = async (contactId) => {
+        const db =new Localbase('chatify-db')
+        db.config.debug = false
         setProgress(25)
         const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/contact/addContact`, {
             method: "POST",
@@ -153,7 +178,7 @@ const ContextState = (props) => {
                 'content-Type': 'application/json',
                 'web-token': cookies["web-token"]
             },
-            body: JSON.stringify({"contactEmail": contact})
+            body: JSON.stringify({contactId})
         })
         setProgress(50)
         const json = await res.json();
@@ -173,6 +198,8 @@ const ContextState = (props) => {
     }
 
     const getMessage = async () => {
+        const db =new Localbase('chatify-db')
+        db.config.debug = false
         setProgress(25)
         let localChats = null;
         try {
@@ -328,7 +355,7 @@ const ContextState = (props) => {
             subscribeToTopicFCM,
             unSubscribeFromTopicFCM,
             updateFCMToken,
-            db
+            googleLogin
         }}>
             {props.children}
         </Context.Provider>

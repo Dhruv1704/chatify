@@ -5,14 +5,15 @@ import {useNavigate} from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
 import {useEffect, useContext} from "react";
 import Context from "../../context/Context.jsx";
-
+import {useGoogleLogin} from '@react-oauth/google';
+import GoogleIcon from '@mui/icons-material/Google';
 import {useState} from "react";
 import {useCookies} from "react-cookie";
 
 function LogIn() {
 
     const context = useContext(Context);
-    const {progress, setProgress, logIn} = context;
+    const {progress, setProgress, logIn, googleLogin} = context;
     const navigate = useNavigate();
     const [shouldRenderLogin, setShouldRenderLogin] = useState(false);
     const [cookies] = useCookies(['web-token']);
@@ -72,6 +73,8 @@ function LogIn() {
         passwordInput.setAttribute("type", type)
     }
 
+    const login = useGoogleLogin({onSuccess: googleLogin});
+
     return (
         <>
             <LoadingBar
@@ -102,6 +105,9 @@ function LogIn() {
                         In
                     </button>
                     <hr/>
+                    <button type={"button"} onClick={login} className={"bg-[#f0f0f0] text-black flex justify-center text-xl font-bold rounded-lg py-3 my-3 active:scale-95"}>
+                        <GoogleIcon className={"text-xl self-center mr-4"}/> Log In with Google
+                    </button>
                     <button type={"button"}
                             className={"bg-[#42b72a] text-white text-xl font-semibold mx-auto w-[210px] rounded-lg py-3 mt-2 active:scale-95 create-account-btn"}
                             onClick={displaySign}>Create New Account

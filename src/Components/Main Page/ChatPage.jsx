@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import {useChannel} from "ably/react";
 import {getMessaging, getToken} from "firebase/messaging";
 import {useCookies} from "react-cookie";
+import Localbase from "localbase-samuk";
 
 function ChatPage(props) {
 
@@ -20,11 +21,13 @@ function ChatPage(props) {
     const navigate = useNavigate();
     const [contactModel, setContactModel] = useState(false);
     const context = useContext(Context);
-    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken, db} = context;
+    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken} = context;
 
     const [cookies] = useCookies(['web-token']);
 
     const updateLocalChat = async (chats)=>{
+        const db =new Localbase('chatify-db')
+        db.config.debug = false
         await db.collection('chats').set([chats])
     }
 
@@ -104,9 +107,7 @@ function ChatPage(props) {
         if (!token) {
             navigate('/')
         }
-        if(db.dbName==='chatify-db'){
-            getContact();
-        }
+        getContact();
         // eslint-disable-next-line
     }, []);
 

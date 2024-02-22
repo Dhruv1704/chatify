@@ -7,6 +7,7 @@ import {Carousel} from 'react-responsive-carousel';
 import ContactSidebar from "./ContactSidebar.jsx";
 import AiSidebar from "./AiSidebar.jsx";
 import {useCookies} from "react-cookie";
+import Localbase from "localbase-samuk";
 
 function Sidebar(props) {
 
@@ -24,6 +25,8 @@ function Sidebar(props) {
     const handleLogOut =async () => {
         // const fcmToken = localStorage.getItem('fcm-token');
         // unSubscribeFromTopicFCM(fcmToken)
+        const db =new Localbase('chatify-db')
+        db.config.debug = false
         localStorage.clear();
         await db.delete()
         removeCookie('web-token', { path: '/' })

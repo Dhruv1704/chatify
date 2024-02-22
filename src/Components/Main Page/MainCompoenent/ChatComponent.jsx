@@ -157,7 +157,7 @@ function ChatComponent(props) {
         const textarea = document.getElementById('chat-input');
         textarea.disabled = true;
         const file = event.target.files[0];
-        const maxSize = 100 * 1024 * 1024;
+        const maxSize = 25 * 1024 * 1024;
         if (file.size > maxSize) {
             console.error("File size exceeds 100 MB. Upload aborted.");
             textarea.disabled = false;

@@ -10,7 +10,7 @@ function AddContact(props) {
 
     const {contactModel, setContactModel} = props;
     const context = useContext(Context);
-    const {addContact} = context;
+    const {addContact, user} = context;
     const [newContact, setnewContact] = useState("")
 
     PropTypes.checkPropTypes(AddContact.propTypes, props,"prop", "AddContact");
@@ -53,9 +53,13 @@ function AddContact(props) {
                 <form onSubmit={handleAddContact}>
                     <label className={"font-semibold"}>Add Contact</label>
                     <br/>
+                    <div className={"text-center bg-[#f0f0f0] rounded-md p-2"}>
+                        <div>Your contact token:</div>
+                        <div className={"bg-gray-300 rounded-md p-2"}>{user?.id}</div>
+                    </div>
                     <input name={"contact"} type={"email"} className={"p-2 rounded-lg border my-2 w-[280px]"}
                            onChange={handleContactInput} value={newContact}
-                           placeholder={"Write email address"}/>
+                           placeholder={"Enter contact token here"}/>
                     <div className={"flex justify-end space-x-4"}>
                         <button type={"submit"}>
                             <DoneIcon className={"cursor-pointer"}/>
