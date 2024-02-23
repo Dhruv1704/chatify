@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import {PhotoView, PhotoProvider} from "react-photo-view";
 import DownloadIcon from "@mui/icons-material/Download.js";
-import DownloadFileBubble from "./DownloadFileBubble.jsx";
 function ChatBubble(props) {
 
     PropTypes.checkPropTypes(ChatBubble.propTypes, props, "prop", "ChatBubble")

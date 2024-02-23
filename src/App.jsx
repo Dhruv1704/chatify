@@ -57,7 +57,7 @@ function App() {
                                     <Route path={"aiComponent"} element={<AiComponent aiDisplay={aiDisplay}
                                                                                       aiTextOrImage={aiTextOrImage}/>}/>
                                 </Route>
-                                <Route exact path={"videoCall/:roomCode"} element={<VideoComponent/>}/>
+                                <Route exact path={"Call/:callType/:roomCode"} element={<VideoComponent/>}/>
                             </Routes>
                         </GoogleOAuthProvider>
                     </AblyProvider>

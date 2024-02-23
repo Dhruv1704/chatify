@@ -12,7 +12,7 @@ import Localbase from "localbase-samuk";
 function Sidebar(props) {
 
     const context = useContext(Context);
-    const {setCurrentContact, mobileChatDisplay, setMobileAiDisplay, mobileAiDisplay, db} = context
+    const {setCurrentContact, mobileChatDisplay, setMobileAiDisplay, mobileAiDisplay} = context
     const navigate = useNavigate();
 
     PropTypes.checkPropTypes(Sidebar.propTypes, props, "prop", "Sidebar");

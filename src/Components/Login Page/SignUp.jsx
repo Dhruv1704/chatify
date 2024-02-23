@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import {useContext, useState, useRef, useEffect} from 'react'
+import {useContext, useState, useRef} from 'react'
 import Context from "../../context/Context.jsx";
 
 function SignUp(props) {

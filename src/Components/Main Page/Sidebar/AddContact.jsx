@@ -48,16 +48,16 @@ function AddContact(props) {
     }
 
     return (
-        <div className={`${contactModel ? "block" : "hidden"} fixed bg-[#ffffffcc] left-0 top-0 w-full h-full z-10`}>
-            <div className={"relative rounded-lg w-fit mx-auto top-[40vh] bg-white p-2 shadow-xl"} ref={addContactRef} >
+        <div className={`${contactModel ? "block" : "hidden"} fixed bg-black/70 left-0 top-0 w-full h-full z-10`}>
+            <div className={"relative rounded-xl w-fit mx-auto top-[40vh] bg-white p-2 shadow-xl"} ref={addContactRef} >
                 <form onSubmit={handleAddContact}>
                     <label className={"font-semibold"}>Add Contact</label>
                     <br/>
-                    <div className={"text-center bg-[#f0f0f0] rounded-md p-2"}>
+                    <div className={"text-center bg-[#f0f0f0] rounded-md p-2 mt-2"}>
                         <div>Your contact token:</div>
                         <div className={"bg-gray-300 rounded-md p-2"}>{user?.id}</div>
                     </div>
-                    <input name={"contact"} type={"email"} className={"p-2 rounded-lg border my-2 w-[280px]"}
+                    <input name={"contact"} className={"p-2 rounded-lg border my-2 w-[280px]"}
                            onChange={handleContactInput} value={newContact}
                            placeholder={"Enter contact token here"}/>
                     <div className={"flex justify-end space-x-4"}>

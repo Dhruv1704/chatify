@@ -11,6 +11,7 @@ import {useChannel} from "ably/react";
 import {getMessaging, getToken} from "firebase/messaging";
 import {useCookies} from "react-cookie";
 import Localbase from "localbase-samuk";
+import CallReceiveComponent from "./CallReceiveComponent.jsx";
 
 function ChatPage(props) {
 
@@ -24,6 +25,9 @@ function ChatPage(props) {
     const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken} = context;
 
     const [cookies] = useCookies(['web-token']);
+    const [callDisplay, setCallDisplay] = useState(false);
+    const [callMessage, setCallMessage] = useState({});
+
 
     const updateLocalChat = async (chats)=>{
         const db =new Localbase('chatify-db')
@@ -31,11 +35,11 @@ function ChatPage(props) {
         await db.collection('chats').set([chats])
     }
 
-    useChannel(user?.id, (message) => {
+    const handleMessage = (message) => {
         const senderId = message.data.sender;
         const newChats = chats;
         newChats[senderId] === undefined ? newChats[senderId] = [message.data] : newChats[senderId].push(message.data);
-        if(currentContact!=senderId){
+        if(currentContact!==senderId){
             const newUnread = unreadChats;
             newUnread[senderId] = newUnread[senderId]?newUnread[senderId]+1:1;
             setUnreadChats(newUnread);
@@ -44,9 +48,27 @@ function ChatPage(props) {
             ...newChats
         }))
         updateLocalChat(newChats)
+    }
+
+    const handleVoiceCall = (message) => {
+        setCallMessage(message)
+        setCallDisplay(true)
+    }
+
+    const handleVideoCall = (message) => {
+        setCallMessage(message)
+        setCallDisplay(true)
+    }
+
+    useChannel(user?.id, (message) => {
+        if(message.data?.type==="Voice Call"){
+            handleVoiceCall(message)
+        }else if(message.data?.type==="Video Call"){
+            handleVideoCall(message)
+        }else{
+            handleMessage(message)
+        }
     })
-
-
 
 
     useEffect(() => {
@@ -149,6 +171,7 @@ function ChatPage(props) {
                 onLoaderFinished={() => setProgress(0)}
             />
             <div className={"bg-sky-300 h-[100vh] flex lg:px-4"}>
+                <CallReceiveComponent display={callDisplay} setDisplay={setCallDisplay} message={callMessage}/>
                 <AddContact contactModel={contactModel} setContactModel={setContactModel}/>
                 <Sidebar setContactModel={setContactModel} setAiDisplay={setAiDisplay}
                          setChatDisplay={setChatDisplay} chatDisplay={chatDisplay} aiDisplay={aiDisplay}

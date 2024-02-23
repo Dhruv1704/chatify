@@ -154,7 +154,8 @@ const ContextState = (props) => {
             const user = {
                 name: json.name,
                 email: json.email,
-                id: json.id
+                id: json.id,
+                roomCode: json.roomCode
             }
             setUser(user)
             localStorage.setItem('user', JSON.stringify(user))
@@ -241,7 +242,7 @@ const ContextState = (props) => {
         setProgress(100);
     }
 
-    const addMessage = async (content, receiver, type, receiverName) => {
+    const addMessage = async (content, receiver, type) => {
         await fetch(`${import.meta.env.VITE_BACKEND_API}/api/chat/addMessage`, {
             method: "POST",
             headers: {
@@ -251,8 +252,7 @@ const ContextState = (props) => {
             body: JSON.stringify({
                 receiver,
                 content,
-                type,
-                receiverName,
+                type
             })
         })
     }
@@ -288,7 +288,7 @@ const ContextState = (props) => {
     }
 
     const subscribeToTopicFCM = async (token) => {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/fcm/subscribe`, {
+        await fetch(`${import.meta.env.VITE_BACKEND_API}/api/fcm/subscribe`, {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
@@ -296,12 +296,10 @@ const ContextState = (props) => {
             },
             body: JSON.stringify({token})
         })
-        const json = await res.json();
-        console.log(json)
     }
 
     const unSubscribeFromTopicFCM = async (token) => {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/fcm/unsubscribe`, {
+        await fetch(`${import.meta.env.VITE_BACKEND_API}/api/fcm/unsubscribe`, {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
@@ -309,12 +307,10 @@ const ContextState = (props) => {
             },
             body: JSON.stringify({token})
         })
-        const json = await res.json();
-        console.log(json)
     }
 
     const updateFCMToken = async (token) => {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/fcm/updateToken`, {
+        await fetch(`${import.meta.env.VITE_BACKEND_API}/api/fcm/updateToken`, {
             method: "PUT",
             headers: {
                 'content-Type': 'application/json',
@@ -322,8 +318,17 @@ const ContextState = (props) => {
             },
             body: JSON.stringify({token})
         })
-        const json = await res.json();
-        console.log(json)
+    }
+
+    const call = async (roomCode, type, receiver)=>{
+        await fetch(`${import.meta.env.VITE_BACKEND_API}/api/call`, {
+            method: "POST",
+            headers: {
+                'content-Type': 'application/json',
+                'web-token': cookies["web-token"]
+            },
+            body: JSON.stringify({roomCode, type, receiver})
+        })
     }
 
     return (
@@ -355,7 +360,8 @@ const ContextState = (props) => {
             subscribeToTopicFCM,
             unSubscribeFromTopicFCM,
             updateFCMToken,
-            googleLogin
+            googleLogin,
+            call
         }}>
             {props.children}
         </Context.Provider>

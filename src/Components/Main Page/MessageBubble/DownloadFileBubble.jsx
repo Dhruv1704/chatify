@@ -1,6 +1,9 @@
 import DownloadIcon from '@mui/icons-material/Download';
+import PropTypes from "prop-types";
 
 const DownloadFileBubble = (props) => {
+
+    PropTypes.checkPropTypes(DownloadFileBubble.propTypes, props, "prop", "DownloadFileBubble")
 
     const {name, type} = props;
 
@@ -34,3 +37,8 @@ const DownloadFileBubble = (props) => {
 }
 
 export default DownloadFileBubble;
+
+DownloadFileBubble.propTypes = {
+    name: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired
+}

@@ -16,6 +16,8 @@ import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/st
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {useNavigate} from "react-router-dom";
 import UploadBubble from "../MessageBubble/UploadBubble.jsx";
+import VideocamIcon from '@mui/icons-material/Videocam';
+import CallIcon from '@mui/icons-material/Call';
 
 function ChatComponent(props) {
 
@@ -42,7 +44,8 @@ function ChatComponent(props) {
         chats,
         setChats,
         mobileChatDisplay,
-        setMobileChatDisplay
+        setMobileChatDisplay,
+        call
     } = context;
     const [inputMessage, setInputMessage] = useState("");
     const messagesEndRef = useRef(null)
@@ -225,7 +228,7 @@ function ChatComponent(props) {
         newChats[currentContact._id] === undefined ? newChats[currentContact._id] = [message] : newChats[currentContact._id].push(message);
         setChats(() => ({...newChats}))
         client.channels.get(currentContact._id).publish('message', message);
-        addMessage(content, currentContact._id, type, currentContact.name)
+        addMessage(content, currentContact._id, type)
         setInputMessage("")
     }
 
@@ -286,6 +289,30 @@ function ChatComponent(props) {
         navigate("./")
     }
 
+    const handleVideoCall = ()=>{
+        const message = {
+            roomCode: user?.roomCode.video,
+            type: "Video Call",
+            sender: user.name,
+            timestamp: new Date()
+        }
+        client.channels.get(currentContact._id).publish('message', message);
+        call(user?.roomCode.video, "video", currentContact._id);
+        navigate("/Call/Video Call/"+user?.roomCode.video)
+    }
+
+    const handleVoiceCall = ()=>{
+        const message = {
+            roomCode: user?.roomCode.voice,
+            type: "Voice Call",
+            sender: user.name,
+            timestamp: new Date()
+        }
+        client.channels.get(currentContact._id).publish('message', message);
+        call(user?.roomCode.voice, "voice", currentContact._id);
+        navigate("/Call/Voice Call/"+user?.roomCode.voice)
+    }
+
     const acceptMap = {
         csv: 'text/csv',
         odt: 'application/vnd.oasis.opendocument.text',
@@ -339,6 +366,10 @@ function ChatComponent(props) {
                         }</div>
                     </div>
                 </div>
+                <div className={`${currentContact===null?"hidden":"block"} flex space-x-2 -mt-4`}>
+                    <button className={"bg-sky-300 rounded-xl p-2 px-3 self-center active:scale-95"} onClick={handleVideoCall}><VideocamIcon/></button>
+                    <button className={"bg-sky-300 rounded-xl p-2 px-3 self-center active:scale-95"} onClick={handleVoiceCall}><CallIcon/></button>
+                </div>
             </div>
             <div
                 className={"bg-sky-200 h-[92.75%]  rounded-3xl lg:rounded-2xl flex flex-col justify-between p-4 overflow-y-clip"}>
@@ -389,7 +420,7 @@ function ChatComponent(props) {
                             upload(event, "document")
                         }} ref={docInputRef}/>
                         <button type={"button"}
-                                className={"mb-2 shadow-md self-center bg-sky-300 rounded-xl p-2 px-3 attach-icon"}
+                                className={"mb-2 shadow-md self-center bg-sky-300 rounded-xl p-2 px-3 attach-icon active:scale-95"}
                                 onClick={handleAttachDisplay}>
                             <AttachFileIcon className={"attach-icon pointer-events-none"}/>
                         </button>
@@ -418,7 +449,7 @@ function ChatComponent(props) {
                         </div>
                     </div>
                     <button type={"submit"} disabled={currentContact == null} id={'chat-submit-button'}
-                            className={"self-center shadow-md mb-1 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl bg-sky-300 p-2 pl-3"}>
+                            className={"self-center shadow-md mb-1 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl bg-sky-300 p-2 pl-3 active:scale-95"}>
                         <SendIcon/>
                     </button>
                 </form>
