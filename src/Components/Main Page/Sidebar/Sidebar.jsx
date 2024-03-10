@@ -8,6 +8,7 @@ import ContactSidebar from "./ContactSidebar.jsx";
 import AiSidebar from "./AiSidebar.jsx";
 import {useCookies} from "react-cookie";
 import Localbase from "localbase-samuk";
+import CallLogSidebar from "./CallLogSidebar.jsx";
 
 function Sidebar(props) {
 
@@ -35,8 +36,11 @@ function Sidebar(props) {
     }
 
     const handleAddContacts = () => {
-        console.log("hello")
         setContactModel(true)
+    }
+
+    const handleSettings = ()=>{
+
     }
 
 
@@ -95,7 +99,7 @@ function Sidebar(props) {
 
     return (
         <div
-            className={`${mobileChatDisplay || mobileAiDisplay?"hidden":"block"} lg:block lg:h-[90vh] bg-sky-100 w-full lg:w-1/3 xl:w-[23%] lg:my-auto lg:rounded-3xl p-6`}>
+            className={`${mobileChatDisplay || mobileAiDisplay?"hidden":"block"} lg:block lg:h-[90vh] bg-sky-100 w-full lg:w-[33%] 2xl:w-[24%] lg:my-auto lg:rounded-3xl p-6`}>
             <div>
                 <div className={"relative flex justify-around font-semibold text-xl mb-5"}>
                     <div className={"cursor-pointer select-none"} id={"chat-link-border"} onClick={(e) => handleBorder(e.target, 1)}>
@@ -110,10 +114,10 @@ function Sidebar(props) {
 
             <Carousel showArrows={false} showThumbs={false} emulateTouch={false}
                       showIndicators={false} showStatus={false} selectedItem={carousalItem} onChange={(index)=>{carousalChange(index)}}>
-                <ContactSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut}/>
-                <ContactSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut}/>
+                <ContactSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut} handleSettings={handleSettings}/>
+                <CallLogSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut} handleSettings={handleSettings}/>
                 <AiSidebar handleLogOut={handleLogOut} handleAiChange={handleAiChange}
-                           handleAddContacts={handleAddContacts} aiTextOrImage={aiTextOrImage}/>
+                           handleAddContacts={handleAddContacts} aiTextOrImage={aiTextOrImage} handleSettings={handleSettings}/>
             </Carousel>
         </div>
     )

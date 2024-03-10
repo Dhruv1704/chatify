@@ -7,7 +7,7 @@ const VideoComponent = () => {
     const navigate = useNavigate();
 
     const handleLeave = ()=>{
-        navigate("/chat")
+        navigate("/chat", {replace: true}) // removes back history.
     }
 
     const { roomCode} = useParams();

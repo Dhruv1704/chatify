@@ -13,12 +13,12 @@ function AddContact(props) {
     const {addContact, user} = context;
     const [newContact, setnewContact] = useState("")
 
-    PropTypes.checkPropTypes(AddContact.propTypes, props,"prop", "AddContact");
+    PropTypes.checkPropTypes(AddContact.propTypes, props, "prop", "AddContact");
 
     useEffect(() => {
         const handleClickOutsideContact = (event) => {
             // Check if the click is outside the modalattach-icon
-            if (contactModel && addContactRef.current && !addContactRef.current.contains(event.target) && !event.target.classList.contains("add-icon")){
+            if (contactModel && addContactRef.current && !addContactRef.current.contains(event.target) && !event.target.classList.contains("add-icon")) {
                 setContactModel(false)
             }
         };
@@ -49,7 +49,7 @@ function AddContact(props) {
 
     return (
         <div className={`${contactModel ? "block" : "hidden"} fixed bg-black/70 left-0 top-0 w-full h-full z-10`}>
-            <div className={"relative rounded-xl w-fit mx-auto top-[40vh] bg-white p-2 shadow-xl"} ref={addContactRef} >
+            <div className={"relative rounded-xl w-fit mx-auto top-[40vh] bg-white p-2 shadow-xl"} ref={addContactRef}>
                 <form onSubmit={handleAddContact}>
                     <label className={"font-semibold"}>Add Contact</label>
                     <br/>
@@ -59,12 +59,14 @@ function AddContact(props) {
                     </div>
                     <input name={"contact"} className={"p-2 rounded-lg border my-2 w-[280px]"}
                            onChange={handleContactInput} value={newContact}
-                           placeholder={"Enter contact token here"}/>
+                           placeholder={"Enter contact token here"} required={true}/>
                     <div className={"flex justify-end space-x-4"}>
                         <button type={"submit"}>
                             <DoneIcon className={"cursor-pointer"}/>
                         </button>
-                        <CloseIcon className={"cursor-pointer"} onClick={handleClose}/>
+                        <button onClick={handleClose} type={"button"}>
+                            <CloseIcon className={"cursor-pointer"}/>
+                        </button>
                     </div>
                 </form>
             </div>

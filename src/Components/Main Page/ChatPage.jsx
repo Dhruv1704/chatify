@@ -12,6 +12,7 @@ import {getMessaging, getToken} from "firebase/messaging";
 import {useCookies} from "react-cookie";
 import Localbase from "localbase-samuk";
 import CallReceiveComponent from "./CallReceiveComponent.jsx";
+import Settings from "./Sidebar/Settings.jsx";
 
 function ChatPage(props) {
 
@@ -21,8 +22,9 @@ function ChatPage(props) {
 
     const navigate = useNavigate();
     const [contactModel, setContactModel] = useState(false);
+    const [displaySettings, setDisplaySettings] = useState(false);
     const context = useContext(Context);
-    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken} = context;
+    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken, getCallLogs} = context;
 
     const [cookies] = useCookies(['web-token']);
     const [callDisplay, setCallDisplay] = useState(false);
@@ -130,6 +132,7 @@ function ChatPage(props) {
             navigate('/')
         }
         getContact();
+        getCallLogs();
         // eslint-disable-next-line
     }, []);
 
@@ -143,7 +146,6 @@ function ChatPage(props) {
                 themeColorMeta.setAttribute('content', "#7DD3FC");
             }
         }
-
         handleResize();
 
         window.addEventListener("resize", handleResize);
@@ -171,6 +173,7 @@ function ChatPage(props) {
                 onLoaderFinished={() => setProgress(0)}
             />
             <div className={"bg-sky-300 h-[100vh] flex lg:px-4"}>
+                <Settings />
                 <CallReceiveComponent display={callDisplay} setDisplay={setCallDisplay} message={callMessage}/>
                 <AddContact contactModel={contactModel} setContactModel={setContactModel}/>
                 <Sidebar setContactModel={setContactModel} setAiDisplay={setAiDisplay}

@@ -1,3 +1,6 @@
+body{
+    -webkit-tap-highlight-color: transparent;
+}
 pre{
     background: rgb(224 242 254 );
     padding: 1em;
@@ -49,5 +52,10 @@ pre{
 @media screen and (max-width: 1024px){
     .carousel-root{
         height: 91vh!important;
+    }
+}
+@media screen and (max-height: 768px){
+    .carousel-root{
+        height: 84vh!important;
     }
 }

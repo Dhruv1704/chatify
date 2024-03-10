@@ -43,9 +43,9 @@ const AiImageBubble = (props) => {
                 {item.question}
             </div>
             <div
-                className={`p-3 my-2 break-words w-fit lg:max-w-[600px] max-w-[280px] shadow-md rounded-b-2xl rounded-tr-2xl bg-white`}>{
+                className={`p-3 ${item.url===null?"pb-1.5":""} my-2 break-words w-fit lg:max-w-[600px] max-w-[280px] shadow-md rounded-b-2xl rounded-tr-2xl bg-white`}>{
                 item.url === null ?
-                    <BeatLoader size={9} margin={4} color={"#00ffe9"}/>
+                    <BeatLoader size={9} margin={4} color={"#7DD3FC"}/>
                     :
                     <div>
                         <PhotoProvider maskOpacity={0.9} toolbarRender={() => <a href={item.url} onClick={download}>

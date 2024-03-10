@@ -17,7 +17,7 @@ const CallReceiveComponent = ({message, display, setDisplay})=>{
         <div className={`${display?"block":"hidden"} fixed bg-black/70 left-0 top-0 w-full h-full z-10`}>
             <div className={"relative rounded-xl w-fit mx-auto top-[40vh] bg-white p-4 shadow-xl select-none"}>
                 <div className={"text-center"}>
-                    <h3 className={"text-3xl"}>{message.data?.sender}</h3>
+                    <h3 className={"text-3xl"}>{message.data?.sender_name}</h3>
                     <div className={"text-sm mt-1.5"}>{message.data?.type}</div>
                 </div>
                 <div className={"flex space-x-5"}>

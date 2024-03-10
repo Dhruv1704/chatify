@@ -20,6 +20,7 @@ const ContextState = (props) => {
     const [mobileChatDisplay, setMobileChatDisplay] = useState(false)
     const [mobileAiDisplay, setMobileAiDisplay] = useState(false)
     const navigate = useNavigate();
+    const [callLogs, setCallLogs] = useState([])
 
     const [cookies, setCookie] = useCookies(['web-token']);
 
@@ -242,18 +243,14 @@ const ContextState = (props) => {
         setProgress(100);
     }
 
-    const addMessage = async (content, receiver, type) => {
+    const addMessage = async (message) => {
         await fetch(`${import.meta.env.VITE_BACKEND_API}/api/chat/addMessage`, {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
                 'web-token': cookies["web-token"]
             },
-            body: JSON.stringify({
-                receiver,
-                content,
-                type
-            })
+            body: JSON.stringify({message})
         })
     }
 
@@ -320,15 +317,41 @@ const ContextState = (props) => {
         })
     }
 
-    const call = async (roomCode, type, receiver)=>{
+    const call = async (message)=>{
         await fetch(`${import.meta.env.VITE_BACKEND_API}/api/call`, {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
                 'web-token': cookies["web-token"]
             },
-            body: JSON.stringify({roomCode, type, receiver})
+            body: JSON.stringify({message})
         })
+    }
+
+    const getCallLogs = async ()=>{
+        const db =new Localbase('chatify-db')
+        db.config.debug = false
+        try {
+            await db.collection('callLogs').get().then(callLogs => {
+                setCallLogs(callLogs);
+            })
+        }catch (e){
+            console.log(e)
+        }
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/call/callLogs`,{
+            method: "GET",
+            headers:{
+                'content-Type': 'application/json',
+                'web-token': cookies["web-token"]
+            }
+        })
+        const json = await res.json();
+        setCallLogs(json.callLogs)
+        try {
+            await db.collection('callLogs').set(json.callLogs)
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     return (
@@ -361,7 +384,9 @@ const ContextState = (props) => {
             unSubscribeFromTopicFCM,
             updateFCMToken,
             googleLogin,
-            call
+            call,
+            callLogs,
+            getCallLogs
         }}>
             {props.children}
         </Context.Provider>

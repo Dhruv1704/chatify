@@ -18,6 +18,7 @@ import {useNavigate} from "react-router-dom";
 import UploadBubble from "../MessageBubble/UploadBubble.jsx";
 import VideocamIcon from '@mui/icons-material/Videocam';
 import CallIcon from '@mui/icons-material/Call';
+import Avatar from 'react-avatar';
 
 function ChatComponent(props) {
 
@@ -162,7 +163,7 @@ function ChatComponent(props) {
         const file = event.target.files[0];
         const maxSize = 25 * 1024 * 1024;
         if (file.size > maxSize) {
-            console.error("File size exceeds 100 MB. Upload aborted.");
+            console.error("File size exceeds 25 MB. Upload aborted.");
             textarea.disabled = false;
             return;
         }
@@ -221,14 +222,14 @@ function ChatComponent(props) {
             content,
             type,
             sender: user.id,
-            reciever: currentContact._id,
+            receiver: currentContact._id,
             timestamp: new Date()
         }
         const newChats = chats;
         newChats[currentContact._id] === undefined ? newChats[currentContact._id] = [message] : newChats[currentContact._id].push(message);
         setChats(() => ({...newChats}))
         client.channels.get(currentContact._id).publish('message', message);
-        addMessage(content, currentContact._id, type)
+        addMessage(message)
         setInputMessage("")
     }
 
@@ -293,11 +294,14 @@ function ChatComponent(props) {
         const message = {
             roomCode: user?.roomCode.video,
             type: "Video Call",
-            sender: user.name,
+            sender:user.id,
+            receiver: currentContact._id,
+            sender_name: user.name,
+            receiver_name:currentContact.name,
             timestamp: new Date()
         }
         client.channels.get(currentContact._id).publish('message', message);
-        call(user?.roomCode.video, "video", currentContact._id);
+        call(message);
         navigate("/Call/Video Call/"+user?.roomCode.video)
     }
 
@@ -305,11 +309,14 @@ function ChatComponent(props) {
         const message = {
             roomCode: user?.roomCode.voice,
             type: "Voice Call",
-            sender: user.name,
+            sender:user.id,
+            receiver: currentContact._id,
+            sender_name: user.name,
+            receiver_name:currentContact.name,
             timestamp: new Date()
         }
         client.channels.get(currentContact._id).publish('message', message);
-        call(user?.roomCode.voice, "voice", currentContact._id);
+        call(message);
         navigate("/Call/Voice Call/"+user?.roomCode.voice)
     }
 
@@ -343,10 +350,7 @@ function ChatComponent(props) {
                             <ArrowBackIcon/>
                         </button>
                     </div>
-                    <div className={"bg-green-300 rounded-full p-2 px-4 content-center flex"}>
-                        <span
-                            className={"font-bold text-xl"}>{currentContact == null ? user?.name.split(" ")[0].charAt(0) : currentContact?.name.charAt(0)}</span>
-                    </div>
+                    <Avatar name={currentContact == null ? user?.name : currentContact?.name} size="45" round={true} className={"font-bold select-none"}/>
                     <div className={`${currentContact === null ? "mt-2" : "mt-0"} ml-4`}>
                         <div>{currentContact === null ? user?.name : currentContact?.name}</div>
                         <div
@@ -366,7 +370,7 @@ function ChatComponent(props) {
                         }</div>
                     </div>
                 </div>
-                <div className={`${currentContact===null?"hidden":"block"} flex space-x-2 -mt-4`}>
+                <div className={`${currentContact===null?"hidden":"block"} flex space-x-4 -mt-4`}>
                     <button className={"bg-sky-300 rounded-xl p-2 px-3 self-center active:scale-95"} onClick={handleVideoCall}><VideocamIcon/></button>
                     <button className={"bg-sky-300 rounded-xl p-2 px-3 self-center active:scale-95"} onClick={handleVoiceCall}><CallIcon/></button>
                 </div>
