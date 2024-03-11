@@ -26,7 +26,7 @@ const CallLogSidebar = (props) => {
                 </div>
                 {callLogs && callLogs.length > 0 ?
                     <div className={"mt-5"}>
-                        {callLogs.map((item, index) => {
+                        {callLogs.slice().reverse().map((item, index) => {
                             return (
                                 <CallLogList key={index} item={item} user={user}/>
                             )

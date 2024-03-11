@@ -50,8 +50,9 @@ const CallLogList = (props) => {
             className={`bg-sky-200 rounded-2xl flex py-3 mb-1 px-2 select-none`}>
             <div className={"flex items-center space-x-4"}>
                 <Avatar name={item.sender_name} size="45" round={true} className={"font-bold select-none"}/>
-                <div className={"self-center -mb-1.5"}>
-                    <div>{item.sender_name}</div>
+                <div className={"-mb-1.5"}>
+                    <div className={"float-left ml-2"}>{item.sender_name}</div>
+                    <br/>
                     <div className={"text-xs"}>{item.sender===user.id?<CallMadeIcon className={"scale-[0.65]"}/>:<CallReceivedIcon className={"scale-[0.65]"}/>} {date}</div>
                 </div>
             </div>
@@ -61,7 +62,7 @@ const CallLogList = (props) => {
 }
 
 CallLogList.propTypes = {
-    item: PropTypes.object.isRequired,
-    user: PropTypes.object.isRequired
+    item: PropTypes.object,
+    user: PropTypes.object
 };
 export default CallLogList;

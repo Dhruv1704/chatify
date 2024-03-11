@@ -338,6 +338,38 @@ function ChatComponent(props) {
 
     const acceptString = Object.values(acceptMap).join(',');
 
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set today's date to midnight
+
+        const dateWithoutTime = new Date(dateString);
+        dateWithoutTime.setHours(0, 0, 0, 0);
+        const diff = dateWithoutTime.getTime() - today.getTime();
+
+        if (diff === 0) {
+            return 'Today';
+        } else if (diff === -86400000) { // One day in milliseconds
+            return 'Yesterday';
+        } else {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+    }
+
+    const handleConditionForDate = (index)=>{
+        if(index===0) return true;
+        const currentChatBubbleDate = new Date(chats[currentContact?._id][index].timestamp)
+        const prevChatBubbleDate = new Date(chats[currentContact?._id][index-1].timestamp)
+
+        const currentDateWithoutTIme = currentChatBubbleDate.setHours(0, 0, 0, 0);
+        const prevDateWithoutTIme = prevChatBubbleDate.setHours(0, 0, 0, 0);
+
+        const diff = currentDateWithoutTIme - prevDateWithoutTIme;
+
+        return diff===0?false:true;
+    }
+
     return (
         <div
             className={`${mobileChatDisplay ? "block" : "hidden"} ${chatDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 lg:h-[90vh] h-[100vh] overflow-clip my-auto lg:rounded-3xl w-full lg:mx-4 p-6 pt-4`}>
@@ -378,10 +410,17 @@ function ChatComponent(props) {
             <div
                 className={"bg-sky-200 h-[92.75%]  rounded-3xl lg:rounded-2xl flex flex-col justify-between p-4 overflow-y-clip"}>
                 <div className={"my-2 px-4 custom-scrollbar overflow-auto"}>
-                    {chats === null  || chats===undefined ? "" : chats[currentContact?._id]?.map((item, index) => (
+                    {chats === null  || chats===undefined ? "" : chats[currentContact?._id]?.map((item, index) => {
+                        const conditionForDate = handleConditionForDate(index);
+                        let date = ""
+                        if(conditionForDate) date = formatDate(item.timestamp)
+                        return (
+                        <>
+                        <div className={`${conditionForDate?"block":"hidden"} select-none bg-sky-300 w-fit mx-auto px-3 py-1 rounded-2xl text-xs font-bold`}>{date}</div>
                         <ChatBubble key={index} position={item.sender === user.id ? "right" : "left"} item={item}
-                                    continued={index === 0 ? false : chats[currentContact?._id][index - 1].sender === item.sender ? true : false}/>
-                    ))}
+                                    continued={index === 0 || conditionForDate ? false : chats[currentContact?._id][index - 1].sender === item.sender ? true : false}/>
+                        </>
+                    )})}
                     <div ref={messagesEndRef}/>
                 </div>
                 <form onSubmit={(e) => handleMessage(e, "text", inputMessage)} aria-disabled={currentContact == null}
