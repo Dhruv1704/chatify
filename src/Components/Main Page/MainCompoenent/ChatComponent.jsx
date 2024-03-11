@@ -161,13 +161,14 @@ function ChatComponent(props) {
         const textarea = document.getElementById('chat-input');
         textarea.disabled = true;
         const file = event.target.files[0];
-        const maxSize = 25 * 1024 * 1024;
+        const maxSize = 50 * 1024 * 1024;
         if (file.size > maxSize) {
-            console.error("File size exceeds 25 MB. Upload aborted.");
+            console.error("File size exceeds 50 MB. Upload aborted.");
             textarea.disabled = false;
             return;
         }
 
+        console.log("HEllo")
         const storageRef = ref(storage, type + '/' + file.name);
 
         const existingFile = await checkExistingFile(storageRef, event, type);
@@ -416,7 +417,7 @@ function ChatComponent(props) {
                         if(conditionForDate) date = formatDate(item.timestamp)
                         return (
                         <>
-                        <div className={`${conditionForDate?"block":"hidden"} select-none bg-sky-300 w-fit mx-auto px-3 py-1 rounded-2xl text-xs font-bold`}>{date}</div>
+                        <div className={`${conditionForDate?"block":"hidden"} select-none bg-sky-300 w-fit mx-auto px-3 py-1 rounded-2xl text-xs font-bold`} >{date}</div>
                         <ChatBubble key={index} position={item.sender === user.id ? "right" : "left"} item={item}
                                     continued={index === 0 || conditionForDate ? false : chats[currentContact?._id][index - 1].sender === item.sender ? true : false}/>
                         </>

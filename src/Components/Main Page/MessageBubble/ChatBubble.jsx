@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import {PhotoView, PhotoProvider} from "react-photo-view";
 import DownloadIcon from "@mui/icons-material/Download.js";
+import {useEffect, useRef} from "react";
 
 function ChatBubble(props) {
 
@@ -47,10 +48,22 @@ function ChatBubble(props) {
         window.open(item.content, '_blank');
     };
 
+    function getTime(dateString) {
+        const date = new Date(dateString);
+        const hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, '0'); // Pad minutes with leading zero if needed
+        return `${hours}:${minutes}`;
+    }
+
+    let chatTime = useRef("");
+
+    chatTime.current = item?getTime(item.timestamp):""
+
+    //Uses padStart(2, '0') to ensure two digits are always displayed, adding a leading zero if necessary (e.g., single-digit minutes will be prefixed with a "0").
 
     return (
             <div
-                className={`chat-bubble shadow-md ${item.type === "text" ? "p-3" : "p-2"} my-2 break-words text-sm lg:text-base w-fit lg:max-w-[500px] max-w-[280px] ${position === "left" ? "rounded-tr-2xl bg-white" : "rounded-tl-2xl bg-sky-100 ml-auto"} ${continued ? "rounded-2xl" : "rounded-b-2xl"}`}>
+                className={`chat-bubble shadow-md ${item.type === "text" ? "p-3" : "p-2"} pb-1 flex flex-col my-2 break-words text-sm lg:text-base w-fit lg:max-w-[500px] max-w-[280px] ${position === "left" ? "rounded-tr-2xl bg-white" : "rounded-tl-2xl bg-sky-100 ml-auto"} ${continued ? "rounded-2xl" : "rounded-b-2xl"}`}>
                 {/*<DownloadFileBubble name={"https://firebasestorage.googleapis.com/v0/b/chatify-17.appspot.com/o/video%2F2023%20OLED%20Demo%20l%204K%20HDR%2060FPS%20Dolby%20Vision.mp4?alt=media&token=2dff6567-d6b1-4456-8791-08bf1406d7c1"} type={item.type}/>*/}
                 {item.type === "text" ? <p>{item.content}</p> : item.type === "image" ?
                     <PhotoProvider maskOpacity={0.9} toolbarRender={() => <a href={item.content} onClick={download}>
@@ -85,6 +98,7 @@ function ChatBubble(props) {
 
                                 : null
                 }
+                <small className={"text-[9px] font-extralight self-end"}>{chatTime.current}</small>
             </div>
     )
 }
