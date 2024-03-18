@@ -19,6 +19,8 @@ import UploadBubble from "../MessageBubble/UploadBubble.jsx";
 import VideocamIcon from '@mui/icons-material/Videocam';
 import CallIcon from '@mui/icons-material/Call';
 import Avatar from 'react-avatar';
+import CloseIcon from "@mui/icons-material/Close";
+import {Delete} from "@mui/icons-material";
 
 function ChatComponent(props) {
 
@@ -55,6 +57,8 @@ function ChatComponent(props) {
     const [attachDisplay, setAttachDisplay] = useState(false)
     const [displayUploadBubble, setDisplayUploadBubble] = useState(false);
     const [currentUploadTask, setCurrentUploadTask] = useState();
+    const [deleteChats, setDeleteChats] = useState([]);
+    const [displayDeleteChats, setDisplayDeleteChats] = useState(false);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -371,6 +375,14 @@ function ChatComponent(props) {
         return diff===0?false:true;
     }
 
+    const handleChatDeleteCancel = ()=>{
+        setDisplayDeleteChats(()=>false)
+    }
+
+    const handleChatDelete = ()=>{
+        setDisplayDeleteChats(()=>false)
+    }
+
     return (
         <div
             className={`${mobileChatDisplay ? "block" : "hidden"} ${chatDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 lg:h-[90vh] h-[100vh] overflow-clip my-auto lg:rounded-3xl w-full lg:mx-4 p-6 pt-4`}>
@@ -403,9 +415,13 @@ function ChatComponent(props) {
                         }</div>
                     </div>
                 </div>
-                <div className={`${currentContact===null?"hidden":"block"} flex space-x-4 -mt-4`}>
-                    <button className={"bg-sky-300 rounded-xl p-2 px-3 self-center active:scale-95"} onClick={handleVideoCall}><VideocamIcon/></button>
-                    <button className={"bg-sky-300 rounded-xl p-2 px-3 self-center active:scale-95"} onClick={handleVoiceCall}><CallIcon/></button>
+                <div className={`${currentContact===null || displayDeleteChats?"hidden":"block"} flex space-x-4 -mt-4`}>
+                    <button className={"bg-sky-300 rounded-xl p-2 px-3 self-center active:scale-95 cursor-pointer"} onClick={handleVideoCall}><VideocamIcon/></button>
+                    <button className={"bg-sky-300 rounded-xl p-2 px-3 self-center active:scale-95 cursor-pointer"} onClick={handleVoiceCall}><CallIcon/></button>
+                </div>
+                <div className={`${displayDeleteChats?"block":"hidden"} flex space-x-4 -mt-4`}>
+                    <button className={"bg-sky-300 rounded-xl p-2 px-3 self-center active:scale-95 cursor-pointer"} onClick={handleChatDeleteCancel}><CloseIcon/></button>
+                    <button className={"bg-sky-300 rounded-xl p-2 px-3 self-center active:scale-95 cursor-pointer"} onClick={handleChatDelete}><Delete/></button>
                 </div>
             </div>
             <div
@@ -416,11 +432,11 @@ function ChatComponent(props) {
                         let date = ""
                         if(conditionForDate) date = formatDate(item.timestamp)
                         return (
-                        <>
+                        <div key={index}>
                         <div className={`${conditionForDate?"block":"hidden"} select-none bg-sky-300 w-fit mx-auto px-3 py-1 rounded-2xl text-xs font-bold`} >{date}</div>
-                        <ChatBubble key={index} position={item.sender === user.id ? "right" : "left"} item={item}
+                        <ChatBubble position={item.sender === user.id ? "right" : "left"} item={item} deleteChats={deleteChats} setDeleteChats={setDeleteChats} setDisplayDeleteChats={setDisplayDeleteChats} displayDeleteChats={displayDeleteChats}
                                     continued={index === 0 || conditionForDate ? false : chats[currentContact?._id][index - 1].sender === item.sender ? true : false}/>
-                        </>
+                        </div>
                     )})}
                     <div ref={messagesEndRef}/>
                 </div>

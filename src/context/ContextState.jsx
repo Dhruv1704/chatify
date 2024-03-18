@@ -347,7 +347,6 @@ const ContextState = (props) => {
         })
         const json = await res.json();
         setCallLogs(json.callLogs)
-        console.log(json.callLogs)
         try {
             await db.collection('callLogs').set(json.callLogs)
         } catch (e) {

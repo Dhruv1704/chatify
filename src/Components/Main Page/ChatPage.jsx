@@ -62,7 +62,7 @@ function ChatPage(props) {
         setCallDisplay(true)
     }
 
-    useChannel(user?.id, (message) => {
+    useChannel(user?.id || 0, (message) => {
         if(message.data?.type==="Voice Call"){
             handleVoiceCall(message)
         }else if(message.data?.type==="Video Call"){
@@ -87,26 +87,25 @@ function ChatPage(props) {
         }
 
         const handleFCM = ()=>{
-            const messaging = getMessaging();
-            getToken(messaging, { vapidKey: import.meta.env.VITE_FCM_VAPID_KEY }).then((currentToken) => {
-                if (currentToken) {
-                    // console.log(currentToken)
-                    // localStorage.setItem("fcm-token", currentToken)
-                    updateFCMToken(currentToken)
-                    // subscribeToTopicFCM(currentToken)
-                } else {
-                    console.log('No registration token available. Request permission to generate one.');
-                }
-            }).catch((err) => {
-                console.log('An error occurred while retrieving token. ', err);
-                // Add more detailed error logging
-                if (err.code) {
-                    console.log('Error code: ', err.code);
-                }
-                if (err.message) {
-                    console.log('Error message: ', err.message);
-                }
-            });
+            if ('serviceWorker' in navigator) {
+                const messaging = getMessaging();
+                getToken(messaging, {vapidKey: import.meta.env.VITE_FCM_VAPID_KEY}).then((currentToken) => {
+                    if (currentToken) {
+                        updateFCMToken(currentToken)
+                    } else {
+                        console.log('No registration token available. Request permission to generate one.');
+                    }
+                }).catch((err) => {
+                    console.log('An error occurred while retrieving token. ', err);
+                    // Add more detailed error logging
+                    if (err.code) {
+                        console.log('Error code: ', err.code);
+                    }
+                    if (err.message) {
+                        console.log('Error message: ', err.message);
+                    }
+                });
+            }
         }
 
         if (user) {

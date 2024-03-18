@@ -68,6 +68,5 @@ export default defineConfig({
         }),
         eslint({lintOnStart: true, failOnError: false}),
         mkcert(),
-    ],
-    strict: true,
+    ]
 })

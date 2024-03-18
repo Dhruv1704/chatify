@@ -24,9 +24,9 @@ const CallLogSidebar = (props) => {
                            placeholder={"Search"}/>
                     <SearchIcon className={"absolute left-2 top-1"}/>
                 </div>
-                {callLogs && callLogs.length > 0 ?
+                {callLogs && callLogs?.length > 0 ?
                     <div className={"mt-5"}>
-                        {callLogs.slice().reverse().map((item, index) => {
+                        {callLogs?.slice().reverse().map((item, index) => {
                             return (
                                 <CallLogList key={index} item={item} user={user}/>
                             )
