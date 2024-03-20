@@ -29,7 +29,7 @@ function ChatBubble(props) {
                 console.log(err);
             });
     };
-    const {item, position, continued, deleteChats, setDeleteChats, setDisplayDeleteChats, displayDeleteChats} = props;
+    const {item, position, continued, deleteChats, setDeleteChats, setDisplayDeleteChats, displayDeleteChats, index, deleteChatsIndex, setDeleteChatsIndex} = props;
 
     const decodedFileName = decodeURIComponent(item.content);
 
@@ -68,16 +68,21 @@ function ChatBubble(props) {
     useEffect(() => {
         if(!displayDeleteChats){
             setDeleteChats([])
+            setDeleteChatsIndex([])
             setDisplayDeleteBubble(()=>false)
         } 
-    }, [displayDeleteChats, setDisplayDeleteChats, setDeleteChats]);
+    }, [displayDeleteChats, setDisplayDeleteChats, setDeleteChats, setDeleteChatsIndex]);
 
     const selectChatsDelete = ()=>{
         const shouldDelete = displayDeleteBubble;
         if(shouldDelete) return
         const arr = deleteChats
         if(arr.indexOf(item._id)===-1) arr.push(item._id)
+        else return
+        const indexArr = deleteChatsIndex
+        indexArr.push(index)
         setDeleteChats(()=>arr)
+        setDeleteChatsIndex(()=>indexArr)
         setDisplayDeleteChats(()=> true)
         setDisplayDeleteBubble(()=>true)
     }
@@ -85,9 +90,13 @@ function ChatBubble(props) {
     const cancelChatDelete = ()=>{
         const arr = deleteChats
         if(arr.length===0) return
-        const index = arr.indexOf(item._id)
-        if(index===-1) return
-        arr.splice(index, 1);
+        const index1 = arr.indexOf(item._id)
+        if(index2===-1) return
+        arr.splice(index1,1);
+        const indexArr = deleteChatsIndex
+        const index2 = indexArr.indexOf(index) // for index array
+        indexArr.splice(indexArr, 1);
+        setDeleteChatsIndex(()=>indexArr)
         if(arr.length===0) setDisplayDeleteChats(()=>false)
         setDisplayDeleteBubble(()=>false)
     }
@@ -154,7 +163,10 @@ ChatBubble.propTypes = {
     deleteChats: PropTypes.array.isRequired,
     setDeleteChats: PropTypes.func.isRequired,
     setDisplayDeleteChats: PropTypes.func.isRequired,
-    displayDeleteChats: PropTypes.bool.isRequired
+    displayDeleteChats: PropTypes.bool.isRequired,
+    index: PropTypes.number.isRequired,
+    deleteChatsIndex: PropTypes.array.isRequired,
+    setDeleteChatsIndex: PropTypes.func.isRequired
 };
 
 export default ChatBubble;

@@ -244,7 +244,7 @@ const ContextState = (props) => {
     }
 
     const addMessage = async (message) => {
-        await fetch(`${import.meta.env.VITE_BACKEND_API}/api/chat/addMessage`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/chat/addMessage`, {
             method: "POST",
             headers: {
                 'content-Type': 'application/json',
@@ -252,6 +252,23 @@ const ContextState = (props) => {
             },
             body: JSON.stringify({message})
         })
+        const json = await res.json();
+        const chat = json.chat
+        const db =new Localbase('chatify-db')
+        db.config.debug = false
+        let localChats = null;
+        try {
+            await db.collection('chats').get().then(chats => {
+                localChats = chats[0]
+            })
+            const contactId = chat.receiver;
+            if(localChats[contactId]===undefined) localChats[contactId] = chat
+            else localChats[contactId].push(chat)
+            await db.collection('chats').set([localChats])
+        }catch (e){
+            console.log(e)
+        }
+        return chat;
     }
 
     const aiQuestion = async (question) => {
@@ -354,6 +371,17 @@ const ContextState = (props) => {
         }
     }
 
+    const deleteSelectedChats = async (chats)=>{
+        await fetch(`${import.meta.env.VITE_BACKEND_API}/api/chat/deleteMessage`, {
+            method: "DELETE",
+            headers:{
+                'content-Type':"application/json",
+                'web-token': cookies['web-token']
+            },
+            body: JSON.stringify({chats})
+        })
+    }
+
     return (
         <Context.Provider value={{
             user,
@@ -386,7 +414,8 @@ const ContextState = (props) => {
             googleLogin,
             call,
             callLogs,
-            getCallLogs
+            getCallLogs,
+            deleteSelectedChats
         }}>
             {props.children}
         </Context.Provider>

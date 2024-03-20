@@ -21,6 +21,7 @@ import CallIcon from '@mui/icons-material/Call';
 import Avatar from 'react-avatar';
 import CloseIcon from "@mui/icons-material/Close";
 import {Delete} from "@mui/icons-material";
+import Localbase from "localbase-samuk";
 
 function ChatComponent(props) {
 
@@ -48,7 +49,8 @@ function ChatComponent(props) {
         setChats,
         mobileChatDisplay,
         setMobileChatDisplay,
-        call
+        call,
+        deleteSelectedChats
     } = context;
     const [inputMessage, setInputMessage] = useState("");
     const messagesEndRef = useRef(null)
@@ -58,6 +60,7 @@ function ChatComponent(props) {
     const [displayUploadBubble, setDisplayUploadBubble] = useState(false);
     const [currentUploadTask, setCurrentUploadTask] = useState();
     const [deleteChats, setDeleteChats] = useState([]);
+    const [deleteChatsIndex, setDeleteChatsIndex] = useState([])
     const [displayDeleteChats, setDisplayDeleteChats] = useState(false);
 
     useEffect(() => {
@@ -87,13 +90,11 @@ function ChatComponent(props) {
                 setStatus(() => ({
                     ...newStatus
                 }))
-                console.log(status)
             } else if (action === "update" && !data.typing) {
                 newStatus[data.user] = "online"
                 setStatus(() => ({
                     ...newStatus
                 }))
-                console.log(status)
             } else if (action === 'enter' || action === 'present') {
                 newStatus[currentContact?._id] = "online"
                 setStatus(() => ({
@@ -122,7 +123,6 @@ function ChatComponent(props) {
         });
     }
     const handleChatOnBlur = () => {
-        console.log("hi")
         statusTyping(false)
     }
 
@@ -172,7 +172,6 @@ function ChatComponent(props) {
             return;
         }
 
-        console.log("HEllo")
         const storageRef = ref(storage, type + '/' + file.name);
 
         const existingFile = await checkExistingFile(storageRef, event, type);
@@ -221,21 +220,26 @@ function ChatComponent(props) {
         scrollToBottom()
     }, [chats, currentContact, mobileChatDisplay, chatDisplay]);
 
-    const handleMessage = (e, type, content) => {
+    const handleMessage =async (e, type, content) => {
         e.preventDefault();
+        const contactId = currentContact._id
         const message = {
             content,
             type,
             sender: user.id,
-            receiver: currentContact._id,
+            receiver:  contactId,
             timestamp: new Date()
         }
         const newChats = chats;
-        newChats[currentContact._id] === undefined ? newChats[currentContact._id] = [message] : newChats[currentContact._id].push(message);
+        let index = 0;
+        if(newChats[contactId]!==undefined) index = newChats[contactId].length;
+        newChats[contactId] === undefined ? newChats[contactId] = [message] : newChats[contactId].push(message);
         setChats(() => ({...newChats}))
-        client.channels.get(currentContact._id).publish('message', message);
-        addMessage(message)
+        client.channels.get(contactId).publish('message', message);
         setInputMessage("")
+        const resChat = await addMessage(message);
+        newChats[contactId][index] = resChat
+        setChats(() => ({...newChats}))
     }
 
     useEffect(() => {
@@ -379,7 +383,26 @@ function ChatComponent(props) {
         setDisplayDeleteChats(()=>false)
     }
 
+    const deleteLocalChats = async (deleteChats, deleteChatsIndex)=>{
+        const localChats = chats
+        const contactId = currentContact._id
+        deleteChatsIndex.forEach((item)=>{
+            localChats[contactId].splice(item, 1);
+        })
+        setChats(()=> localChats)
+
+        const db =new Localbase('chatify-db')
+        db.config.debug = false
+        try {
+            await db.collection('chats').set([localChats])
+        }catch (e){
+            console.log(e)
+        }
+    }
+
     const handleChatDelete = ()=>{
+        deleteLocalChats(deleteChats, deleteChatsIndex)
+        deleteSelectedChats(deleteChats)
         setDisplayDeleteChats(()=>false)
     }
 
@@ -434,7 +457,7 @@ function ChatComponent(props) {
                         return (
                         <div key={index}>
                         <div className={`${conditionForDate?"block":"hidden"} select-none bg-sky-300 w-fit mx-auto px-3 py-1 rounded-2xl text-xs font-bold`} >{date}</div>
-                        <ChatBubble position={item.sender === user.id ? "right" : "left"} item={item} deleteChats={deleteChats} setDeleteChats={setDeleteChats} setDisplayDeleteChats={setDisplayDeleteChats} displayDeleteChats={displayDeleteChats}
+                        <ChatBubble position={item.sender === user.id ? "right" : "left"} item={item} deleteChats={deleteChats} setDeleteChats={setDeleteChats} setDisplayDeleteChats={setDisplayDeleteChats} displayDeleteChats={displayDeleteChats} index={index} deleteChatsIndex={deleteChatsIndex} setDeleteChatsIndex={setDeleteChatsIndex}
                                     continued={index === 0 || conditionForDate ? false : chats[currentContact?._id][index - 1].sender === item.sender ? true : false}/>
                         </div>
                     )})}
