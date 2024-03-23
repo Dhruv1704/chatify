@@ -37,14 +37,21 @@ function ChatPage(props) {
         await db.collection('chats').set([chats])
     }
 
+    const updateLocalUnread = async (newUnread)=>{
+        const db = new Localbase('chatify-db')
+        db.config.debug = false
+        await db.collection('unread').set([newUnread])
+    }
+
     const handleMessage = (message) => {
         const senderId = message.data.sender;
         const newChats = chats;
         newChats[senderId] === undefined ? newChats[senderId] = [message.data] : newChats[senderId].push(message.data);
-        if(currentContact!==senderId){
+        if(!currentContact || currentContact?._id!==senderId){
             const newUnread = unreadChats;
             newUnread[senderId] = newUnread[senderId]?newUnread[senderId]+1:1;
             setUnreadChats(newUnread);
+            updateLocalUnread(newUnread)
         }
         setChats(() => ({
             ...newChats

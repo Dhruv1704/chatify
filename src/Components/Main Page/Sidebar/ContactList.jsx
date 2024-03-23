@@ -3,6 +3,7 @@ import {useContext, useEffect, useState} from "react";
 import Context from "../../../context/Context.jsx";
 import {useNavigate} from "react-router-dom";
 import Avatar from 'react-avatar';
+import Localbase from "localbase-samuk";
 
 function ContactList(props) {
 
@@ -14,11 +15,20 @@ function ContactList(props) {
 
     PropTypes.checkPropTypes(ContactList.propTypes, "prop", "ContactList");
 
-    const handleCurrentContact = (item) => {
+    const handleCurrentContact = async (item) => {
         const unread = unreadChats;
         unread[item._id] = 0;
         setUnreadChats(unread);
         setCurrentContact(item)
+
+        const db = new Localbase('chatify-db')
+        db.config.debug = false
+        try{
+            await db.collection('unread').set([unread])
+        }catch (e){
+            console.log(e)
+        }
+
         if (window.innerWidth <= 1024) {
             setMobileChatDisplay(true)
             navigate("chatComponent")
@@ -56,7 +66,7 @@ function ContactList(props) {
     const [date, setDate] = useState()
 
     useEffect(() => {
-        if(chats!==undefined) {
+        if(chats && chats[item?._id] && chats[item?._id]?.length>0) {
             const formatedDate = formatDate(chats[item?._id]?.at(-1).timestamp)
             setDate(formatedDate)
         }
@@ -65,17 +75,17 @@ function ContactList(props) {
     return (
         <div className={"cursor-pointer"} onClick={() => handleCurrentContact(item)}>
             <div
-                className={`${currentContact === item && window.innerWidth > 1024 ? "bg-sky-300" : "bg-sky-200"} rounded-2xl flex py-3 mb-1 px-2`}>
+                className={`${currentContact?._id === item?._id && window.innerWidth > 1024 ? "bg-sky-300" : "bg-sky-200"} rounded-2xl flex py-3 mb-1 px-2`}>
                 <Avatar name={item.name} size="45" round={true} className={"font-bold select-none"}/>
                 <div className={"ml-4 select-none flex flex-col self-center"}>
                     <span>{item.name}</span>
-                    <span className={"font-light text-xs self-start"}>{chats!==undefined?chats[item?._id]?.at(-1)?.content:""}</span>
+                    <span className={"font-light text-xs self-start"}>{chats && chats[item?._id] && chats[item?._id].length>0 ?chats[item?._id]?.at(-1)?.content:""}</span>
                 </div>
                 <div className={"flex self-center ml-auto mr-2 flex-col mt-1"}>
                     <span className={"font-light text-xs"}>{date}</span>
                     <div
-                        className={`${(unreadChats[item._id] && unreadChats[item._id] >= 0) ? "flex" : "invisible"}  h-[20px] w-[20px]  text-xs  ml-auto text-white rounded-full bg-sky-400 justify-center items-center`}>
-                        {unreadChats[item._id]}
+                        className={`${(unreadChats && unreadChats[item?._id] && unreadChats[item?._id] >= 0) ? "flex" : "invisible"}  h-[20px] w-[20px]  text-xs  ml-auto text-white rounded-full bg-sky-400 justify-center items-center`}>
+                        {unreadChats? unreadChats[item?._id] : ""}
                     </div>
                 </div>
             </div>

@@ -42,12 +42,22 @@ const ContextState = (props) => {
         }
     }
 
-    const unreadMessages = (oldMessage, newMessage) => {
-        const unread = {};
-        if (oldMessage === null || oldMessage === undefined) oldMessage = {}
+    const unreadMessages = async (localMessage , newMessage) => {
+        if(!newMessage) return;
+
+        const db = new Localbase('chatify-db')
+        db.config.debug = false
+
+        let unread = unreadChats
+
         const keysNewMessage = Object.keys(newMessage);
         for (const key of keysNewMessage) {
-            unread[key] = newMessage[key].length - (oldMessage[key] ? oldMessage[key].length : 0);
+            unread[key] = ( newMessage[key]?.length - localMessage[key]? localMessage[key].length : 0) + ( unread[key] || 0 );
+        }
+        try{
+            await db.collection('unread').set([unread])
+        }catch (e){
+            console.log(e)
         }
         setUnreadChats(unread);
     }
@@ -203,11 +213,16 @@ const ContextState = (props) => {
         const db =new Localbase('chatify-db')
         db.config.debug = false
         setProgress(25)
-        let localChats = null;
+        let localChats = {}
         try {
             await db.collection('chats').get().then(chats => {
-                setChats(chats[0]);
-                localChats = chats[0]
+                if(chats[0]) {
+                    setChats(chats[0]);
+                    localChats = chats[0]
+                }
+            })
+            await db.collection('unread').get().then((item) => {
+                setUnreadChats(()=>item[0])
             })
         }catch (e){
             console.log(e)
@@ -232,10 +247,10 @@ const ContextState = (props) => {
                 const contactId = chatElement.sender === user.id ? chatElement.receiver : chatElement.sender;
                 messages[contactId] === undefined ? messages[contactId] = [chatElement] : messages[contactId].push(chatElement);
             }
-            unreadMessages(localChats, messages);
             setChats(messages);
             try {
                 await db.collection('chats').set([messages])
+                await unreadMessages(localChats, messages);
             } catch (e) {
                 console.log(e)
             }
@@ -262,7 +277,7 @@ const ContextState = (props) => {
                 localChats = chats[0]
             })
             const contactId = chat.receiver;
-            if(localChats[contactId]===undefined) localChats[contactId] = chat
+            if(localChats[contactId]===undefined) localChats[contactId] = [chat]
             else localChats[contactId].push(chat)
             await db.collection('chats').set([localChats])
         }catch (e){

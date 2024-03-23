@@ -218,6 +218,9 @@ function ChatComponent(props) {
     }
     useEffect(() => {
         scrollToBottom()
+        return(()=>{
+            setDisplayDeleteChats(false)
+        })
     }, [chats, currentContact, mobileChatDisplay, chatDisplay]);
 
     const handleMessage =async (e, type, content) => {
@@ -234,17 +237,18 @@ function ChatComponent(props) {
         let index = 0;
         if(newChats[contactId]!==undefined) index = newChats[contactId].length;
         newChats[contactId] === undefined ? newChats[contactId] = [message] : newChats[contactId].push(message);
-        setChats(() => ({...newChats}))
+        setChats(() => (newChats))
         client.channels.get(contactId).publish('message', message);
         setInputMessage("")
         const resChat = await addMessage(message);
-        newChats[contactId][index] = resChat
-        setChats(() => ({...newChats}))
+        newChats[contactId][index]['_id'] = resChat._id
+        setChats(() => (newChats))
     }
 
     useEffect(() => {
         const backHandlerChat = () => {
             if (window.innerWidth <= 1024 && mobileChatDisplay) {
+                setDisplayDeleteChats(false)
                 setMobileChatDisplay(false);
             }
         }
@@ -295,6 +299,7 @@ function ChatComponent(props) {
     }
 
     const handleChatBack = () => {
+        setDisplayDeleteChats(false)
         setMobileChatDisplay(false);
         navigate("./")
     }
@@ -450,7 +455,7 @@ function ChatComponent(props) {
             <div
                 className={"bg-sky-200 h-[92.75%]  rounded-3xl lg:rounded-2xl flex flex-col justify-between p-4 overflow-y-clip"}>
                 <div className={"my-2 px-4 custom-scrollbar overflow-auto"}>
-                    {chats === null  || chats===undefined ? "" : chats[currentContact?._id]?.map((item, index) => {
+                    {chats === null  || chats===undefined  || chats[currentContact?._id]?.length===0 ? "" : chats[currentContact?._id]?.map((item, index) => {
                         const conditionForDate = handleConditionForDate(index);
                         let date = ""
                         if(conditionForDate) date = formatDate(item.timestamp)
