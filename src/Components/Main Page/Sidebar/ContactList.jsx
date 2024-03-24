@@ -4,6 +4,10 @@ import Context from "../../../context/Context.jsx";
 import {useNavigate} from "react-router-dom";
 import Avatar from 'react-avatar';
 import Localbase from "localbase-samuk";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import HeadphonesIcon from "@mui/icons-material/Headphones";
+import PhotoIcon from '@mui/icons-material/Photo';
+import DescriptionIcon from "@mui/icons-material/Description";
 
 function ContactList(props) {
 
@@ -23,9 +27,9 @@ function ContactList(props) {
 
         const db = new Localbase('chatify-db')
         db.config.debug = false
-        try{
+        try {
             await db.collection('unread').set([unread])
-        }catch (e){
+        } catch (e) {
             console.log(e)
         }
 
@@ -36,7 +40,7 @@ function ContactList(props) {
     }
 
     function formatDate(dateString) {
-        if(dateString===null || dateString===undefined) return ""
+        if (dateString === null || dateString === undefined) return ""
         const date = new Date(dateString);
 
         // Get today's date without time
@@ -65,12 +69,34 @@ function ContactList(props) {
 
     const [date, setDate] = useState()
 
+    const [content, setContent] = useState("")
+
+
     useEffect(() => {
-        if(chats && chats[item?._id] && chats[item?._id]?.length>0) {
+        const handleLastContent = () => {
+            const type = chats[item?._id]?.at(-1)?.type
+            if (type === "text") {
+                setContent(()=>chats[item?._id]?.at(-1)?.content)
+            } else if (type === "image") {
+                setContent(()=>"Image")
+            } else if (type === "audio") {
+                setContent(()=>"Audio")
+            } else if (type === "video") {
+                setContent(()=>"Video")
+            } else if (type === "document") {
+                setContent(()=>"Document")
+            } else {
+                setContent(()=>"")
+            }
+        }
+
+        if (chats && chats[item?._id] && chats[item?._id]?.length > 0) {
             const formatedDate = formatDate(chats[item?._id]?.at(-1).timestamp)
             setDate(formatedDate)
+            handleLastContent();
         }
     }, [item, chats]);
+
 
     return (
         <div className={"cursor-pointer"} onClick={() => handleCurrentContact(item)}>
@@ -79,13 +105,28 @@ function ContactList(props) {
                 <Avatar name={item.name} size="45" round={true} className={"font-bold select-none"}/>
                 <div className={"ml-4 select-none flex flex-col self-center"}>
                     <span>{item.name}</span>
-                    <span className={"font-light text-xs self-start"}>{chats && chats[item?._id] && chats[item?._id].length>0 ?chats[item?._id]?.at(-1)?.content:""}</span>
+                    <div className={"font-light text-xs self-start flex justify-center"}>
+                        <div className={`${content==="Video"?"block":"hidden"}`}>
+                            <VideocamIcon className={"scale-75"}/>
+                        </div>
+                        <div className={`${content==="Audio"?"block":"hidden"}`}>
+                            <HeadphonesIcon className={"scale-75"}/>
+                        </div>
+                        <div className={`${content==="Document"?"block":"hidden"}`}>
+                            <DescriptionIcon className={"scale-75"}/>
+                        </div>
+                        <div className={`${content==="Image"?"block":"hidden"}`}>
+                            <PhotoIcon className={"scale-75"}/>
+                        </div>
+
+                        <div className={"my-auto"}>{content}</div>
+                    </div>
                 </div>
                 <div className={"flex self-center ml-auto mr-2 flex-col mt-1"}>
                     <span className={"font-light text-xs"}>{date}</span>
                     <div
                         className={`${(unreadChats && unreadChats[item?._id] && unreadChats[item?._id] >= 0) ? "flex" : "invisible"}  h-[20px] w-[20px]  text-xs  ml-auto text-white rounded-full bg-sky-400 justify-center items-center`}>
-                        {unreadChats? unreadChats[item?._id] : ""}
+                        {unreadChats ? unreadChats[item?._id] : ""}
                     </div>
                 </div>
             </div>

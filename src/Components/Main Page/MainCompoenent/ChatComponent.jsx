@@ -184,7 +184,6 @@ function ChatComponent(props) {
                 (snapshot) => {
                     // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log(progress)
                     setUploadProgress(() => (progress))
                     if (progress === 100) photoInputRef.current.value = null
                 },
