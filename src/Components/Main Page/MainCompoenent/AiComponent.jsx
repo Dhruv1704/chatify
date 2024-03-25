@@ -124,6 +124,7 @@ const AiComponent = (props) => {
             setImageAiChat([])
             localStorage.removeItem('image-ai');
         }
+        document.getElementById("ai-input").disabled = false
     }
 
     const handleAIBack = () => {

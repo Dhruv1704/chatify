@@ -50,7 +50,8 @@ function ChatComponent(props) {
         mobileChatDisplay,
         setMobileChatDisplay,
         call,
-        deleteSelectedChats
+        deleteSelectedChats,
+        tst
     } = context;
     const [inputMessage, setInputMessage] = useState("");
     const messagesEndRef = useRef(null)
@@ -148,12 +149,12 @@ function ChatComponent(props) {
         setDisplayUploadBubble(false);
     }
 
-    async function checkExistingFile(storageRef, event, type) {
+    async function checkExistingFile(storageRef, event, type, file) {
         const textarea = document.getElementById('chat-input');
         try {
             const url = await getDownloadURL(storageRef);
             console.log("File already exists at", url);
-            handleMessage(event, type, url);
+            handleMessage(event, type, url, file);
             textarea.disabled = false;
             return true;
         } catch (error) {
@@ -168,13 +169,14 @@ function ChatComponent(props) {
         const maxSize = 50 * 1024 * 1024;
         if (file.size > maxSize) {
             console.error("File size exceeds 50 MB. Upload aborted.");
+            tst("File size exceeds 50 MB. Upload aborted.", "error")
             textarea.disabled = false;
             return;
         }
 
         const storageRef = ref(storage, type + '/' + file.name);
 
-        const existingFile = await checkExistingFile(storageRef, event, type);
+        const existingFile = await checkExistingFile(storageRef, event, type, file);
         if(!existingFile) {
             const uploadTask = uploadBytesResumable(storageRef, file);
             setCurrentUploadTask(() => (uploadTask));
@@ -200,8 +202,7 @@ function ChatComponent(props) {
                         setUploadProgress(0);
                         setDisplayUploadBubble(false)
                         textarea.disabled = true;
-                        handleMessage(event, type, downloadURL);
-
+                        handleMessage(event, type, downloadURL, file);
                     }).catch((error) => {
                         console.error("Error getting download URL:", error);
                         setUploadProgress(0);
@@ -222,7 +223,7 @@ function ChatComponent(props) {
         })
     }, [chats, currentContact, mobileChatDisplay, chatDisplay]);
 
-    const handleMessage =async (e, type, content) => {
+    const handleMessage =async (e, type, content, blob=0) => {
         e.preventDefault();
         const contactId = currentContact._id
         const message = {
@@ -241,7 +242,21 @@ function ChatComponent(props) {
         setInputMessage("")
         const resChat = await addMessage(message);
         newChats[contactId][index]['_id'] = resChat._id
+
+        if(type!=="text"){
+            const db = new Localbase('chatify-db')
+            db.config.debug = false
+            try{
+                await db.collection('files').add({
+                    blob
+                }, resChat._id)
+                setChats(() => (newChats))
+            }catch (e) {
+                console.log(e)
+            }
+        }
         setChats(() => (newChats))
+        scrollToBottom()
     }
 
     useEffect(() => {

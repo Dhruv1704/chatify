@@ -90,8 +90,7 @@ function ChatBubble(props) {
         const shouldDelete = displayDeleteBubble;
         if (shouldDelete) return
         const arr = deleteChats
-        if (arr.indexOf(item._id) === -1) arr.push(item._id)
-        else return
+        arr.push(item._id)
         const indexArr = deleteChatsIndex
         indexArr.push(index)
         setDeleteChats(() => arr)
@@ -101,13 +100,17 @@ function ChatBubble(props) {
     }
 
     const cancelChatDelete = () => {
+        const shouldDelete = displayDeleteBubble;
+        if (!shouldDelete) return
         const arr = deleteChats
         if (arr.length === 0) return
         const index1 = arr.indexOf(item._id)
         if (index1 === -1) return
         arr.splice(index1, 1);
+        setDeleteChats(()=>arr)
         const indexArr = deleteChatsIndex
-        indexArr.splice(indexArr, 1);
+        const index2 = indexArr.indexOf(index)
+        indexArr.splice(index2, 1);
         setDeleteChatsIndex(() => indexArr)
         if (arr.length === 0) setDisplayDeleteChats(() => false)
         setDisplayDeleteBubble(() => false)

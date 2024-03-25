@@ -140,7 +140,7 @@ const ContextState = (props) => {
         setProgress(25)
         try {
             await db.collection('contacts').get().then(contacts => {
-                setContact(contacts)
+                setContact(()=>contacts)
             })
         } catch (e) {
             console.log(e)
@@ -170,7 +170,7 @@ const ContextState = (props) => {
             }
             setUser(user)
             localStorage.setItem('user', JSON.stringify(user))
-            setContact(json.contact)
+            setContact(()=>json.contact)
             try {
                 await db.collection('contacts').set(json.contact)
             } catch (e) {
@@ -430,7 +430,8 @@ const ContextState = (props) => {
             call,
             callLogs,
             getCallLogs,
-            deleteSelectedChats
+            deleteSelectedChats,
+            tst
         }}>
             {props.children}
         </Context.Provider>
