@@ -412,6 +412,15 @@ function ChatComponent(props) {
 
         const db =new Localbase('chatify-db')
         db.config.debug = false
+
+        deleteChats.forEach((item)=>{
+            try{
+                db.collection('files').doc(item).delete()
+            }catch (e) {
+                console.log(e)
+            }
+        })
+
         try {
             await db.collection('chats').set([localChats])
         }catch (e){
