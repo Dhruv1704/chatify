@@ -22,12 +22,15 @@ import Avatar from 'react-avatar';
 import CloseIcon from "@mui/icons-material/Close";
 import {Delete} from "@mui/icons-material";
 import Localbase from "localbase-samuk";
+import {useClickAway} from "@uidotdev/usehooks";
 
 function ChatComponent(props) {
 
     PropTypes.checkPropTypes(ChatComponent.propTypes, props, "prop", "ChatComponent");
     const {chatDisplay, client} = props;
-    const attachRef = useRef();
+    const attachRef = useClickAway(() => {
+        setAttachDisplay(false);
+    });
     const photoInputRef = useRef();
     const audioInputRef = useRef();
     const videoInputRef = useRef();
@@ -63,23 +66,6 @@ function ChatComponent(props) {
     const [deleteChats, setDeleteChats] = useState([]);
     const [deleteChatsIndex, setDeleteChatsIndex] = useState([])
     const [displayDeleteChats, setDisplayDeleteChats] = useState(false);
-
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            // Check if the click is outside the modalattach-icon
-            if (attachDisplay && attachRef.current && !attachRef.current.contains(event.target) && !event.target.classList.contains("attach-icon")) {
-                setAttachDisplay(false)
-            }
-        };
-
-        // Attach the event listener when the component mounts
-        document.addEventListener('click', handleClickOutside);
-
-        // Detach the event listener when the component unmounts
-        return () => {
-            document.removeEventListener('click', handleClickOutside);
-        };
-    }, [attachDisplay, attachRef]);
 
 
     const getPresence = async () => {
@@ -237,26 +223,28 @@ function ChatComponent(props) {
         let index = 0;
         if(newChats[contactId]!==undefined) index = newChats[contactId].length;
         newChats[contactId] === undefined ? newChats[contactId] = [message] : newChats[contactId].push(message);
-        setChats(() => (newChats))
+        if(type==="text") setChats(newChats)
         client.channels.get(contactId).publish('message', message);
         setInputMessage("")
-        const resChat = await addMessage(message);
-        newChats[contactId][index]['_id'] = resChat._id
+        addMessage(message).then( async (resChat)=>{
+            newChats[contactId][index]['_id'] = resChat._id
 
-        if(type!=="text"){
-            const db = new Localbase('chatify-db')
-            db.config.debug = false
-            try{
-                await db.collection('files').add({
-                    blob
-                }, resChat._id)
-                setChats(() => (newChats))
-            }catch (e) {
-                console.log(e)
+            if(type!=="text"){
+                const db = new Localbase('chatify-db')
+                db.config.debug = false
+                try{
+                    await db.collection('files').add({
+                        blob
+                    }, resChat._id)
+                }catch (e) {
+                    console.log(e)
+                }
             }
-        }
-        setChats(() => (newChats))
-        scrollToBottom()
+            setChats(()=>{
+               return {...newChats}
+            })
+            scrollToBottom()
+        })
     }
 
     useEffect(() => {
@@ -408,7 +396,9 @@ function ChatComponent(props) {
         deleteChatsIndex.forEach((item)=>{
             localChats[contactId].splice(item, 1);
         })
-        setChats(()=> localChats)
+        setChats(()=>{
+            return {...localChats}
+        })
 
         const db =new Localbase('chatify-db')
         db.config.debug = false

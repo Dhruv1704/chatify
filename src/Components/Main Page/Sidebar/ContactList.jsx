@@ -39,6 +39,22 @@ function ContactList(props) {
         }
     }
 
+    function getTime(dateString) {
+        const date = new Date(dateString);
+
+        let hours = date.getHours() % 12;
+
+        if (hours === 0) {
+            hours = 12;
+        }
+
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+
+        return `${hours}:${minutes} ${ampm}`;
+    }
+
     function formatDate(dateString) {
         if (dateString === null || dateString === undefined) return ""
         const date = new Date(dateString);
@@ -56,7 +72,7 @@ function ContactList(props) {
 
         // Format the date based on the difference
         if (diff === 0) {
-            return 'Today';
+            return getTime(dateString);
         } else if (diff === -86400000) { // One day in milliseconds
             return 'Yesterday';
         } else {

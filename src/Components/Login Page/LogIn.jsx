@@ -3,11 +3,10 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import SignUp from "./SignUp.jsx";
 import {useNavigate} from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
-import {useEffect, useContext} from "react";
+import {useEffect, useContext, useState} from "react";
 import Context from "../../context/Context.jsx";
 import {useGoogleLogin} from '@react-oauth/google';
 import GoogleIcon from '@mui/icons-material/Google';
-import {useState} from "react";
 import {useCookies} from "react-cookie";
 
 function LogIn() {
@@ -44,11 +43,13 @@ function LogIn() {
     const [icon3, setIcon3] = useState(<VisibilityIcon/>);
     const [iconTracker3, setIconTracker3] = useState(0)
 
+    const [displaySignUp, setDisplaySignUp] = useState(false)
+
     const [credentials, setCredentials] = useState({email: "", password: ""});
 
     const displaySign = (e) => {
         e.preventDefault();
-        document.getElementById("sign-div").style.display = "block";
+        setDisplaySignUp(true)
     }
 
     const handleLogin = (e) =>{
@@ -119,7 +120,7 @@ function LogIn() {
                             onClick={displaySign}>Create New Account
                     </button>
                 </form>
-                <SignUp passwordHideShow={passwordHideShow} icon2={icon2} icon3={icon3}/>
+                <SignUp passwordHideShow={passwordHideShow} icon2={icon2} icon3={icon3} displaySignUp={displaySignUp} setDisplaySignUp={setDisplaySignUp}/>
             </div>}
         </>
     );

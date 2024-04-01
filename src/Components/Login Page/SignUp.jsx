@@ -1,12 +1,17 @@
 import PropTypes from "prop-types";
-import {useContext, useState, useRef} from 'react'
+import {useContext, useState} from 'react'
 import Context from "../../context/Context.jsx";
+import { useClickAway } from "@uidotdev/usehooks";
 
 function SignUp(props) {
 
-    const signRef = useRef();
+    const signRef  = useClickAway(() => {
+        setDisplaySignUp(false);
+    });
 
-    const {passwordHideShow, icon2, icon3} = props;
+
+
+    const {passwordHideShow, icon2, icon3, displaySignUp, setDisplaySignUp} = props;
     const context = useContext(Context);
     const {signUp} = context;
 
@@ -26,25 +31,8 @@ function SignUp(props) {
 
     const closeModal = () => {
         document.getElementById("sign-form").reset();
-        document.getElementById("sign-div").style.display = "none";
+        setDisplaySignUp(false)
     }
-
-    // useEffect(() => {
-    //     const handleClickOutsideSign = (event) => {
-    //         // Check if the click is outside the modalattach-icon
-    //         if (signRef.current && !signRef.current.contains(event.target) && !event.target.classList.contains("create-account-btn") && ){
-    //             closeModal();
-    //         }
-    //     };
-    //
-    //     // Attach the event listener when the component mounts
-    //     document.addEventListener('click', handleClickOutsideSign);
-    //
-    //     // Detach the event listener when the component unmounts
-    //     return () => {
-    //         document.removeEventListener('click', handleClickOutsideSign);
-    //     };
-    // }, []);
 
     const handleChange = (e) => {
         setCredentials({...credentials, [e.target.name]: e.target.value})
@@ -56,9 +44,9 @@ function SignUp(props) {
     }
 
     return (
-        <div className={"hidden z-10 fixed top-0 w-full h-full bg-[#ffffffcc]"} id={"sign-div"}>
+        <div className={`${displaySignUp?"visible opacity-100":"invisible opacity-0"} transform duration-300 z-10 fixed top-0 w-full h-full bg-[#ffffffcc]`} id={"sign-div"}>
             <form onSubmit={handleSignUp}
-                className={"relative top-[20%] shadow-xl w-[350px] h-[382px] bg-white m-auto py-2 px-4 rounded-lg"}
+                className={`${displaySignUp?"visible opacity-100 scale-100":"invisible opacity-0 scale-95"} transform duration-300 ease-in-out relative top-[20%] shadow-xl w-[350px] h-[382px] bg-white m-auto py-2 px-4 rounded-lg`}
                 id={"sign-form"} ref={signRef}>
                 <div className={"border-b-[1px] pb-2 border-gray-300"}>
                         <span
@@ -103,7 +91,9 @@ function SignUp(props) {
 SignUp.propTypes = {
     passwordHideShow: PropTypes.func.isRequired,
     icon2: PropTypes.object.isRequired,
-    icon3: PropTypes.object.isRequired
+    icon3: PropTypes.object.isRequired,
+    displaySignUp: PropTypes.bool.isRequired,
+    setDisplaySignUp:PropTypes.func.isRequired
 };
 
 export default SignUp;

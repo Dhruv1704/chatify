@@ -53,7 +53,7 @@ const CallLogList = (props) => {
                 <div className={"-mb-1.5"}>
                     <div className={"float-left ml-2"}>{item.sender_name}</div>
                     <br/>
-                    <div className={"text-xs"}>{item.sender===user.id?<CallMadeIcon className={"scale-[0.65]"}/>:<CallReceivedIcon className={"scale-[0.65]"}/>} {date}</div>
+                    <div className={"text-xs"}>{item?.sender===user?.id?<CallMadeIcon className={"scale-[0.65]"}/>:<CallReceivedIcon className={"scale-[0.65]"}/>} {date}</div>
                 </div>
             </div>
             <div className={"ml-auto my-auto cursor-pointer"}>{item.type==="Video Call"?<VideocamIcon/>:<CallIcon/>}</div>

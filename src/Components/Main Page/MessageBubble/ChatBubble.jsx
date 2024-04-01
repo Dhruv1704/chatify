@@ -65,9 +65,18 @@ function ChatBubble(props) {
 
     function getTime(dateString) {
         const date = new Date(dateString);
-        const hours = date.getHours();
-        const minutes = date.getMinutes().toString().padStart(2, '0'); // Pad minutes with leading zero if needed
-        return `${hours}:${minutes}`;
+
+        let hours = date.getHours() % 12;
+
+        if (hours === 0) {
+            hours = 12;
+        }
+
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+
+        return `${hours}:${minutes} ${ampm}`;
     }
 
     let chatTime = useRef("");

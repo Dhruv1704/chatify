@@ -179,7 +179,7 @@ function ChatPage(props) {
                 onLoaderFinished={() => setProgress(0)}
             />
             <div className={"bg-sky-300 h-[100vh] flex lg:px-4"}>
-                <Settings />
+                <Settings displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}/>
                 <CallReceiveComponent display={callDisplay} setDisplay={setCallDisplay} message={callMessage}/>
                 <AddContact contactModel={contactModel} setContactModel={setContactModel}/>
                 <Sidebar setContactModel={setContactModel} setAiDisplay={setAiDisplay}
