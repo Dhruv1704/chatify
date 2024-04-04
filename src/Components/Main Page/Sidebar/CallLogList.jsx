@@ -47,16 +47,16 @@ const CallLogList = (props) => {
 
     return (
         <div
-            className={`bg-sky-200 rounded-2xl flex py-3 mb-1 px-2 select-none`}>
+            className={`bg-sky-200 rounded-2xl flex py-3 mb-1 px-2 select-none callLog`} id={item?.sender_name}>
             <div className={"flex items-center space-x-4"}>
-                <Avatar name={item.sender_name} size="45" round={true} className={"font-bold select-none"}/>
+                <Avatar name={item?.sender_name} size="45" round={true} className={"font-bold select-none"}/>
                 <div className={"-mb-1.5"}>
-                    <div className={"float-left ml-2"}>{item.sender_name}</div>
+                    <div className={"float-left ml-2"}>{item?.sender_name}</div>
                     <br/>
                     <div className={"text-xs"}>{item?.sender===user?.id?<CallMadeIcon className={"scale-[0.65]"}/>:<CallReceivedIcon className={"scale-[0.65]"}/>} {date}</div>
                 </div>
             </div>
-            <div className={"ml-auto my-auto cursor-pointer"}>{item.type==="Video Call"?<VideocamIcon/>:<CallIcon/>}</div>
+            <div className={"ml-auto my-auto cursor-pointer"}>{item?.type==="Video Call"?<VideocamIcon/>:<CallIcon/>}</div>
         </div>
     )
 }

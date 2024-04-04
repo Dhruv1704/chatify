@@ -18,7 +18,7 @@ function Sidebar(props) {
 
     PropTypes.checkPropTypes(Sidebar.propTypes, props, "prop", "Sidebar");
 
-    const {setContactModel, setChatDisplay, setAiDisplay, setAiTextOrImage, aiTextOrImage} = props;
+    const {setContactModel, setChatDisplay, setAiDisplay, setAiTextOrImage, aiTextOrImage, handleSettings} = props;
     const [carousalItem, setCarousalItem] = useState(0)
 
     const [cookies, setCookie, removeCookie] = useCookies(['web-token']);
@@ -37,10 +37,6 @@ function Sidebar(props) {
 
     const handleAddContacts = () => {
         setContactModel(true)
-    }
-
-    const handleSettings = ()=>{
-
     }
 
 
@@ -131,7 +127,8 @@ Sidebar.propTypes = {
     chatDisplay: PropTypes.bool.isRequired,
     aiDisplay: PropTypes.bool.isRequired,
     setAiTextOrImage: PropTypes.func.isRequired,
-    aiTextOrImage: PropTypes.bool.isRequired
+    aiTextOrImage: PropTypes.bool.isRequired,
+    handleSettings: PropTypes.func.isRequired
 };
 
 

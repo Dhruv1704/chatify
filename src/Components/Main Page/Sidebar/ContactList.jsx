@@ -115,7 +115,7 @@ function ContactList(props) {
 
 
     return (
-        <div className={"cursor-pointer"} onClick={() => handleCurrentContact(item)}>
+        <div className={"cursor-pointer contact"} id={item?.name} onClick={() => handleCurrentContact(item)}>
             <div
                 className={`${currentContact?._id === item?._id && window.innerWidth > 1024 ? "bg-sky-300" : "bg-sky-200"} rounded-2xl flex py-3 mb-1 px-2`}>
                 <Avatar name={item.name} size="45" round={true} className={"font-bold select-none"}/>

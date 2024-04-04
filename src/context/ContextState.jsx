@@ -22,6 +22,8 @@ const ContextState = (props) => {
     const navigate = useNavigate();
     const [callLogs, setCallLogs] = useState([])
 
+    const [bgColor, setBgColor] = useState(["bg-sky-300", ""])
+
     const [cookies, setCookie] = useCookies(['web-token']);
 
     const tst = (msg, type) => {
@@ -431,7 +433,8 @@ const ContextState = (props) => {
             callLogs,
             getCallLogs,
             deleteSelectedChats,
-            tst
+            tst,
+            bgColor
         }}>
             {props.children}
         </Context.Provider>

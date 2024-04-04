@@ -15,13 +15,26 @@ const CallLogSidebar = (props) => {
     const context = useContext(Context)
     const {callLogs, user} = context;
 
+    const handleSearchLog = (e)=>{
+        const val = e.target.value.trim();
+        const logs = document.getElementsByClassName('callLog')
+        Array.from(logs).forEach((element)=>{
+            const name = element.id
+            if(name.toLowerCase().includes(val.toLowerCase())){
+                element.classList.remove("hidden")
+            }else{
+                element.classList.add('hidden')
+            }
+        })
+    }
+
     return (
         <div className={"bg-sky-200 p-6 flex flex-col rounded-3xl lg:h-[93%] h-[97%] justify-between"}>
             {/*contacts-sidebar*/}
             <div className={"mb-5 overflow-scroll custom-scrollbar"}>
                 <div className={"relative"}>
                     <input className={"rounded-2xl w-full p-1 pl-8 font-semibold bg-[#f5f6f7]"}
-                           placeholder={"Search"}/>
+                           placeholder={"Search"} onInput={handleSearchLog}/>
                     <SearchIcon className={"absolute left-2 top-1"}/>
                 </div>
                 {callLogs && callLogs?.length > 0 ?

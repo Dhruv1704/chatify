@@ -15,18 +15,30 @@ const ContactSidebar = (props) => {
     const context = useContext(Context)
     const {contact} = context;
 
+    const handleSearchContact = (e)=>{
+        const val = e.target.value.trim();
+        const contacts = document.getElementsByClassName('contact')
+
+        Array.from(contacts).forEach((element)=>{
+            const name = element.id
+            if(name.toLowerCase().includes(val.toLowerCase())){
+                element.classList.remove('hidden')
+            }else{
+                element.classList.add('hidden')
+            }
+        })
+    }
+
     return (
         <div className={"bg-sky-200 p-6 flex flex-col rounded-3xl lg:h-[93%] h-[97%]"}>
-            {/*contacts-sidebar*/}
             <div className={"mb-5 overflow-scroll custom-scrollbar"}>
                 <div className={"relative"}>
                     <input className={"rounded-2xl w-full p-1 pl-8 font-semibold bg-[#f5f6f7]"}
-                           placeholder={"Search"}/>
+                           placeholder={"Search"} onInput={handleSearchContact}/>
                     <SearchIcon className={"absolute left-2 top-1"}/>
                 </div>
                 {contact && contact.length > 0 ?
                     <div className={"mt-5"}>
-                        {/*<div className={"border-b-2 border-sky-300 rounded-2xl mt-6"}></div>*/}
                         {contact.sort((a, b) => a.name.localeCompare(b.name)).map((item, index) => {
                             return (
                                     <ContactList key={index} item={item}/>

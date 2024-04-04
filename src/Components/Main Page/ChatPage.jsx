@@ -31,6 +31,7 @@ function ChatPage(props) {
     const [callMessage, setCallMessage] = useState({});
 
 
+
     const updateLocalChat = async (chats)=>{
         const db =new Localbase('chatify-db')
         db.config.debug = false
@@ -168,6 +169,9 @@ function ChatPage(props) {
         // eslint-disable-next-line
     }, [user]);
 
+    const handleSettings = ()=>{
+        setDisplaySettings(true)
+    }
 
 
     return (
@@ -184,7 +188,7 @@ function ChatPage(props) {
                 <AddContact contactModel={contactModel} setContactModel={setContactModel}/>
                 <Sidebar setContactModel={setContactModel} setAiDisplay={setAiDisplay}
                          setChatDisplay={setChatDisplay} chatDisplay={chatDisplay} aiDisplay={aiDisplay}
-                         setAiTextOrImage={setAiTextOrImage} aiTextOrImage={aiTextOrImage}/>
+                         setAiTextOrImage={setAiTextOrImage} aiTextOrImage={aiTextOrImage} handleSettings={handleSettings}/>
                 <ChatComponent chatDisplay={chatDisplay} client={client}/>
                 <AiComponent aiDisplay={aiDisplay} aiTextOrImage={aiTextOrImage}/>
             </div>
