@@ -6,12 +6,12 @@ const AiChatBubble = (props) => {
 
     PropTypes.checkPropTypes(AiChatBubble.propTypes, props, "prop", "AiChatBubble")
 
-    const {item} = props;
+    const {item, bgColor} = props;
 
     return (
         <>
             <div
-                className={`p-3 my-2 break-words w-fit lg:max-w-[500px] max-w-[260px] text-sm lg:text-base shadow-md ml-auto rounded-b-2xl rounded-tl-2xl bg-sky-100`}>
+                className={`p-3 my-2 break-words w-fit lg:max-w-[500px] max-w-[260px] text-sm lg:text-base shadow-md ml-auto rounded-b-2xl rounded-tl-2xl ${bgColor[2]}`}>
                 {item.question}
             </div>
             <div

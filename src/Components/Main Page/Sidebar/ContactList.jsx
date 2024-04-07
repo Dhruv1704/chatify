@@ -14,7 +14,7 @@ function ContactList(props) {
     const navigate = useNavigate();
     const {item} = props;
     const context = useContext(Context);
-    const {setCurrentContact, currentContact, unreadChats, setUnreadChats, setMobileChatDisplay, chats} = context;
+    const {setCurrentContact, currentContact, unreadChats, setUnreadChats, setMobileChatDisplay, chats, bgColor} = context;
 
 
     PropTypes.checkPropTypes(ContactList.propTypes, "prop", "ContactList");
@@ -117,7 +117,7 @@ function ContactList(props) {
     return (
         <div className={"cursor-pointer contact"} id={item?.name} onClick={() => handleCurrentContact(item)}>
             <div
-                className={`${currentContact?._id === item?._id && window.innerWidth > 1024 ? "bg-sky-300" : "bg-sky-200"} rounded-2xl flex py-3 mb-1 px-2`}>
+                className={`${currentContact?._id === item?._id && window.innerWidth > 1024 ? `${bgColor[0]}` :`${bgColor[1]}`} rounded-2xl flex py-3 mb-1 px-2`}>
                 <Avatar name={item.name} size="45" round={true} className={"font-bold select-none"}/>
                 <div className={"ml-4 select-none flex flex-col self-center"}>
                     <span>{item.name}</span>

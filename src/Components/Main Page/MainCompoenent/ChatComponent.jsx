@@ -54,7 +54,8 @@ function ChatComponent(props) {
         setMobileChatDisplay,
         call,
         deleteSelectedChats,
-        tst
+        tst,
+        bgColor
     } = context;
     const [inputMessage, setInputMessage] = useState("");
     const messagesEndRef = useRef(null)
@@ -426,11 +427,11 @@ function ChatComponent(props) {
 
     return (
         <div
-            className={`${mobileChatDisplay ? "block" : "hidden"} ${chatDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 lg:h-[90vh] h-[100vh] overflow-clip my-auto lg:rounded-3xl w-full lg:mx-4 p-6 pt-4`}>
+            className={`${mobileChatDisplay ? "block" : "hidden"} ${chatDisplay ? "lg:block" : "lg:hidden"} ${bgColor[2]} lg:h-[90vh] h-[100vh] overflow-clip my-auto lg:rounded-3xl w-full lg:mx-4 p-6 pt-4`}>
             <div className={"flex justify-between"}>
                 <div className={"flex mb-4"}>
                     <div
-                        className={`${mobileChatDisplay ? "block" : "hidden"} lg:hidden bg-sky-300 rounded-xl px-2 mr-2 flex content-center`}
+                        className={`${mobileChatDisplay ? "block" : "hidden"} lg:hidden ${bgColor[0]} rounded-xl px-2 mr-2 flex content-center`}
                         onClick={handleChatBack}>
                         <button>
                             <ArrowBackIcon/>
@@ -457,16 +458,16 @@ function ChatComponent(props) {
                     </div>
                 </div>
                 <div className={`${currentContact===null || displayDeleteChats?"hidden":"block"} flex space-x-4 -mt-4`}>
-                    <button className={"bg-sky-300 rounded-xl p-2 px-3 self-center active:scale-95 cursor-pointer"} onClick={handleVideoCall}><VideocamIcon/></button>
-                    <button className={"bg-sky-300 rounded-xl p-2 px-3 self-center active:scale-95 cursor-pointer"} onClick={handleVoiceCall}><CallIcon/></button>
+                    <button className={`${bgColor[0]} rounded-xl p-2 px-3 self-center active:scale-95 cursor-pointer`} onClick={handleVideoCall}><VideocamIcon/></button>
+                    <button className={`${bgColor[0]} rounded-xl p-2 px-3 self-center active:scale-95 cursor-pointer`} onClick={handleVoiceCall}><CallIcon/></button>
                 </div>
                 <div className={`${displayDeleteChats?"block":"hidden"} flex space-x-4 -mt-4`}>
-                    <button className={"bg-sky-300 rounded-xl p-2 px-3 self-center active:scale-95 cursor-pointer"} onClick={handleChatDeleteCancel}><CloseIcon/></button>
-                    <button className={"bg-sky-300 rounded-xl p-2 px-3 self-center active:scale-95 cursor-pointer"} onClick={handleChatDelete}><Delete/></button>
+                    <button className={`${bgColor[0]} rounded-xl p-2 px-3 self-center active:scale-95 cursor-pointer`} onClick={handleChatDeleteCancel}><CloseIcon/></button>
+                    <button className={`${bgColor[0]} rounded-xl p-2 px-3 self-center active:scale-95 cursor-pointer`} onClick={handleChatDelete}><Delete/></button>
                 </div>
             </div>
             <div
-                className={"bg-sky-200 h-[92.75%]  rounded-3xl lg:rounded-2xl flex flex-col justify-between p-4 overflow-y-clip"}>
+                className={`${bgColor[1]} h-[92.75%]  rounded-3xl lg:rounded-2xl flex flex-col justify-between p-4 overflow-y-clip`}>
                 <div className={"my-2 px-4 custom-scrollbar overflow-auto"}>
                     {chats === null  || chats===undefined  || chats[currentContact?._id]?.length===0 ? "" : chats[currentContact?._id]?.map((item, index) => {
                         const conditionForDate = handleConditionForDate(index);
@@ -474,8 +475,8 @@ function ChatComponent(props) {
                         if(conditionForDate) date = formatDate(item.timestamp)
                         return (
                         <div key={index}>
-                        <div className={`${conditionForDate?"block":"hidden"} select-none bg-sky-300 w-fit mx-auto px-3 py-1 rounded-2xl text-xs font-bold`} >{date}</div>
-                        <ChatBubble position={item.sender === user.id ? "right" : "left"} item={item} deleteChats={deleteChats} setDeleteChats={setDeleteChats} setDisplayDeleteChats={setDisplayDeleteChats} displayDeleteChats={displayDeleteChats} index={index} deleteChatsIndex={deleteChatsIndex} setDeleteChatsIndex={setDeleteChatsIndex}
+                        <div className={`${conditionForDate?"block":"hidden"} select-none ${bgColor[0]} w-fit mx-auto px-3 py-1 rounded-2xl text-xs font-bold`} >{date}</div>
+                        <ChatBubble position={item.sender === user.id ? "right" : "left"} item={item} deleteChats={deleteChats}  bgColor={bgColor} setDeleteChats={setDeleteChats} setDisplayDeleteChats={setDisplayDeleteChats} displayDeleteChats={displayDeleteChats} index={index} deleteChatsIndex={deleteChatsIndex} setDeleteChatsIndex={setDeleteChatsIndex}
                                     continued={index === 0 || conditionForDate ? false : chats[currentContact?._id][index - 1].sender === item.sender ? true : false}/>
                         </div>
                     )})}
@@ -485,7 +486,7 @@ function ChatComponent(props) {
                       className={`${currentContact == null ? "hidden" : "flex"} justify-center space-x-1.5 lg:space-x-4`}>
                     <div className={"relative flex"}>
                         <div
-                            className={`absolute ${attachDisplay ? "block" : "hidden"} ${emojiDisplay ? "bottom-[290px]" : "bottom-[70px]"} space-x-8 flex text-center bg-sky-100 shadow-md rounded-t-2xl rounded-br-2xl p-4 pl-6 z-20 left-6`}
+                            className={`absolute ${attachDisplay ? "block" : "hidden"} ${emojiDisplay ? "bottom-[290px]" : "bottom-[70px]"} space-x-8 flex text-center ${bgColor[2]} shadow-md rounded-t-2xl rounded-br-2xl p-4 pl-6 z-20 left-6`}
                             ref={attachRef}>
                             <div>
                                 <div onClick={handlePhotoUpload} className={"cursor-pointer mb-2"}>
@@ -521,7 +522,7 @@ function ChatComponent(props) {
                             upload(event, "document")
                         }} ref={docInputRef}/>
                         <button type={"button"}
-                                className={"mb-2 shadow-md self-center bg-sky-300 rounded-xl p-2 px-3 attach-icon active:scale-95"}
+                                className={`mb-2 shadow-md self-center ${bgColor[0]} rounded-xl p-2 px-3 attach-icon active:scale-95`}
                                 onClick={handleAttachDisplay}>
                             <AttachFileIcon className={"attach-icon pointer-events-none"}/>
                         </button>
@@ -539,7 +540,7 @@ function ChatComponent(props) {
                             <TextareaAutosize placeholder={"Message"} disabled={currentContact == null} minLength={1}
                                               value={inputMessage} required={true} id={"chat-input"}
                                               type={"text"} onKeyDown={handleKeyDown}
-                                              className={"bg-[#f5f6f7] shadow-md disabled:cursor-not-allowed rounded-2xl p-3 pl-10 h-14 max-h-36 resize-none font-semibold w-full"}
+                                              className={`${bgColor[3]} shadow-md disabled:cursor-not-allowed rounded-2xl p-3 pl-10 h-14 max-h-36 resize-none font-semibold w-full`}
                                               onChange={handleInputMessage} onFocus={handleChatOnFocus}
                                               onBlur={handleChatOnBlur}/>
                         </div>
@@ -550,7 +551,7 @@ function ChatComponent(props) {
                         </div>
                     </div>
                     <button type={"submit"} disabled={currentContact == null} id={'chat-submit-button'}
-                            className={"self-center shadow-md mb-1 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl bg-sky-300 p-2 pl-3 active:scale-95"}>
+                            className={`self-center shadow-md mb-1 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl ${bgColor[0]} p-2 pl-3 active:scale-95`}>
                         <SendIcon/>
                     </button>
                 </form>

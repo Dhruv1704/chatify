@@ -13,7 +13,7 @@ import CallLogSidebar from "./CallLogSidebar.jsx";
 function Sidebar(props) {
 
     const context = useContext(Context);
-    const {setCurrentContact, mobileChatDisplay, setMobileAiDisplay, mobileAiDisplay} = context
+    const {setCurrentContact, mobileChatDisplay, setMobileAiDisplay, mobileAiDisplay, bgColor} = context
     const navigate = useNavigate();
 
     PropTypes.checkPropTypes(Sidebar.propTypes, props, "prop", "Sidebar");
@@ -95,13 +95,13 @@ function Sidebar(props) {
 
     return (
         <div
-            className={`${mobileChatDisplay || mobileAiDisplay?"hidden":"block"} lg:block lg:h-[90vh] bg-sky-100 w-full lg:w-[33%] 2xl:w-[24%] lg:my-auto lg:rounded-3xl p-6`}>
+            className={`${mobileChatDisplay || mobileAiDisplay?"hidden":"block"} lg:block lg:h-[90vh] ${bgColor[2]} w-full lg:w-[33%] 2xl:w-[24%] lg:my-auto lg:rounded-3xl p-6`}>
             <div>
                 <div className={"relative flex justify-around font-semibold text-xl mb-5"}>
                     <div className={"cursor-pointer select-none"} id={"chat-link-border"} onClick={(e) => handleBorder(e.target, 1)}>
                         Chats
                         <div id={"bottom-border"}
-                             className={`relative border-2 transition-all duration-300 ease-in-out rounded border-sky-300 transform-gpu w-[52px]`}></div>
+                             className={`relative border-2 transition-all duration-300 ease-in-out rounded ${bgColor[4]} transform-gpu w-[52px]`}></div>
                     </div>
                     <div className={"cursor-pointer select-none"} id={"call-link-border"} onClick={(e) => handleBorder(e.target, 2)}>Calls</div>
                     <div className={"cursor-pointer select-none"} id={"chatgpt-link-border"} onClick={(e) => handleBorder(e.target, 3)}>ChatGPT</div>
@@ -113,7 +113,7 @@ function Sidebar(props) {
                 <ContactSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut} handleSettings={handleSettings}/>
                 <CallLogSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut} handleSettings={handleSettings}/>
                 <AiSidebar handleLogOut={handleLogOut} handleAiChange={handleAiChange}
-                           handleAddContacts={handleAddContacts} aiTextOrImage={aiTextOrImage} handleSettings={handleSettings}/>
+                           handleAddContacts={handleAddContacts} aiTextOrImage={aiTextOrImage} handleSettings={handleSettings} bgColor={bgColor}/>
             </Carousel>
         </div>
     )

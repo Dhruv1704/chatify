@@ -24,7 +24,7 @@ function ChatPage(props) {
     const [contactModel, setContactModel] = useState(false);
     const [displaySettings, setDisplaySettings] = useState(false);
     const context = useContext(Context);
-    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken, getCallLogs} = context;
+    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken, getCallLogs, bgColor} = context;
 
     const [cookies] = useCookies(['web-token']);
     const [callDisplay, setCallDisplay] = useState(false);
@@ -182,7 +182,7 @@ function ChatPage(props) {
                 progress={progress}
                 onLoaderFinished={() => setProgress(0)}
             />
-            <div className={"bg-sky-300 h-[100vh] flex lg:px-4"}>
+            <div className={`${bgColor[0]} h-[100vh] flex lg:px-4`}>
                 <Settings displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}/>
                 <CallReceiveComponent display={callDisplay} setDisplay={setCallDisplay} message={callMessage}/>
                 <AddContact contactModel={contactModel} setContactModel={setContactModel}/>

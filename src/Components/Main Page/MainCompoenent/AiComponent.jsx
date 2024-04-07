@@ -15,7 +15,7 @@ const AiComponent = (props) => {
     const {aiDisplay, aiTextOrImage} = props;
     const [width, setWidth] = useState(window.innerWidth);
     const context = useContext(Context);
-    const {aiQuestion, aiImage, mobileAiDisplay, setMobileAiDisplay} = context;
+    const {aiQuestion, aiImage, mobileAiDisplay, setMobileAiDisplay, bgColor} = context;
     const [inputAiMessage, setInputAiMessage] = useState("")
     const [textAiChat, setTextAiChat] = useState([]);
     const [imageAiChat, setImageAiChat] = useState();
@@ -141,10 +141,10 @@ const AiComponent = (props) => {
 
     return (
         <div
-            className={`${mobileAiDisplay ? "block" : "hidden"} ${aiDisplay ? "lg:block" : "lg:hidden"} bg-sky-100 lg:h-[90vh] h-[100vh] my-auto lg:rounded-3xl w-full overflow-clip lg:mx-4 p-6 pt-4`}>
+            className={`${mobileAiDisplay ? "block" : "hidden"} ${aiDisplay ? "lg:block" : "lg:hidden"} ${bgColor[2]} lg:h-[90vh] h-[100vh] my-auto lg:rounded-3xl w-full overflow-clip lg:mx-4 p-6 pt-4`}>
             <div className={"flex content-center"}>
                 <div
-                    className={`${mobileAiDisplay ? "block" : "hidden"} self-start mb-3 lg:hidden bg-sky-300 rounded-xl p-2 mr-2 flex content-center`}
+                    className={`${mobileAiDisplay ? "block" : "hidden"} self-start mb-3 lg:hidden ${bgColor[0]} rounded-xl p-2 mr-2 flex content-center`}
                     onClick={handleAIBack}>
                     <button>
                         <ArrowBackIcon/>
@@ -154,11 +154,11 @@ const AiComponent = (props) => {
                     {aiTextOrImage ? "ChatGPT-4 (32k)" : "AI Image Generator (Lexica)"}
                 </div>
             </div>
-            <div className={"bg-sky-200 h-[92.75%] lg:rounded-2xl rounded-3xl flex flex-col justify-between p-4"}>
+            <div className={`${bgColor[1]} h-[92.75%] lg:rounded-2xl rounded-3xl flex flex-col justify-between p-4`}>
                 <div className={"my-2 px-4 overflow-auto"}>
                     <div className={`${aiTextOrImage ? "block" : "hidden"}`}>
                         {textAiChat?.map((item, index) => (
-                            <AiChatBubble item={item} key={index}/>
+                            <AiChatBubble item={item} key={index} bgColor={bgColor} />
                         ))}
                     </div>
                     <div className={`${aiTextOrImage ? "hidden" : "block"}`}>
@@ -172,7 +172,7 @@ const AiComponent = (props) => {
                 <form onSubmit={handleAi}
                       className={`flex justify-center space-x-1.5 lg:space-x-4`}>
                     <button type={"button"} id={"ai-delete-button"}
-                            className={"self-center shadow-md bg-sky-300 p-2 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl active:scale-95"}
+                            className={`self-center shadow-md ${bgColor[0]} p-2 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl active:scale-95`}
                             onClick={handleClearAi}>
                         <DeleteSweepIcon/>
                     </button>
@@ -180,10 +180,10 @@ const AiComponent = (props) => {
                                       value={inputAiMessage}
                                       onKeyDown={handleKeyDown}
                                       type={"text"} required={true} id={"ai-input"}
-                                      className={"bg-[#f5f6f7] shadow-md disabled:cursor-not-allowed rounded-2xl h-14 max-h-36 resize-none p-3 font-semibold w-full ai-image-input"}
+                                      className={`${bgColor[3]} shadow-md disabled:cursor-not-allowed rounded-2xl h-14 max-h-36 resize-none p-3 font-semibold w-full ai-image-input`}
                                       onChange={handleInputAiMessage}/>
                     <button type={"submit"} id={"ai-submit-button"}
-                            className={"self-center shadow-md disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl bg-sky-300 p-2 pl-3 active:scale-95"}>
+                            className={`self-center shadow-md disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl ${bgColor[0]} p-2 pl-3 active:scale-95`}>
                         <SendIcon/>
                     </button>
                 </form>

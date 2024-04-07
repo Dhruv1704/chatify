@@ -13,7 +13,7 @@ const CallLogSidebar = (props) => {
     PropTypes.checkPropTypes(CallLogSidebar.propTypes, props, "prop", "CallLogSidebar");
 
     const context = useContext(Context)
-    const {callLogs, user} = context;
+    const {callLogs, user, bgColor} = context;
 
     const handleSearchLog = (e)=>{
         const val = e.target.value.trim();
@@ -29,11 +29,11 @@ const CallLogSidebar = (props) => {
     }
 
     return (
-        <div className={"bg-sky-200 p-6 flex flex-col rounded-3xl lg:h-[93%] h-[97%] justify-between"}>
+        <div className={`${bgColor[1]} p-6 flex flex-col rounded-3xl lg:h-[93%] h-[97%] justify-between`}>
             {/*contacts-sidebar*/}
             <div className={"mb-5 overflow-scroll custom-scrollbar"}>
                 <div className={"relative"}>
-                    <input className={"rounded-2xl w-full p-1 pl-8 font-semibold bg-[#f5f6f7]"}
+                    <input className={`rounded-2xl w-full p-1 pl-8 font-semibold ${bgColor[3]}`}
                            placeholder={"Search"} onInput={handleSearchLog}/>
                     <SearchIcon className={"absolute left-2 top-1"}/>
                 </div>
@@ -41,7 +41,7 @@ const CallLogSidebar = (props) => {
                     <div className={"mt-5"}>
                         {callLogs?.slice().reverse().map((item, index) => {
                             return (
-                                <CallLogList key={index} item={item} user={user}/>
+                                <CallLogList key={index} item={item} user={user} bgColor={bgColor}/>
                             )
                         })}
                     </div> :
@@ -52,7 +52,7 @@ const CallLogSidebar = (props) => {
             </div>
 
 
-            <div className={"bg-[#f5f6f7] shadow-md mb-[-6px] rounded-2xl flex p-2  justify-around h-fit"}>
+            <div className={`${bgColor[3]} shadow-md mb-[-6px] rounded-2xl flex p-2  justify-around h-fit`}>
                 <div className={"cursor-pointer mb-1 scale-110"} onClick={handleSettings}>
                     <SettingsIcon/>
                 </div>

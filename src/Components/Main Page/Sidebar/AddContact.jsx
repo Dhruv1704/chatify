@@ -35,8 +35,8 @@ function AddContact(props) {
     }
 
     return (
-        <div className={`${contactModel ? "visible opacity-100" : "invisible opacity-0"} transform ease-in-out duration-300 fixed bg-white/70 left-0 top-0 w-full h-full z-20`}>
-            <div className={`${contactModel ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"} transform ease-in-out duration-300 relative rounded-xl w-fit mx-auto top-[40vh] bg-white p-2 shadow-xl`} ref={contactRef}>
+        <div className={`modal ${contactModel ? "visible opacity-100" : "invisible opacity-0"} transform ease-in-out duration-300 fixed bg-white/70 left-0 top-0 w-full h-full z-20`}>
+            <div className={`${contactModel ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"} transform ease-in-out duration-300 relative rounded-xl w-fit mx-auto top-[35vh] bg-white p-2 shadow-xl`} ref={contactRef}>
                 <form onSubmit={handleAddContact}>
                     <label className={"font-semibold"}>Add Contact</label>
                     <br/>

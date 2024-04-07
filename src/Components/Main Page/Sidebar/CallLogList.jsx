@@ -9,7 +9,7 @@ import CallReceivedIcon from '@mui/icons-material/CallReceived';
 const CallLogList = (props) => {
 
     PropTypes.checkPropTypes(CallLogList.propTypes, "prop", "CallLogList");
-    const {item, user} = props;
+    const {item, user, bgColor} = props;
     const [date, setDate] = useState("")
 
     function formatDate(dateString) {
@@ -47,7 +47,7 @@ const CallLogList = (props) => {
 
     return (
         <div
-            className={`bg-sky-200 rounded-2xl flex py-3 mb-1 px-2 select-none callLog`} id={item?.sender_name}>
+            className={`${bgColor[1]} rounded-2xl flex py-3 mb-1 px-2 select-none callLog`} id={item?.sender_name}>
             <div className={"flex items-center space-x-4"}>
                 <Avatar name={item?.sender_name} size="45" round={true} className={"font-bold select-none"}/>
                 <div className={"-mb-1.5"}>

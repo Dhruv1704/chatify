@@ -13,7 +13,7 @@ const ContactSidebar = (props) => {
     PropTypes.checkPropTypes(ContactSidebar.propTypes, props, "prop", "ContactSidebar");
 
     const context = useContext(Context)
-    const {contact} = context;
+    const {contact, bgColor} = context;
 
     const handleSearchContact = (e)=>{
         const val = e.target.value.trim();
@@ -30,10 +30,10 @@ const ContactSidebar = (props) => {
     }
 
     return (
-        <div className={"bg-sky-200 p-6 flex flex-col rounded-3xl lg:h-[93%] h-[97%]"}>
+        <div className={`${bgColor[1]} p-6 flex flex-col rounded-3xl lg:h-[93%] h-[97%]`}>
             <div className={"mb-5 overflow-scroll custom-scrollbar"}>
                 <div className={"relative"}>
-                    <input className={"rounded-2xl w-full p-1 pl-8 font-semibold bg-[#f5f6f7]"}
+                    <input className={`rounded-2xl w-full p-1 pl-8 font-semibold ${bgColor[3]}`}
                            placeholder={"Search"} onInput={handleSearchContact}/>
                     <SearchIcon className={"absolute left-2 top-1"}/>
                 </div>
@@ -41,7 +41,7 @@ const ContactSidebar = (props) => {
                     <div className={"mt-5"}>
                         {contact.sort((a, b) => a.name.localeCompare(b.name)).map((item, index) => {
                             return (
-                                    <ContactList key={index} item={item}/>
+                                    <ContactList key={index} item={item} />
                             )
                         })}
                     </div> :
@@ -52,7 +52,7 @@ const ContactSidebar = (props) => {
             </div>
 
 
-            <div className={"bg-[#f5f6f7] shadow-md mt-auto mb-[-6px] rounded-2xl flex p-2  justify-around"}>
+            <div className={`${bgColor[3]} shadow-md mt-auto mb-[-6px] rounded-2xl flex p-2  justify-around`}>
                 <div className={"cursor-pointer mb-1 scale-110"} onClick={handleSettings}>
                     <SettingsIcon/>
                 </div>

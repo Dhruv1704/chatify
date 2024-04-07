@@ -6,7 +6,7 @@ const DownloadFileBubble = (props) => {
 
     PropTypes.checkPropTypes(DownloadFileBubble.propTypes, props, "prop", "DownloadFileBubble")
 
-    const {name, type, id, setDownloadBubble, setObjectURL} = props;
+    const {name, type, id, setDownloadBubble, setObjectURL, bgColor} = props;
 
     const download = async (e) => {
         e.preventDefault();
@@ -48,7 +48,7 @@ const DownloadFileBubble = (props) => {
 
 
     return (
-        <div className={"flex bg-sky-200 rounded-2xl p-2 cursor-pointer"}>
+        <div className={`flex ${bgColor[1]} rounded-2xl p-2 cursor-pointer`}>
             <div className={"mr-2 self-center"} onClick={download}>
                 <DownloadIcon/>
             </div>
