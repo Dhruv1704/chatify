@@ -27,7 +27,7 @@ import {useClickAway} from "@uidotdev/usehooks";
 function ChatComponent(props) {
 
     PropTypes.checkPropTypes(ChatComponent.propTypes, props, "prop", "ChatComponent");
-    const {chatDisplay, client} = props;
+    const {chatDisplay, client, theme} = props;
     const attachRef = useClickAway(() => {
         setAttachDisplay(false);
     });
@@ -94,6 +94,11 @@ function ChatComponent(props) {
             }
         })
     }
+
+    useEffect(() => {
+        setInputMessage('')
+    }, [currentContact?._id]);
+
 
     const statusTyping = (val) => {
         const payload = val ? {
@@ -545,8 +550,8 @@ function ChatComponent(props) {
                                               onBlur={handleChatOnBlur}/>
                         </div>
                         <div
-                            className={`${emojiDisplay ? "relative opacity-100 translate-x-0" : "absolute opacity-0 translate-y-[450px]"} transition-all w-full duration-300 ease-in-out transform-gpu`}>
-                            <EmojiPicker width={"100%"} height={"450px"} theme={"light"}
+                            className={`${emojiDisplay ? "relative opacity-100 translate-x-0" : "absolute opacity-0 translate-y-[450px]"}  transition-all w-full duration-300 ease-in-out transform-gpu`}>
+                            <EmojiPicker width={"100%"} height={"450px"} theme={theme?"light":"dark"}
                                          onEmojiClick={(emoji) => handleEmoji(emoji)}/>
                         </div>
                     </div>
@@ -562,7 +567,8 @@ function ChatComponent(props) {
 
 ChatComponent.propTypes = {
     chatDisplay: PropTypes.bool.isRequired,
-    client: PropTypes.object.isRequired
+    client: PropTypes.object.isRequired,
+    theme: PropTypes.bool.isRequired
 };
 
 export default ChatComponent;

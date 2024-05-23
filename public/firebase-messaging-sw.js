@@ -22,34 +22,37 @@ const firebaseConfig = {
     appId: "1:1003628190110:web:ec602204b09eecf33a5e8f",
     measurementId: "G-HHQVD5HJJE"
 };
+try {
+    firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
 
-firebase.initializeApp(firebaseConfig);
-const messaging = firebase.messaging();
+    messaging.onBackgroundMessage(function (payload) {
+        console.log('[firebase-messaging-sw.js] Received background message ', payload);
+        let notificationTitle;
+        let notificationOptions;
+        if (payload.data.type === "message") {
+            notificationTitle = payload.data.title;
+            notificationOptions = {
+                icon: payload.data.image,
+                body: payload.data.body,
+                badge: payload.data.image,
+            };
+        } else {
+            notificationTitle = payload.data.title;
+            notificationOptions = {
+                icon: payload.data.image,
+                body: payload.data.type,
+                badge: payload.data.image,
+            };
+        }
 
-messaging.onBackgroundMessage(function(payload) {
-    console.log('[firebase-messaging-sw.js] Received background message ', payload);
-    let notificationTitle;
-    let notificationOptions;
-    if(payload.data.type === "message") {
-        notificationTitle = payload.data.title;
-        notificationOptions = {
-            icon: payload.data.image,
-            body: payload.data.body,
-            badge: payload.data.image,
-        };
-    }else{
-        notificationTitle = payload.data.title;
-        notificationOptions = {
-            icon: payload.data.image,
-            body: payload.data.type,
-            badge: payload.data.image,
-        };
-    }
+        self.registration.showNotification(notificationTitle,
+            notificationOptions);
 
-    self.registration.showNotification(notificationTitle,
-        notificationOptions);
-
-});
+    });
+}catch (e){
+    console.log(e);
+}
 
 addEventListener("notificationclick", (event) => {onnotificationclick(event)});
 

@@ -24,11 +24,13 @@ function ChatPage(props) {
     const [contactModel, setContactModel] = useState(false);
     const [displaySettings, setDisplaySettings] = useState(false);
     const context = useContext(Context);
-    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken, getCallLogs, bgColor} = context;
+    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken, getCallLogs, bgColor, setBgColor} = context;
 
     const [cookies] = useCookies(['web-token']);
     const [callDisplay, setCallDisplay] = useState(false);
     const [callMessage, setCallMessage] = useState({});
+
+    const [theme, setTheme] = useState(true)
 
 
 
@@ -143,16 +145,66 @@ function ChatPage(props) {
         // eslint-disable-next-line
     }, []);
 
+
+    const bgColors = [
+        ["bg-sky-300", "bg-sky-200", "bg-sky-100", "bg-gray-100", "border-sky-300"],
+        ["bg-indigo-300", "bg-indigo-200", "bg-indigo-100", "bg-gray-100", "border-indigo-300"],
+        ["bg-slate-900", "bg-slate-800", "bg-slate-700", "bg-slate-600", "border-slate-900"],
+        ["bg-zinc-900", "bg-zinc-800", "bg-zinc-700", "bg-zinc-600", "border-zinc-900"]
+    ];
+
+    const themeColor = [["#7dd3fc", "#e0f2fe"], ["#a5b4fc", "#e0e7ff"], ["#0f172a", "#334155"], ["#18181b", "#3f3f46"]]
+
+    const handleTheme = (num) => {
+        if (num < 2){
+            document.body.style.color = "black"
+            setTheme(true)
+        }
+        else {
+            document.body.style.color = "silver"
+            setTheme(()=>false)
+        }
+
+        const model = document.getElementsByClassName("modal")
+
+        Array.from(model).forEach((element)=>{
+            element.style.color = "black"
+            if(num<2) element.style.background = "#ffffffb3"
+            else element.style.background = "#000000b3"
+        })
+        const pre = document.getElementsByTagName('pre');
+
+        Array.from(pre).forEach((element)=>{
+            element.style.background = themeColor[num][1]
+        })
+
+        const themeColorMeta = document.getElementById('theme-color');
+        if(themeColorMeta && window.innerWidth<=1024){
+            themeColorMeta.setAttribute('content', themeColor[num][1]);
+        }else if(themeColorMeta){
+            themeColorMeta.setAttribute('content', themeColor[num][0]);
+        }
+
+        setBgColor(bgColors[num])
+        localStorage.setItem("theme", num)
+    }
+
+
+
     useEffect(() => {
         const themeColorMeta = document.getElementById('theme-color');
+
         const handleResize = () =>
         {
+            const num = localStorage.getItem("theme") || 0;
             if(themeColorMeta && window.innerWidth<=1024){
-                themeColorMeta.setAttribute('content', "#E0F2FE");
+                themeColorMeta.setAttribute('content', themeColor[num][1]);
             }else if(themeColorMeta){
-                themeColorMeta.setAttribute('content', "#7DD3FC");
+                themeColorMeta.setAttribute('content', themeColor[num][0]);
             }
         }
+        const num = localStorage.getItem("theme") || 0;
+        handleTheme(num)
         handleResize();
 
         window.addEventListener("resize", handleResize);
@@ -183,13 +235,13 @@ function ChatPage(props) {
                 onLoaderFinished={() => setProgress(0)}
             />
             <div className={`${bgColor[0]} h-[100vh] flex lg:px-4`}>
-                <Settings displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}/>
+                <Settings displaySettings={displaySettings} handleTheme={handleTheme} setDisplaySettings={setDisplaySettings}/>
                 <CallReceiveComponent display={callDisplay} setDisplay={setCallDisplay} message={callMessage}/>
                 <AddContact contactModel={contactModel} setContactModel={setContactModel}/>
                 <Sidebar setContactModel={setContactModel} setAiDisplay={setAiDisplay}
                          setChatDisplay={setChatDisplay} chatDisplay={chatDisplay} aiDisplay={aiDisplay}
                          setAiTextOrImage={setAiTextOrImage} aiTextOrImage={aiTextOrImage} handleSettings={handleSettings}/>
-                <ChatComponent chatDisplay={chatDisplay} client={client}/>
+                <ChatComponent chatDisplay={chatDisplay} client={client} theme={theme}/>
                 <AiComponent aiDisplay={aiDisplay} aiTextOrImage={aiTextOrImage}/>
             </div>
         </>

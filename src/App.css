@@ -2,7 +2,7 @@ body{
     -webkit-tap-highlight-color: transparent;
 }
 pre{
-    background: rgb(224 242 254 );
+    background: rgb(224 242 254);
     padding: 1em;
     border-radius: 12px;
     overflow-x: auto;

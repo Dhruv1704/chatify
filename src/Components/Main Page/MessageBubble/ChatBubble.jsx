@@ -163,7 +163,7 @@ function ChatBubble(props) {
 
     return (
         <div {...attr}
-             className={`chat-bubble shadow-md ${displayDeleteBubble ? "!bg-blue-500" : ""} ${item.type === "text" ? "p-3" : "p-2"} pb-0 flex space-x-1 my-2 break-words text-sm lg:text-base cursor-pointer w-fit lg:max-w-[500px] max-w-[280px] ${position === "left" ? `rounded-tr-2xl bg-white ${bgColor[3]}` : `rounded-tl-2xl ${bgColor[2]} ml-auto`}  ${continued ? "rounded-2xl" : "rounded-b-2xl"}`}>
+             className={`chat-bubble shadow-md ${displayDeleteBubble ? "!bg-blue-500" : ""} ${item.type === "text" ? "p-3" : "p-2"} pb-0 flex space-x-1 my-2 break-words text-sm lg:text-base cursor-pointer w-fit lg:max-w-[500px] max-w-[280px] ${position === "left" ? `rounded-tr-2xl  ${bgColor[3]}` : `rounded-tl-2xl ${bgColor[2]} ml-auto`}  ${continued ? "rounded-2xl" : "rounded-b-2xl"}`}>
             {item.type !== "text" ?
                 <div className={`pb-2 ${downloadBubble ? "block" : "hidden"}`}>
                     <DownloadFileBubble

@@ -9,7 +9,7 @@ import {BeatLoader} from "react-spinners";
 const AiImageBubble = (props) => {
     PropTypes.checkPropTypes(AiImageBubble.propTypes, props, "prop", "AiImageBubble")
     const [placeHolderImageDisplay, setPlaceHolderImageDisplay] = useState(true);
-    const {item} = props;
+    const {item, bgColor} = props;
 
     const handlePlaceHolder = () => {
         setPlaceHolderImageDisplay(false)
@@ -39,11 +39,11 @@ const AiImageBubble = (props) => {
     return (
         <>
             <div
-                className={`p-3 my-2 break-words w-fit lg:max-w-[500px] max-w-[260px] shadow-md ml-auto rounded-b-2xl rounded-tl-2xl bg-sky-100`}>
+                className={`p-3 my-2 break-words w-fit lg:max-w-[500px] max-w-[260px] shadow-md ml-auto rounded-b-2xl rounded-tl-2xl ${bgColor[2]}`}>
                 {item.question}
             </div>
             <div
-                className={`p-3 ${item.url===null?"pb-1.5":""} my-2 break-words w-fit lg:max-w-[600px] max-w-[280px] shadow-md rounded-b-2xl rounded-tr-2xl bg-white`}>{
+                className={`p-3 ${item.url===null?"pb-1.5":""} my-2 break-words w-fit lg:max-w-[600px] max-w-[280px] shadow-md rounded-b-2xl rounded-tr-2xl  ${bgColor[3]}`}>{
                 item.url === null ?
                     <BeatLoader size={9} margin={4} color={"#7DD3FC"}/>
                     :

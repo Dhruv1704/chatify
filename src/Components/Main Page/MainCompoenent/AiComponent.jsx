@@ -38,6 +38,19 @@ const AiComponent = (props) => {
         setImageAiChat(imageAi)
     }, [aiTextOrImage]);
 
+    useEffect(()=>{
+        const themeColor = [["#7dd3fc", "#e0f2fe"], ["#a5b4fc", "#e0e7ff"], ["#0f172a", "#334155"], ["#18181b", "#3f3f46"]]
+
+        const num = localStorage.getItem('theme') || 0
+
+
+        const pre = document.getElementsByTagName('pre');
+
+        Array.from(pre).forEach((element)=>{
+            element.style.background = themeColor[num][1]
+        })
+    },[textAiChat])
+
     useEffect(() => {
         const backHandlerAI = () => {
             if (window.innerWidth <= 1024 && mobileAiDisplay) {
@@ -163,7 +176,7 @@ const AiComponent = (props) => {
                     </div>
                     <div className={`${aiTextOrImage ? "hidden" : "block"}`}>
                         {imageAiChat?.map((item, index) => (
-                            <AiImageBubble item={item} key={index}/>
+                            <AiImageBubble item={item} key={index} bgColor={bgColor}/>
                         ))
                         }
                     </div>

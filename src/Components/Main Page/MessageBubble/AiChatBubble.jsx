@@ -15,7 +15,7 @@ const AiChatBubble = (props) => {
                 {item.question}
             </div>
             <div
-                className={`p-3 my-2 ${item.reply===null?"pb-1.5":""} break-words w-fit lg:max-w-[600px] max-w-[260px] shadow-md text-sm lg:text-base rounded-b-2xl rounded-tr-2xl bg-white`}>
+                className={`p-3 my-2 ${item.reply===null?"pb-1.5":""} break-words w-fit lg:max-w-[600px] max-w-[260px] shadow-md text-sm lg:text-base rounded-b-2xl rounded-tr-2xl ${bgColor[3]}`}>
                 {item.reply===null ?
                     <BeatLoader size={9} margin={4} color={"#7DD3FC"}/>
                     :
