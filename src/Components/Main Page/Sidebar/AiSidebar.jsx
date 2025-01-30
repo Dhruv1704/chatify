@@ -43,7 +43,8 @@ AiSidebar.propTypes = {
     handleLogOut : PropTypes.func.isRequired,
     handleAiChange: PropTypes.func.isRequired,
     aiTextOrImage : PropTypes.bool.isRequired,
-    handleSettings : PropTypes.func.isRequired
+    handleSettings : PropTypes.func.isRequired,
+    bgColor: PropTypes.string,
 };
 
 

@@ -39,7 +39,8 @@
     "react-top-loading-bar": "^2.3.1",
     "vite-plugin-checker": "^0.6.2",
     "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-pwa": "^0.17.5"
+    "vite-plugin-pwa": "^0.17.5",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
@@ -54,7 +55,7 @@
     "postcss": "^8.4.31",
     "prop-types": "^15.8.1",
     "tailwindcss": "^3.3.3",
-    "vite": "^4.5.2",
+    "vite": "^4.5.9",
     "vite-plugin-mkcert": "^1.17.3"
   }
 }

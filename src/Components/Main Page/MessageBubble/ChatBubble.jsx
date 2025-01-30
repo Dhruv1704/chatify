@@ -140,6 +140,7 @@ function ChatBubble(props) {
     const [downloadBubble, setDownloadBubble] = useState(true)
 
     const [objectURL, setObjectURL] = useState("")
+    const [displayTime, setDisplayTime] = useState(false)
 
     useEffect(() => {
         const handleCheckLocalFiles = async () => {
@@ -160,10 +161,13 @@ function ChatBubble(props) {
         }
     }, [item]);
 
+    const handleDisplayTime = ()=>{
+        setDisplayTime((prev)=>!prev);
+    }
 
     return (
         <div {...attr}
-             className={`chat-bubble shadow-md ${displayDeleteBubble ? "!bg-blue-500" : ""} ${item.type === "text" ? "p-3" : "p-2"} pb-0 flex space-x-1 my-2 break-words text-sm lg:text-base cursor-pointer w-fit lg:max-w-[500px] max-w-[280px] ${position === "left" ? `rounded-tr-2xl  ${bgColor[3]}` : `rounded-tl-2xl ${bgColor[2]} ml-auto`}  ${continued ? "rounded-2xl" : "rounded-b-2xl"}`}>
+             className={`relative chat-bubble shadow-md ${displayDeleteBubble ? "!bg-blue-500" : ""} ${item.type === "text" ? "p-3" : "p-2"} pb-0 flex space-x-1 my-2 break-words text-sm lg:text-base cursor-pointer w-fit lg:max-w-[500px] max-w-[280px] ${position === "left" ? `rounded-tr-2xl  ${bgColor[3]}` : `rounded-tl-2xl ${bgColor[2]} ml-auto`}  ${continued ? "rounded-2xl" : "rounded-b-2xl"}`} onClick={handleDisplayTime}>
             {item.type !== "text" ?
                 <div className={`pb-2 ${downloadBubble ? "block" : "hidden"}`}>
                     <DownloadFileBubble
@@ -219,7 +223,7 @@ function ChatBubble(props) {
                                     : null
                 }
             </div>
-            <small className={"text-[9px] select-none font-extralight self-end"}>{chatTime.current}</small>
+            <small className={`absolute ${displayTime?"translate-y-5 opacity-100 ":"opacity-0 translate-y-3"} right-2 transform-gpu ease-in duration-500 transition text-[9px] select-none font-extralight self-end whitespace-nowrap`}>{chatTime.current}</small>
         </div>
     )
 }
@@ -234,7 +238,8 @@ ChatBubble.propTypes = {
     displayDeleteChats: PropTypes.bool.isRequired,
     index: PropTypes.number.isRequired,
     deleteChatsIndex: PropTypes.array.isRequired,
-    setDeleteChatsIndex: PropTypes.func.isRequired
+    setDeleteChatsIndex: PropTypes.func.isRequired,
+    bgColor: PropTypes.string,
 };
 
 export default ChatBubble;

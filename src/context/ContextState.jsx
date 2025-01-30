@@ -288,14 +288,38 @@ const ContextState = (props) => {
         return chat;
     }
 
-    const aiQuestion = async (question) => {
+    const getAiChat = async ()=>{
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/ai/getAiChat`, {
+            method: "GET",
+            headers: {
+                'content-Type': 'application/json',
+                'web-token': cookies["web-token"]
+            }
+        })
+        const json = await res.json();
+        localStorage.setItem("text-ai", JSON.stringify(json.aiChat))
+    }
+
+    const deleteAiChats = async ()=>{
+        await fetch(`${import.meta.env.VITE_BACKEND_API}/api/ai/deleteAiChat`, {
+            method: "DELETE",
+            headers: {
+                'content-Type': 'application/json',
+                'web-token': cookies["web-token"]
+            }
+        })
+        localStorage.removeItem("text-ai");
+    }
+
+    const aiQuestion = async (history, question) => {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/ai/question`, {
-            method: "POST",
+            method: "PUT",
             headers: {
                 'content-Type': 'application/json',
                 'web-token': cookies["web-token"]
             },
             body: JSON.stringify({
+                history,
                 question
             })
         })
@@ -415,6 +439,8 @@ const ContextState = (props) => {
             addContact,
             addMessage,
             getMessage,
+            getAiChat,
+            deleteAiChats,
             setChats,
             chats,
             aiQuestion,

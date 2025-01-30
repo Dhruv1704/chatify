@@ -473,7 +473,7 @@ function ChatComponent(props) {
             </div>
             <div
                 className={`${bgColor[1]} h-[92.75%]  rounded-3xl lg:rounded-2xl flex flex-col justify-between p-4 overflow-y-clip`}>
-                <div className={"my-2 px-4 custom-scrollbar overflow-auto"}>
+                <div className={"my-2 px-4 custom-scrollbar overflow-auto pt-2"}>
                     {chats === null  || chats===undefined  || chats[currentContact?._id]?.length===0 ? "" : chats[currentContact?._id]?.map((item, index) => {
                         const conditionForDate = handleConditionForDate(index);
                         let date = ""

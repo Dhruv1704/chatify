@@ -70,6 +70,7 @@ const AiImageBubble = (props) => {
 
 AiImageBubble.propTypes = {
     item: PropTypes.object.isRequired,
+    bgColor: PropTypes.string,
 };
 
 export default AiImageBubble;

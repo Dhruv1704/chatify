@@ -69,5 +69,6 @@ DownloadFileBubble.propTypes = {
     type: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     setObjectURL: PropTypes.func.isRequired,
-    setDownloadBubble: PropTypes.func.isRequired
+    setDownloadBubble: PropTypes.func.isRequired,
+    bgColor: PropTypes.string,
 }

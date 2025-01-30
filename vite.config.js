@@ -2,10 +2,15 @@ import {defineConfig} from 'vite'
 import react from "@vitejs/plugin-react-swc";
 import eslint from 'vite-plugin-eslint'
 import {VitePWA} from 'vite-plugin-pwa';
-import mkcert from 'vite-plugin-mkcert'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    server:{
+        https:{
+            key: './chatify-privateKey.key',
+            cert:'./chatify.crt'
+        }
+    },
     plugins: [
         react(),
         VitePWA({
@@ -67,6 +72,5 @@ export default defineConfig({
             }
         }),
         eslint({lintOnStart: true, failOnError: false}),
-        mkcert(),
     ]
 })

@@ -111,6 +111,7 @@ function ContactList(props) {
             setDate(formatedDate)
             handleLastContent();
         }
+        // eslint-disable-next-line
     }, [item, chats]);
 
 

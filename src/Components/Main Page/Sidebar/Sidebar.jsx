@@ -21,7 +21,7 @@ function Sidebar(props) {
     const {setContactModel, setChatDisplay, setAiDisplay, setAiTextOrImage, aiTextOrImage, handleSettings} = props;
     const [carousalItem, setCarousalItem] = useState(0)
 
-    const [cookies, setCookie, removeCookie] = useCookies(['web-token']);
+    const [removeCookie] = useCookies(['web-token']);
 
     const handleLogOut =async () => {
         // const fcmToken = localStorage.getItem('fcm-token');

@@ -15,7 +15,7 @@ const AiComponent = (props) => {
     const {aiDisplay, aiTextOrImage} = props;
     const [width, setWidth] = useState(window.innerWidth);
     const context = useContext(Context);
-    const {aiQuestion, aiImage, mobileAiDisplay, setMobileAiDisplay, bgColor} = context;
+    const {aiQuestion, aiImage, mobileAiDisplay, setMobileAiDisplay, bgColor, deleteAiChats} = context;
     const [inputAiMessage, setInputAiMessage] = useState("")
     const [textAiChat, setTextAiChat] = useState([]);
     const [imageAiChat, setImageAiChat] = useState();
@@ -32,9 +32,9 @@ const AiComponent = (props) => {
     }, [textAiChat, imageAiChat, aiDisplay, aiTextOrImage, mobileAiDisplay]);
 
     useEffect(() => {
-        const textAi = JSON.parse(localStorage.getItem("text-ai")) || [];
-        const imageAi = JSON.parse(localStorage.getItem("image-ai")) || [];
+        const textAi = JSON.parse(localStorage.getItem('text-ai')) || []
         setTextAiChat(textAi)
+        const imageAi = JSON.parse(localStorage.getItem("image-ai")) || [];
         setImageAiChat(imageAi)
     }, [aiTextOrImage]);
 
@@ -89,21 +89,28 @@ const AiComponent = (props) => {
 
     const handleAiMessage = async () => {
         document.getElementById("ai-input").disabled = true
-        const arr = textAiChat;
-        setTextAiChat((prev) => [...prev, {
-            question: inputAiMessage,
-            reply: null
-        }]);
+        const arr = textAiChat.slice(0);
         const input = inputAiMessage
+        setTextAiChat((prev) => [...prev,
+            {
+                role: "user",
+                parts :  [{text: input}]
+            },
+            {
+            role: "model",
+            parts: null
+        }]);
         setInputAiMessage("");
-        const json = await aiQuestion(input)
+        console.log(arr)
+        const json = await aiQuestion(arr, input)
         if (json.type === "success") {
             arr.push({
-                question: input,
-                reply: json.message
+                role: "user",
+                parts : [{text: input}]
             })
+            arr.push(json.message)
             setTextAiChat(arr)
-            localStorage.setItem('text-ai', JSON.stringify(arr));
+            localStorage.setItem('text-ai', JSON.stringify(arr))
         }
         document.getElementById("ai-input").disabled = false;
     }
@@ -132,7 +139,7 @@ const AiComponent = (props) => {
     const handleClearAi = () => {
         if (aiTextOrImage) {
             setTextAiChat([])
-            localStorage.removeItem('text-ai');
+            deleteAiChats()
         } else {
             setImageAiChat([])
             localStorage.removeItem('image-ai');

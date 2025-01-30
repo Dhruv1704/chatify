@@ -24,7 +24,7 @@ function ChatPage(props) {
     const [contactModel, setContactModel] = useState(false);
     const [displaySettings, setDisplaySettings] = useState(false);
     const context = useContext(Context);
-    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken, getCallLogs, bgColor, setBgColor} = context;
+    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken, getCallLogs, bgColor, setBgColor, getAiChat} = context;
 
     const [cookies] = useCookies(['web-token']);
     const [callDisplay, setCallDisplay] = useState(false);
@@ -212,12 +212,14 @@ function ChatPage(props) {
             themeColorMeta.setAttribute('content', "#ffffff");
             window.removeEventListener("resize", handleResize)
         };
+        // eslint-disable-next-line
     }, []);
 
 
     useEffect(() => {
         if (user === undefined || user === null) return
         getMessage();
+        getAiChat();
         // eslint-disable-next-line
     }, [user]);
 
