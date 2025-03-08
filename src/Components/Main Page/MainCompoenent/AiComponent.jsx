@@ -89,7 +89,7 @@ const AiComponent = (props) => {
 
     const handleAiMessage = async () => {
         document.getElementById("ai-input").disabled = true
-        const arr = textAiChat.slice(0);
+        const arr = textAiChat?.slice(0) || [];
         const input = inputAiMessage
         setTextAiChat((prev) => [...prev,
             {
@@ -101,7 +101,6 @@ const AiComponent = (props) => {
             parts: null
         }]);
         setInputAiMessage("");
-        console.log(arr)
         const json = await aiQuestion(arr, input)
         if (json.type === "success") {
             arr.push({
@@ -110,7 +109,7 @@ const AiComponent = (props) => {
             })
             arr.push(json.message)
             setTextAiChat(arr)
-            localStorage.setItem('text-ai', JSON.stringify(arr))
+            if(arr) localStorage.setItem('text-ai', JSON.stringify(arr))
         }
         document.getElementById("ai-input").disabled = false;
     }

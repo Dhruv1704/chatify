@@ -297,7 +297,7 @@ const ContextState = (props) => {
             }
         })
         const json = await res.json();
-        localStorage.setItem("text-ai", JSON.stringify(json.aiChat))
+        if(json.aiChat) localStorage.setItem("text-ai", JSON.stringify(json.aiChat))
     }
 
     const deleteAiChats = async ()=>{
