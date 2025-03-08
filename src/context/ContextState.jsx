@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import {useNavigate} from "react-router-dom";
 import {useCookies} from 'react-cookie';
 import Localbase from "localbase-samuk";
+import Together from "together-ai";
 
 
 const ContextState = (props) => {
@@ -25,6 +26,7 @@ const ContextState = (props) => {
     const [bgColor, setBgColor] = useState(["bg-sky-300", "bg-sky-200", "bg-sky-100", "bg-gray-100",  "border-sky-300"])
 
     const [cookies, setCookie] = useCookies(['web-token']);
+
 
     const tst = (msg, type) => {
         const data = {
@@ -327,19 +329,18 @@ const ContextState = (props) => {
         return json;
     }
 
-    const aiImage = async (image) => {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/ai/drawImage`, {
-            method: "POST",
-            headers: {
-                'content-Type': 'application/json',
-                'web-token': cookies["web-token"]
-            },
-            body: JSON.stringify({
-                image
-            })
-        })
-        const json = await res.json();
-        return json;
+    const aiImage = async (prompt) => {
+
+        const together = new Together({ apiKey: import.meta.env.VITE_TOGETHER_API_KEY});
+
+        const response = await together.images.create({
+            model: "black-forest-labs/FLUX.1-schnell-Free",
+            prompt: prompt,
+            steps: 4,
+            n: 4});
+        if(response.data[0].url===undefined) return {type: "error", message: "No image found"}
+        else return {type: "success", message: "Image found", url: response.data[0].url}
+
     }
 
     const subscribeToTopicFCM = async (token) => {

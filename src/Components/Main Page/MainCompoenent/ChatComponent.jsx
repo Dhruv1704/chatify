@@ -568,7 +568,7 @@ function ChatComponent(props) {
 ChatComponent.propTypes = {
     chatDisplay: PropTypes.bool.isRequired,
     client: PropTypes.object.isRequired,
-    theme: PropTypes.bool.isRequired
+    theme: PropTypes.bool
 };
 
 export default ChatComponent;
