@@ -59,7 +59,7 @@ function Sidebar(props) {
                 break;
             case 3:
                 border.style.width = "50px";
-                border.style.translate = "15px";
+                border.style.translate = "10px";
                 setChatDisplay(false)
                 setAiDisplay(true)
                 setCurrentContact(null)
@@ -104,7 +104,7 @@ function Sidebar(props) {
                              className={`relative border-2 transition-all duration-300 ease-in-out rounded ${bgColor[4]} transform-gpu w-[52px]`}></div>
                     </div>
                     <div className={"cursor-pointer select-none"} id={"call-link-border"} onClick={(e) => handleBorder(e.target, 2)}>Calls</div>
-                    <div className={"cursor-pointer select-none"} id={"chatgpt-link-border"} onClick={(e) => handleBorder(e.target, 3)}>ChatGPT</div>
+                    <div className={"cursor-pointer select-none"} id={"chatgpt-link-border"} onClick={(e) => handleBorder(e.target, 3)}>Gemini</div>
                 </div>
             </div>
 
