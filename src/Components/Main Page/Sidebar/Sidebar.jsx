@@ -59,7 +59,7 @@ function Sidebar(props) {
                 break;
             case 3:
                 border.style.width = "50px";
-                border.style.translate = "10px";
+                border.style.translate = "7px";
                 setChatDisplay(false)
                 setAiDisplay(true)
                 setCurrentContact(null)
