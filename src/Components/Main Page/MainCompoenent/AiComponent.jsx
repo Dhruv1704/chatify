@@ -170,7 +170,7 @@ const AiComponent = (props) => {
                     </button>
                 </div>
                 <div className={'font-semibold mb-5 mt-2 self-center text-xl ml-2'}>
-                    {aiTextOrImage ? "Gemini 2.0 (Flash)" : "AI Image Generator (FLUX.1)"}
+                    {aiTextOrImage ? "Gemini 2.5 Pro" : "AI Image Generator (FLUX.1)"}
                 </div>
             </div>
             <div className={`${bgColor[1]} h-[92.75%] lg:rounded-2xl rounded-3xl flex flex-col justify-between p-4`}>
@@ -195,7 +195,7 @@ const AiComponent = (props) => {
                             onClick={handleClearAi}>
                         <DeleteSweepIcon/>
                     </button>
-                    <TextareaAutosize placeholder={aiTextOrImage ? "Talk to ChatGPT" : placeholder} minLength={1}
+                    <TextareaAutosize placeholder={aiTextOrImage ? "Talk to Gemini" : placeholder} minLength={1}
                                       value={inputAiMessage}
                                       onKeyDown={handleKeyDown}
                                       type={"text"} required={true} id={"ai-input"}

@@ -58,7 +58,7 @@ function Sidebar(props) {
                 setCarousalItem(1)
                 break;
             case 3:
-                border.style.width = "50px";
+                border.style.width = "45px";
                 border.style.translate = "7px";
                 setChatDisplay(false)
                 setAiDisplay(true)
