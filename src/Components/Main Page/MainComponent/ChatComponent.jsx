@@ -489,10 +489,10 @@ function ChatComponent(props) {
                 </div>
                 <form onSubmit={(e) => handleMessage(e, "text", inputMessage)} aria-disabled={currentContact == null}
                       className={`${currentContact == null ? "hidden" : "flex"} justify-center space-x-1.5 lg:space-x-4`}>
-                    <div className={"relative flex"}>
+                    <div className={"relative flex"} ref={attachRef}>
                         <div
-                            className={`absolute ${attachDisplay ? "block" : "hidden"} ${emojiDisplay ? "bottom-[290px]" : "bottom-[70px]"} space-x-8 flex text-center ${bgColor[2]} shadow-md rounded-t-2xl rounded-br-2xl p-4 pl-6 z-20 left-6`}
-                            ref={attachRef}>
+                            className={`absolute ${attachDisplay ? "block" : "hidden"} ${emojiDisplay ? "bottom-[285px]" : "bottom-[60px]"} space-x-8 flex text-center ${bgColor[2]} shadow-md rounded-t-2xl rounded-br-2xl p-4 pl-6 z-20 left-6`}
+                            >
                             <div>
                                 <div onClick={handlePhotoUpload} className={"cursor-pointer mb-2"}>
                                     <AddPhotoAlternateIcon/>
@@ -514,20 +514,20 @@ function ChatComponent(props) {
                                 </div>
                             </div>
                         </div>
-                        <input type={"file"} className={"hidden"} accept="image/*" onChange={() => {
+                        <input type={"file"} className={"hidden"} accept="image/*" onChange={(event) => {
                             upload(event, "image")
                         }} ref={photoInputRef}/>
-                        <input type={"file"} className={"hidden"} accept="audio/*" onChange={() => {
+                        <input type={"file"} className={"hidden"} accept="audio/*" onChange={(event) => {
                             upload(event, "audio")
                         }} ref={audioInputRef}/>
-                        <input type={"file"} className={"hidden"} accept="video/*" onChange={() => {
+                        <input type={"file"} className={"hidden"} accept="video/*" onChange={(event) => {
                             upload(event, "video")
                         }} ref={videoInputRef}/>
-                        <input type={"file"} className={"hidden"} accept={acceptString} onChange={() => {
+                        <input type={"file"} className={"hidden"} accept={acceptString} onChange={(event) => {
                             upload(event, "document")
                         }} ref={docInputRef}/>
                         <button type={"button"}
-                                className={`mb-2 shadow-md self-center ${bgColor[0]} rounded-xl p-2 px-3 attach-icon active:scale-95`}
+                                className={`mb-1 shadow-md self-center ${bgColor[0]} rounded-xl p-2 px-3 attach-icon active:scale-95`}
                                 onClick={handleAttachDisplay}>
                             <AttachFileIcon className={"attach-icon pointer-events-none"}/>
                         </button>

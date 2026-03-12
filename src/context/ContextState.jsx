@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import {useNavigate} from "react-router-dom";
 import {useCookies} from 'react-cookie';
 import Localbase from "localbase-samuk";
-import Together from "together-ai";
 
 
 const ContextState = (props) => {
@@ -331,15 +330,23 @@ const ContextState = (props) => {
 
     const aiImage = async (prompt) => {
 
-        const together = new Together({ apiKey: import.meta.env.VITE_TOGETHER_API_KEY});
+        const url = 'https://gateway.pixazo.ai/flux-1-schnell/v1/getData';
 
-        const response = await together.images.create({
-            model: "black-forest-labs/FLUX.1-schnell-Free",
-            prompt: prompt,
-            steps: 4,
-            n: 4});
-        if(response.data[0].url===undefined) return {type: "error", message: "No image found"}
-        else return {type: "success", message: "Image found", url: response.data[0].url}
+        try{
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache',
+                    'Ocp-Apim-Subscription-Key': import.meta.env.VITE_IMAGE_AI_KEY
+                },
+                body: JSON.stringify(prompt)
+            })
+            const data = await response.json();
+            return {type: "success", message: "Image found", url: data.output}
+        }catch(e){
+            return {type: "error", message: "No image found"}
+        }
 
     }
 

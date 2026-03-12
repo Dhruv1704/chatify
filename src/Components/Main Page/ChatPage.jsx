@@ -1,11 +1,11 @@
 import Sidebar from "./Sidebar/Sidebar.jsx";
-import ChatComponent from "./MainCompoenent/ChatComponent.jsx";
+import ChatComponent from "./MainComponent/ChatComponent.jsx";
 import {useEffect, useState, useContext} from "react";
 import {useNavigate} from "react-router-dom";
 import AddContact from "./Sidebar/AddContact.jsx";
 import LoadingBar from "react-top-loading-bar";
 import Context from "../../context/Context.jsx";
-import AiComponent from './MainCompoenent/AiComponent.jsx'
+import AiComponent from './MainComponent/AiComponent.jsx'
 import PropTypes from "prop-types";
 import {useChannel} from "ably/react";
 import {getMessaging, getToken} from "firebase/messaging";

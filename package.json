@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "cross-env node proxy-server.js & cross-env NODE_ENV=development vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -19,6 +19,9 @@
     "@react-oauth/google": "^0.12.1",
     "@uidotdev/usehooks": "^2.4.1",
     "ably": "^1.2.45",
+    "baseline-browser-mapping": "^2.10.7",
+    "caniuse-lite": "^1.0.30001778",
+    "cross-env": "^10.1.0",
     "emoji-picker-react": "^4.5.15",
     "firebase": "^10.7.2",
     "localbase-samuk": "^0.7.7",
@@ -54,10 +57,13 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "express": "^5.2.1",
+    "fs": "^0.0.1-security",
+    "http-proxy": "^1.18.1",
+    "http-proxy-middleware": "^3.0.5",
     "postcss": "^8.4.31",
     "prop-types": "^15.8.1",
     "tailwindcss": "^3.3.3",
-    "vite": "^4.5.9",
-    "vite-plugin-mkcert": "^1.17.3"
+    "vite": "^4.5.14"
   }
 }

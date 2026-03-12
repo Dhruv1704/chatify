@@ -5,12 +5,6 @@ import {VitePWA} from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    server:{
-        https:{
-            key: './chatify-privateKey.key',
-            cert:'./chatify.crt'
-        }
-    },
     plugins: [
         react(),
         VitePWA({

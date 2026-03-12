@@ -123,7 +123,10 @@ const AiComponent = (props) => {
         }]);
         const input = inputAiMessage
         setInputAiMessage("");
-        const json = await aiImage(input)
+        const prompt = {
+            "prompt": input
+        }
+        const json = await aiImage(prompt)
         if (json.type === "success") {
             arr.push({
                 question: input,
@@ -170,7 +173,7 @@ const AiComponent = (props) => {
                     </button>
                 </div>
                 <div className={'font-semibold mb-5 mt-2 self-center text-xl ml-2'}>
-                    {aiTextOrImage ? "Gemini 2.5 Pro" : "AI Image Generator (FLUX.1)"}
+                    {aiTextOrImage ? "Gemini 3 Flash" : "AI Image Generator (FLUX.1)"}
                 </div>
             </div>
             <div className={`${bgColor[1]} h-[92.75%] lg:rounded-2xl rounded-3xl flex flex-col justify-between p-4`}>
