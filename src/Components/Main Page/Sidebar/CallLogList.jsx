@@ -63,6 +63,7 @@ const CallLogList = (props) => {
 
 CallLogList.propTypes = {
     item: PropTypes.object,
-    user: PropTypes.object
+    user: PropTypes.object,
+    bgColor: PropTypes.array.isRequired
 };
 export default CallLogList;

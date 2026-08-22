@@ -260,7 +260,8 @@ ChatPage.propTypes = {
     aiTextOrImage: PropTypes.bool.isRequired,
     aiDisplay: PropTypes.bool.isRequired,
     setAiDisplay: PropTypes.func.isRequired,
-    setAiTextOrImage: PropTypes.func.isRequired
+    setAiTextOrImage: PropTypes.func.isRequired,
+    bgColor: PropTypes.array.isRequired
 };
 
 export default ChatPage;

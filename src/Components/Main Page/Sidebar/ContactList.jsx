@@ -152,7 +152,8 @@ function ContactList(props) {
 }
 
 ContactList.propTypes = {
-    item: PropTypes.object
+    item: PropTypes.object,
+    bgColor: PropTypes.array.isRequired
 };
 
 export default ContactList;

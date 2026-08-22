@@ -234,7 +234,8 @@ ChatBubble.propTypes = {
     displayDeleteChats: PropTypes.bool.isRequired,
     index: PropTypes.number.isRequired,
     deleteChatsIndex: PropTypes.array.isRequired,
-    setDeleteChatsIndex: PropTypes.func.isRequired
+    setDeleteChatsIndex: PropTypes.func.isRequired,
+    bgColor: PropTypes.array.isRequired
 };
 
 export default ChatBubble;
