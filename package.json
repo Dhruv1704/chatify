@@ -20,7 +20,7 @@
     "@uidotdev/usehooks": "^2.4.1",
     "ably": "^1.2.45",
     "emoji-picker-react": "^4.5.15",
-    "firebase": "^10.7.2",
+    "firebase": "^10.14.1",
     "localbase-samuk": "^0.7.7",
     "markdown-to-jsx": "^7.3.2",
     "rc-progress": "^3.5.1",

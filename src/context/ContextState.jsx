@@ -298,7 +298,7 @@ const ContextState = (props) => {
         return chat;
     }
 
-    const aiQuestion = async (question) => {
+    const aiQuestion = async (history, question) => {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/ai/question`, {
             method: "PUT",
             headers: {
@@ -306,6 +306,7 @@ const ContextState = (props) => {
                 'web-token': cookies["web-token"]
             },
             body: JSON.stringify({
+                history,
                 question
             })
         })

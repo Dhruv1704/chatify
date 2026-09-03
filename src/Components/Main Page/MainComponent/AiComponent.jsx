@@ -91,21 +91,29 @@ const AiComponent = (props) => {
     const handleAiMessage = async () => {
         const aiInput = getAiInput();
         if (aiInput) aiInput.disabled = true;
-        const arr = textAiChat;
-        setTextAiChat((prev) => [...prev, {
-            question: inputAiMessage,
-            reply: null
-        }]);
+        const arr = textAiChat?.slice(0) || [];
         const input = inputAiMessage
+        setTextAiChat((prev) => [...prev,
+            {
+                role: "user",
+                parts :  [{text: input}]
+            },
+            {
+            role: "model",
+            parts: null
+        }]);
         setInputAiMessage("");
-        const json = await aiQuestion(input)
+        
+        const json = await aiQuestion(arr, input)
+        
         if (json.type === "success") {
             arr.push({
-                question: input,
-                reply: json.message
+                role: "user",
+                parts : [{text: input}]
             })
+            arr.push(json.message)
             setTextAiChat(arr)
-            localStorage.setItem('text-ai', JSON.stringify(arr));
+            if(arr) localStorage.setItem('text-ai', JSON.stringify(arr))
         }
         if (aiInput) aiInput.disabled = false;
     }
@@ -113,14 +121,17 @@ const AiComponent = (props) => {
     const handleAiImage = async () => {
         const aiInput = getAiInput();
         if (aiInput) aiInput.disabled = true;
-        const arr = imageAiChat;
+       const arr = imageAiChat;
         setImageAiChat((prev) => [...prev, {
             question: inputAiMessage,
             url: null
         }]);
         const input = inputAiMessage
         setInputAiMessage("");
-        const json = await aiImage(input)
+        const prompt = {
+            "prompt": input
+        }
+        const json = await aiImage(prompt)
         if (json.type === "success") {
             arr.push({
                 question: input,
