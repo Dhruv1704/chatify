@@ -300,7 +300,7 @@ const ContextState = (props) => {
 
     const aiQuestion = async (question) => {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/ai/question`, {
-            method: "POST",
+            method: "PUT",
             headers: {
                 'content-Type': 'application/json',
                 'web-token': cookies["web-token"]
