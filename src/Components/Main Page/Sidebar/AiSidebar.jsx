@@ -8,12 +8,12 @@ const AiSidebar = (props) => {
     PropTypes.checkPropTypes(AiSidebar.propTypes, props, "prop", "AiSidebar");
 
     return (
-        <div className={`${bgColor[1]} p-6 flex flex-col rounded-3xl lg:h-[93%] h-[97%]`}>
+        <div className={`${bgColor[1]} p-6 flex flex-col rounded-3xl h-full min-h-0 flex-grow`}>
             <div>
                 {/*<div className={"border-b-2 border-sky-300 rounded-2xl mt-2"}></div>*/}
                 <div
                     className={`${aiTextOrImage && window.innerWidth>1024? `${bgColor[0]}` : `${bgColor[1]}`} my-1 py-4 cursor-pointer rounded-2xl text-lg mt-2`}
-                    onClick={() => handleAiChange(1)}>ChatGPT-4
+                    onClick={() => handleAiChange(1)}>Gemini 3 Flash
                 </div>
                 {/*<div className={"border-b-2 border-sky-300 rounded-2xl"}></div>*/}
                 <div

@@ -33,7 +33,7 @@ function ContactList(props) {
             console.log(e)
         }
 
-        if (window.innerWidth <= 1024) {
+        if (window.innerWidth <= 768) {
             setMobileChatDisplay(true)
             navigate("chatComponent")
         }

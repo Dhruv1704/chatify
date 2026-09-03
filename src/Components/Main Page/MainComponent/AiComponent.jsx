@@ -15,10 +15,10 @@ const AiComponent = (props) => {
     const {aiDisplay, aiTextOrImage} = props;
     const [width, setWidth] = useState(window.innerWidth);
     const context = useContext(Context);
-    const {aiQuestion, aiImage, mobileAiDisplay, setMobileAiDisplay, bgColor, deleteAiChats} = context;
+    const {aiQuestion, aiImage, mobileAiDisplay, setMobileAiDisplay, bgColor} = context;
     const [inputAiMessage, setInputAiMessage] = useState("")
     const [textAiChat, setTextAiChat] = useState([]);
-    const [imageAiChat, setImageAiChat] = useState();
+    const [imageAiChat, setImageAiChat] = useState([]);
 
     const aiMessagesEndRef = useRef(null)
 
@@ -32,9 +32,9 @@ const AiComponent = (props) => {
     }, [textAiChat, imageAiChat, aiDisplay, aiTextOrImage, mobileAiDisplay]);
 
     useEffect(() => {
-        const textAi = JSON.parse(localStorage.getItem('text-ai')) || []
-        setTextAiChat(textAi)
+        const textAi = JSON.parse(localStorage.getItem("text-ai")) || [];
         const imageAi = JSON.parse(localStorage.getItem("image-ai")) || [];
+        setTextAiChat(textAi)
         setImageAiChat(imageAi)
     }, [aiTextOrImage]);
 
@@ -66,7 +66,6 @@ const AiComponent = (props) => {
             window.removeEventListener("resize", handleResize)
             window.removeEventListener("popstate", backHandlerAI);
         };
-        // eslint-disable-next-line
     }, [mobileAiDisplay, setMobileAiDisplay]);
 
     const placeholder = useMemo(() => {
@@ -87,35 +86,33 @@ const AiComponent = (props) => {
         else handleAiImage()
     }
 
+    const getAiInput = () => /** @type {HTMLTextAreaElement | null} */ (document.getElementById("ai-input"));
+
     const handleAiMessage = async () => {
-        document.getElementById("ai-input").disabled = true
-        const arr = textAiChat?.slice(0) || [];
-        const input = inputAiMessage
-        setTextAiChat((prev) => [...prev,
-            {
-                role: "user",
-                parts :  [{text: input}]
-            },
-            {
-            role: "model",
-            parts: null
+        const aiInput = getAiInput();
+        if (aiInput) aiInput.disabled = true;
+        const arr = textAiChat;
+        setTextAiChat((prev) => [...prev, {
+            question: inputAiMessage,
+            reply: null
         }]);
+        const input = inputAiMessage
         setInputAiMessage("");
-        const json = await aiQuestion(arr, input)
+        const json = await aiQuestion(input)
         if (json.type === "success") {
             arr.push({
-                role: "user",
-                parts : [{text: input}]
+                question: input,
+                reply: json.message
             })
-            arr.push(json.message)
             setTextAiChat(arr)
-            if(arr) localStorage.setItem('text-ai', JSON.stringify(arr))
+            localStorage.setItem('text-ai', JSON.stringify(arr));
         }
-        document.getElementById("ai-input").disabled = false;
+        if (aiInput) aiInput.disabled = false;
     }
 
     const handleAiImage = async () => {
-        document.getElementById("ai-input").disabled = true
+        const aiInput = getAiInput();
+        if (aiInput) aiInput.disabled = true;
         const arr = imageAiChat;
         setImageAiChat((prev) => [...prev, {
             question: inputAiMessage,
@@ -123,10 +120,7 @@ const AiComponent = (props) => {
         }]);
         const input = inputAiMessage
         setInputAiMessage("");
-        const prompt = {
-            "prompt": input
-        }
-        const json = await aiImage(prompt)
+        const json = await aiImage(input)
         if (json.type === "success") {
             arr.push({
                 question: input,
@@ -135,18 +129,19 @@ const AiComponent = (props) => {
             setImageAiChat(arr)
             localStorage.setItem('image-ai', JSON.stringify(arr));
         }
-        document.getElementById("ai-input").disabled = false
+        if (aiInput) aiInput.disabled = false;
     }
 
     const handleClearAi = () => {
         if (aiTextOrImage) {
             setTextAiChat([])
-            deleteAiChats()
+            localStorage.removeItem('text-ai');
         } else {
             setImageAiChat([])
             localStorage.removeItem('image-ai');
         }
-        document.getElementById("ai-input").disabled = false
+        const aiInput = getAiInput();
+        if (aiInput) aiInput.disabled = false;
     }
 
     const handleAIBack = () => {
@@ -163,7 +158,7 @@ const AiComponent = (props) => {
 
     return (
         <div
-            className={`${mobileAiDisplay ? "block" : "hidden"} ${aiDisplay ? "lg:block" : "lg:hidden"} ${bgColor[2]} lg:h-[90vh] h-[100vh] my-auto lg:rounded-3xl w-full overflow-clip lg:mx-4 p-6 pt-4`}>
+            className={`${mobileAiDisplay ? "flex" : "hidden"} ${aiDisplay ? "lg:flex" : "lg:hidden"} ${bgColor[2]} lg:rounded-3xl w-full h-[100dvh] md:h-[90dvh] flex flex-col p-6 pt-3`}>
             <div className={"flex content-center"}>
                 <div
                     className={`${mobileAiDisplay ? "block" : "hidden"} self-start mb-3 lg:hidden ${bgColor[0]} rounded-xl p-2 mr-2 flex content-center`}
@@ -173,11 +168,11 @@ const AiComponent = (props) => {
                     </button>
                 </div>
                 <div className={'font-semibold mb-5 mt-2 self-center text-xl ml-2'}>
-                    {aiTextOrImage ? "Gemini 3 Flash" : "AI Image Generator (FLUX.1)"}
+                    {aiTextOrImage ? "ChatGPT-4 (32k)" : "AI Image Generator (Lexica)"}
                 </div>
             </div>
-            <div className={`${bgColor[1]} h-[92.75%] lg:rounded-2xl rounded-3xl flex flex-col justify-between p-4`}>
-                <div className={"my-2 px-4 overflow-auto"}>
+            <div className={`${bgColor[1]} overflow-clip flex-grow rounded-3xl lg:rounded-2xl flex flex-col p-4 min-h-0`}>
+                <div className={"my-2 px-4 overflow-auto flex-grow"}>
                     <div className={`${aiTextOrImage ? "block" : "hidden"}`}>
                         {textAiChat?.map((item, index) => (
                             <AiChatBubble item={item} key={index} bgColor={bgColor} />
@@ -194,14 +189,14 @@ const AiComponent = (props) => {
                 <form onSubmit={handleAi}
                       className={`flex justify-center space-x-1.5 lg:space-x-4`}>
                     <button type={"button"} id={"ai-delete-button"}
-                            className={`self-center shadow-md ${bgColor[0]} p-2 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl active:scale-95`}
+                            className={`self-center shadow-md ${bgColor[0]} p-2 px-3 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl active:scale-95`}
                             onClick={handleClearAi}>
                         <DeleteSweepIcon/>
                     </button>
-                    <TextareaAutosize placeholder={aiTextOrImage ? "Talk to Gemini" : placeholder} minLength={1}
+                    <TextareaAutosize placeholder={aiTextOrImage ? "Talk to ChatGPT" : placeholder} minLength={1}
                                       value={inputAiMessage}
                                       onKeyDown={handleKeyDown}
-                                      type={"text"} required={true} id={"ai-input"}
+                                      required={true} id={"ai-input"}
                                       className={`${bgColor[3]} shadow-md disabled:cursor-not-allowed rounded-2xl h-14 max-h-36 resize-none p-3 font-semibold w-full ai-image-input`}
                                       onChange={handleInputAiMessage}/>
                     <button type={"submit"} id={"ai-submit-button"}

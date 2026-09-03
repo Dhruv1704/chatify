@@ -29,9 +29,9 @@ const CallLogSidebar = (props) => {
     }
 
     return (
-        <div className={`${bgColor[1]} p-6 flex flex-col rounded-3xl lg:h-[93%] h-[97%] justify-between`}>
+        <div className={`${bgColor[1]} p-6 flex flex-col rounded-3xl h-full min-h-0 flex-grow justify-between`}>
             {/*contacts-sidebar*/}
-            <div className={"mb-5 overflow-scroll custom-scrollbar"}>
+            <div className={"mb-5 overflow-y-auto custom-scrollbar flex-grow min-h-0"}>
                 <div className={"relative"}>
                     <input className={`rounded-2xl w-full p-1 pl-8 font-semibold ${bgColor[3]}`}
                            placeholder={"Search"} onInput={handleSearchLog}/>

@@ -36,8 +36,13 @@ pre{
     }
 }
 
-.carousel-root, .carousel, .slider-wrapper, ul, .slider{
-    height: 100%;
+.carousel-root, .carousel, .slider-wrapper, ul, .slider, .carousel .slide {
+    height: 100% !important;
+}
+
+.carousel .slide {
+    display: flex;
+    flex-direction: column;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -47,15 +52,4 @@ pre{
 .custom-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-}
-
-@media screen and (max-width: 1024px){
-    .carousel-root{
-        height: 91vh!important;
-    }
-}
-@media screen and (max-height: 768px){
-    .carousel-root{
-        height: 84vh!important;
-    }
 }

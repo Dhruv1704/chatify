@@ -1,32 +1,32 @@
-import {useContext, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Context from "../../../context/Context.jsx";
 import PropTypes from "prop-types";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import {Carousel} from 'react-responsive-carousel';
+import { Carousel } from 'react-responsive-carousel';
 import ContactSidebar from "./ContactSidebar.jsx";
 import AiSidebar from "./AiSidebar.jsx";
-import {useCookies} from "react-cookie";
+import { useCookies } from "react-cookie";
 import Localbase from "localbase-samuk";
 import CallLogSidebar from "./CallLogSidebar.jsx";
 
 function Sidebar(props) {
 
     const context = useContext(Context);
-    const {setCurrentContact, mobileChatDisplay, setMobileAiDisplay, mobileAiDisplay, bgColor} = context
+    const { setCurrentContact, mobileChatDisplay, setMobileAiDisplay, mobileAiDisplay, bgColor } = context
     const navigate = useNavigate();
 
     PropTypes.checkPropTypes(Sidebar.propTypes, props, "prop", "Sidebar");
 
-    const {setContactModel, setChatDisplay, setAiDisplay, setAiTextOrImage, aiTextOrImage, handleSettings} = props;
+    const { setContactModel, setChatDisplay, setAiDisplay, setAiTextOrImage, aiTextOrImage, handleSettings } = props;
     const [carousalItem, setCarousalItem] = useState(0)
 
     const [cookies, setCookie, removeCookie] = useCookies(['web-token']);
 
-    const handleLogOut =async () => {
+    const handleLogOut = async () => {
         // const fcmToken = localStorage.getItem('fcm-token');
         // unSubscribeFromTopicFCM(fcmToken)
-        const db =new Localbase('chatify-db')
+        const db = new Localbase('chatify-db')
         db.config.debug = false
         localStorage.clear();
         await db.delete()
@@ -70,51 +70,52 @@ function Sidebar(props) {
     const handleAiChange = (val) => {
         if (val === 1) setAiTextOrImage(true)
         else setAiTextOrImage(false)
-        if(window.innerWidth<=1024){
+        if (window.innerWidth <= 768) {
             setMobileAiDisplay(true)
             navigate("aiComponent")
         }
     }
 
-    const carousalChange = (index)=>{
-        const chatBorder= document.getElementById("chat-link-border")
-        const callBorder= document.getElementById("call-link-border")
-        const chatgptBorder= document.getElementById("chatgpt-link-border")
+    const carousalChange = (index) => {
+        const chatBorder = document.getElementById("chat-link-border")
+        const callBorder = document.getElementById("call-link-border")
+        const chatgptBorder = document.getElementById("chatgpt-link-border")
         switch (index) {
             case 0:
-                handleBorder(chatBorder,1)
+                handleBorder(chatBorder, 1)
                 break;
             case 1:
-                handleBorder(callBorder,2)
+                handleBorder(callBorder, 2)
                 break;
             case 2:
-                handleBorder(chatgptBorder,3)
+                handleBorder(chatgptBorder, 3)
                 break;
         }
     }
 
     return (
         <div
-            className={`${mobileChatDisplay || mobileAiDisplay?"hidden":"block"} lg:block lg:h-[90vh] ${bgColor[2]} w-full lg:w-[33%] 2xl:w-[24%] lg:my-auto lg:rounded-3xl p-6`}>
+            className={`${mobileChatDisplay || mobileAiDisplay ? "hidden" : "flex"} flex-col h-[100dvh] md:h-[90dvh] ${bgColor[2]} min-h-0 w-full md:my-auto md:rounded-3xl p-6`}>
             <div>
                 <div className={"relative flex justify-around font-semibold text-xl mb-5"}>
                     <div className={"cursor-pointer select-none"} id={"chat-link-border"} onClick={(e) => handleBorder(e.target, 1)}>
                         Chats
                         <div id={"bottom-border"}
-                             className={`relative border-2 transition-all duration-300 ease-in-out rounded ${bgColor[4]} transform-gpu w-[52px]`}></div>
+                            className={`relative border-2 transition-all duration-300 ease-in-out rounded ${bgColor[4]} transform-gpu w-[52px]`}></div>
                     </div>
                     <div className={"cursor-pointer select-none"} id={"call-link-border"} onClick={(e) => handleBorder(e.target, 2)}>Calls</div>
-                    <div className={"cursor-pointer select-none"} id={"chatgpt-link-border"} onClick={(e) => handleBorder(e.target, 3)}>ChatGPT</div>
+                    <div className={"cursor-pointer select-none"} id={"chatgpt-link-border"} onClick={(e) => handleBorder(e.target, 3)}>Gemini</div>
                 </div>
             </div>
-
-            <Carousel showArrows={false} showThumbs={false} emulateTouch={false}
-                      showIndicators={false} showStatus={false} selectedItem={carousalItem} onChange={(index)=>{carousalChange(index)}}>
-                <ContactSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut} handleSettings={handleSettings}/>
-                <CallLogSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut} handleSettings={handleSettings}/>
-                <AiSidebar handleLogOut={handleLogOut} handleAiChange={handleAiChange}
-                           handleAddContacts={handleAddContacts} aiTextOrImage={aiTextOrImage} handleSettings={handleSettings} bgColor={bgColor}/>
-            </Carousel>
+            <div className="flex-1 min-h-0 min-w-0 h-full">
+                <Carousel showArrows={false} showThumbs={false} emulateTouch={false}
+                    showIndicators={false} showStatus={false} selectedItem={carousalItem} onChange={(index) => { carousalChange(index) }}>
+                    <ContactSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut} handleSettings={handleSettings} />
+                    <CallLogSidebar handleAddContacts={handleAddContacts} handleLogOut={handleLogOut} handleSettings={handleSettings} />
+                    <AiSidebar handleLogOut={handleLogOut} handleAiChange={handleAiChange}
+                        handleAddContacts={handleAddContacts} aiTextOrImage={aiTextOrImage} handleSettings={handleSettings} bgColor={bgColor} />
+                </Carousel>
+            </div>
         </div>
     )
         ;

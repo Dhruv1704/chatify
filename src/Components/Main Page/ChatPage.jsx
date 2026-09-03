@@ -1,15 +1,15 @@
 import Sidebar from "./Sidebar/Sidebar.jsx";
-import ChatComponent from "./MainCompoenent/ChatComponent.jsx";
-import {useEffect, useState, useContext} from "react";
-import {useNavigate} from "react-router-dom";
+import ChatComponent from "./MainComponent/ChatComponent.jsx";
+import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import AddContact from "./Sidebar/AddContact.jsx";
 import LoadingBar from "react-top-loading-bar";
 import Context from "../../context/Context.jsx";
-import AiComponent from './MainCompoenent/AiComponent.jsx'
+import AiComponent from './MainComponent/AiComponent.jsx'
 import PropTypes from "prop-types";
-import {useChannel} from "ably/react";
-import {getMessaging, getToken} from "firebase/messaging";
-import {useCookies} from "react-cookie";
+import { useChannel } from "ably/react";
+import { getMessaging, getToken } from "firebase/messaging";
+import { useCookies } from "react-cookie";
 import Localbase from "localbase-samuk";
 import CallReceiveComponent from "./CallReceiveComponent.jsx";
 import Settings from "./Sidebar/Settings.jsx";
@@ -18,13 +18,13 @@ function ChatPage(props) {
 
     PropTypes.checkPropTypes(ChatPage.propTypes, props, "prop", "ChatPage");
 
-    const {client, chatDisplay, setChatDisplay, aiTextOrImage, aiDisplay, setAiDisplay, setAiTextOrImage} = props;
+    const { client, chatDisplay, setChatDisplay, aiTextOrImage, aiDisplay, setAiDisplay, setAiTextOrImage } = props;
 
     const navigate = useNavigate();
     const [contactModel, setContactModel] = useState(false);
     const [displaySettings, setDisplaySettings] = useState(false);
     const context = useContext(Context);
-    const {progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken, getCallLogs, bgColor, setBgColor} = context;
+    const { progress, setProgress, getContact, user, setChats, getMessage, chats, setUnreadChats, unreadChats, currentContact, updateFCMToken, getCallLogs, bgColor, setBgColor } = context;
 
     const [cookies] = useCookies(['web-token']);
     const [callDisplay, setCallDisplay] = useState(false);
@@ -34,13 +34,13 @@ function ChatPage(props) {
 
 
 
-    const updateLocalChat = async (chats)=>{
-        const db =new Localbase('chatify-db')
+    const updateLocalChat = async (chats) => {
+        const db = new Localbase('chatify-db')
         db.config.debug = false
         await db.collection('chats').set([chats])
     }
 
-    const updateLocalUnread = async (newUnread)=>{
+    const updateLocalUnread = async (newUnread) => {
         const db = new Localbase('chatify-db')
         db.config.debug = false
         await db.collection('unread').set([newUnread])
@@ -50,9 +50,9 @@ function ChatPage(props) {
         const senderId = message.data.sender;
         const newChats = chats;
         newChats[senderId] === undefined ? newChats[senderId] = [message.data] : newChats[senderId].push(message.data);
-        if(!currentContact || currentContact?._id!==senderId){
+        if (!currentContact || currentContact?._id !== senderId) {
             const newUnread = unreadChats;
-            newUnread[senderId] = newUnread[senderId]?newUnread[senderId]+1:1;
+            newUnread[senderId] = newUnread[senderId] ? newUnread[senderId] + 1 : 1;
             setUnreadChats(newUnread);
             updateLocalUnread(newUnread)
         }
@@ -73,11 +73,11 @@ function ChatPage(props) {
     }
 
     useChannel(user?.id || 0, (message) => {
-        if(message.data?.type==="Voice Call"){
+        if (message.data?.type === "Voice Call") {
             handleVoiceCall(message)
-        }else if(message.data?.type==="Video Call"){
+        } else if (message.data?.type === "Video Call") {
             handleVideoCall(message)
-        }else{
+        } else {
             handleMessage(message)
         }
     })
@@ -85,21 +85,21 @@ function ChatPage(props) {
 
     useEffect(() => {
 
-        const requestNotificationPermission = ()=>{
+        const requestNotificationPermission = () => {
             Notification.requestPermission().then((permission) => {
-                    if (permission === 'granted') {
-                        handleFCM()
-                    } else {
-                        console.log('Unable to get permission to notify.');
-                    }
+                if (permission === 'granted') {
+                    handleFCM()
+                } else {
+                    console.log('Unable to get permission to notify.');
                 }
+            }
             )
         }
 
-        const handleFCM = ()=>{
+        const handleFCM = () => {
             if ('serviceWorker' in navigator) {
                 const messaging = getMessaging();
-                getToken(messaging, {vapidKey: import.meta.env.VITE_FCM_VAPID_KEY}).then((currentToken) => {
+                getToken(messaging, { vapidKey: import.meta.env.VITE_FCM_VAPID_KEY }).then((currentToken) => {
                     if (currentToken) {
                         updateFCMToken(currentToken)
                     } else {
@@ -156,36 +156,36 @@ function ChatPage(props) {
     const themeColor = [["#7dd3fc", "#e0f2fe"], ["#a5b4fc", "#e0e7ff"], ["#0f172a", "#334155"], ["#18181b", "#3f3f46"]]
 
     const handleTheme = (num) => {
-        if (num < 2){
+        if (num < 2) {
             document.body.style.color = "black"
             setTheme(true)
         }
         else {
             document.body.style.color = "silver"
-            setTheme(()=>false)
+            setTheme(() => false)
         }
 
         const model = document.getElementsByClassName("modal")
 
-        Array.from(model).forEach((element)=>{
+        Array.from(model).forEach((element) => {
             if (element instanceof HTMLElement) {
                 element.style.color = "black"
-                if(num<2) element.style.background = "#ffffffb3"
+                if (num < 2) element.style.background = "#ffffffb3"
                 else element.style.background = "#000000b3"
             }
         })
         const pre = document.getElementsByTagName('pre');
 
-        Array.from(pre).forEach((element)=>{
+        Array.from(pre).forEach((element) => {
             if (element instanceof HTMLElement) {
                 element.style.background = themeColor[num][1]
             }
         })
 
         const themeColorMeta = document.getElementById('theme-color');
-        if(themeColorMeta && window.innerWidth<=1024){
+        if (themeColorMeta && window.innerWidth <= 768) {
             themeColorMeta.setAttribute('content', themeColor[num][1]);
-        }else if(themeColorMeta){
+        } else if (themeColorMeta) {
             themeColorMeta.setAttribute('content', themeColor[num][0]);
         }
 
@@ -198,12 +198,11 @@ function ChatPage(props) {
     useEffect(() => {
         const themeColorMeta = document.getElementById('theme-color');
 
-        const handleResize = () =>
-        {
+        const handleResize = () => {
             const num = localStorage.getItem("theme") || 0;
-            if(themeColorMeta && window.innerWidth<=1024){
+            if (themeColorMeta && window.innerWidth <= 768) {
                 themeColorMeta.setAttribute('content', themeColor[num][1]);
-            }else if(themeColorMeta){
+            } else if (themeColorMeta) {
                 themeColorMeta.setAttribute('content', themeColor[num][0]);
             }
         }
@@ -225,7 +224,7 @@ function ChatPage(props) {
         // eslint-disable-next-line
     }, [user]);
 
-    const handleSettings = ()=>{
+    const handleSettings = () => {
         setDisplaySettings(true)
     }
 
@@ -238,16 +237,22 @@ function ChatPage(props) {
                 progress={progress}
                 onLoaderFinished={() => setProgress(0)}
             />
-            <div className={`${bgColor[0]} h-[100vh] flex lg:px-4`}>
-                <Settings displaySettings={displaySettings} handleTheme={handleTheme} setDisplaySettings={setDisplaySettings}/>
-                <CallReceiveComponent display={callDisplay} setDisplay={setCallDisplay} message={callMessage}/>
-                <AddContact contactModel={contactModel} setContactModel={setContactModel}/>
-                <Sidebar setContactModel={setContactModel} setAiDisplay={setAiDisplay}
-                         setChatDisplay={setChatDisplay} chatDisplay={chatDisplay} aiDisplay={aiDisplay}
-                         setAiTextOrImage={setAiTextOrImage} aiTextOrImage={aiTextOrImage} handleSettings={handleSettings}/>
-                <ChatComponent chatDisplay={chatDisplay} client={client} theme={theme}/>
-                <AiComponent aiDisplay={aiDisplay} aiTextOrImage={aiTextOrImage}/>
-            </div>
+            <div>
+
+                <Settings displaySettings={displaySettings} handleTheme={handleTheme} setDisplaySettings={setDisplaySettings} />
+                <CallReceiveComponent display={callDisplay} setDisplay={setCallDisplay} message={callMessage} />
+                <AddContact contactModel={contactModel} setContactModel={setContactModel} />
+
+                <div className={`${bgColor[0]} h-[100vh] md:grid md:grid-cols-[3fr_9fr] md:items-center md:gap-6`}>
+                    <Sidebar setContactModel={setContactModel} setAiDisplay={setAiDisplay}
+                        setChatDisplay={setChatDisplay} chatDisplay={chatDisplay} aiDisplay={aiDisplay}
+                        setAiTextOrImage={setAiTextOrImage} aiTextOrImage={aiTextOrImage} handleSettings={handleSettings} />
+                    <div>
+                        <ChatComponent chatDisplay={chatDisplay} client={client} theme={theme} />
+                        <AiComponent aiDisplay={aiDisplay} aiTextOrImage={aiTextOrImage} />
+                    </div>
+                </div>
+            </div>  
         </>
     );
 }

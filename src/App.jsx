@@ -9,10 +9,10 @@ import {Realtime} from "ably";
 import {AblyProvider} from 'ably/react';
 import 'react-photo-view/dist/react-photo-view.css';
 import {useState} from "react";
-import ChatComponent from "./Components/Main Page/MainCompoenent/ChatComponent.jsx";
-import AiComponent from "./Components/Main Page/MainCompoenent/AiComponent.jsx";
+import ChatComponent from "./Components/Main Page/MainComponent/ChatComponent.jsx";
+import AiComponent from "./Components/Main Page/MainComponent/AiComponent.jsx";
 import {initializeApp} from "firebase/app";
-import VideoComponent from "./Components/Main Page/MainCompoenent/VideoComponent.jsx";
+import VideoComponent from "./Components/Main Page/MainComponent/VideoComponent.jsx";
 import {GoogleOAuthProvider} from "@react-oauth/google"
 
 function App() {
