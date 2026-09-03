@@ -53,7 +53,7 @@ const AiComponent = (props) => {
 
     useEffect(() => {
         const backHandlerAI = () => {
-            if (window.innerWidth <= 1024 && mobileAiDisplay) {
+            if (window.innerWidth <= 768 && mobileAiDisplay) {
                 setMobileAiDisplay(false);
             }
         }
@@ -69,7 +69,7 @@ const AiComponent = (props) => {
     }, [mobileAiDisplay, setMobileAiDisplay]);
 
     const placeholder = useMemo(() => {
-        if (width < 1024) {
+        if (width < 768) {
             return 'Sketch your vision...'
         }
         return 'Enter a description or concept for the image you want AI to generate'
@@ -158,10 +158,10 @@ const AiComponent = (props) => {
 
     return (
         <div
-            className={`${mobileAiDisplay ? "flex" : "hidden"} ${aiDisplay ? "lg:flex" : "lg:hidden"} ${bgColor[2]} lg:rounded-3xl w-full h-[100dvh] md:h-[90dvh] flex flex-col p-6 pt-3`}>
+            className={`${mobileAiDisplay ? "flex" : "hidden"} ${aiDisplay ? "md:flex" : "md:hidden"} ${bgColor[2]} md:rounded-3xl w-full h-[100dvh] md:h-[90dvh] flex flex-col p-6 pt-3`}>
             <div className={"flex content-center"}>
                 <div
-                    className={`${mobileAiDisplay ? "block" : "hidden"} self-start mb-3 lg:hidden ${bgColor[0]} rounded-xl p-2 mr-2 flex content-center`}
+                    className={`${mobileAiDisplay ? "block" : "hidden"} self-start mb-3 md:hidden ${bgColor[0]} rounded-xl p-2 mr-2 flex content-center`}
                     onClick={handleAIBack}>
                     <button>
                         <ArrowBackIcon/>
@@ -171,7 +171,7 @@ const AiComponent = (props) => {
                     {aiTextOrImage ? "ChatGPT-4 (32k)" : "AI Image Generator (Lexica)"}
                 </div>
             </div>
-            <div className={`${bgColor[1]} overflow-clip flex-grow rounded-3xl lg:rounded-2xl flex flex-col p-4 min-h-0`}>
+            <div className={`${bgColor[1]} overflow-clip flex-grow rounded-3xl md:rounded-2xl flex flex-col p-4 min-h-0`}>
                 <div className={"my-2 px-4 overflow-auto flex-grow"}>
                     <div className={`${aiTextOrImage ? "block" : "hidden"}`}>
                         {textAiChat?.map((item, index) => (
@@ -187,7 +187,7 @@ const AiComponent = (props) => {
                     <div ref={aiMessagesEndRef}/>
                 </div>
                 <form onSubmit={handleAi}
-                      className={`flex justify-center space-x-1.5 lg:space-x-4`}>
+                      className={`flex justify-center space-x-1.5 md:space-x-4`}>
                     <button type={"button"} id={"ai-delete-button"}
                             className={`self-center shadow-md ${bgColor[0]} p-2 px-3 disabled:text-gray-500 disabled:cursor-not-allowed cursor-pointer rounded-xl active:scale-95`}
                             onClick={handleClearAi}>

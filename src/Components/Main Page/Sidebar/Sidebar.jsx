@@ -21,7 +21,7 @@ function Sidebar(props) {
     const { setContactModel, setChatDisplay, setAiDisplay, setAiTextOrImage, aiTextOrImage, handleSettings } = props;
     const [carousalItem, setCarousalItem] = useState(0)
 
-    const [cookies, setCookie, removeCookie] = useCookies(['web-token']);
+    const [, , removeCookie] = useCookies(['web-token']);
 
     const handleLogOut = async () => {
         // const fcmToken = localStorage.getItem('fcm-token');
@@ -95,7 +95,7 @@ function Sidebar(props) {
 
     return (
         <div
-            className={`${mobileChatDisplay || mobileAiDisplay ? "hidden" : "flex"} flex-col h-[100dvh] md:h-[90dvh] ${bgColor[2]} min-h-0 w-full md:my-auto md:rounded-3xl p-6`}>
+            className={`${mobileChatDisplay || mobileAiDisplay ? "hidden md:flex" : "flex"} flex-col h-[100dvh] md:h-[90dvh] ${bgColor[2]} min-h-0 min-w-0 w-full md:my-auto md:rounded-3xl p-6`}>
             <div>
                 <div className={"relative flex justify-around font-semibold text-xl mb-5"}>
                     <div className={"cursor-pointer select-none"} id={"chat-link-border"} onClick={(e) => handleBorder(e.target, 1)}>

@@ -243,11 +243,11 @@ function ChatPage(props) {
                 <CallReceiveComponent display={callDisplay} setDisplay={setCallDisplay} message={callMessage} />
                 <AddContact contactModel={contactModel} setContactModel={setContactModel} />
 
-                <div className={`${bgColor[0]} h-[100vh] md:grid md:grid-cols-[3fr_9fr] md:items-center md:gap-6`}>
+                <div className={`${bgColor[0]} h-[100vh] md:grid lg:grid-cols-[2fr_5fr] md:grid-cols-[3fr_5fr] md:items-center md:gap-6 md:px-4`}>
                     <Sidebar setContactModel={setContactModel} setAiDisplay={setAiDisplay}
                         setChatDisplay={setChatDisplay} chatDisplay={chatDisplay} aiDisplay={aiDisplay}
                         setAiTextOrImage={setAiTextOrImage} aiTextOrImage={aiTextOrImage} handleSettings={handleSettings} />
-                    <div>
+                    <div className="min-w-0 w-full h-full md:flex md:items-center">
                         <ChatComponent chatDisplay={chatDisplay} client={client} theme={theme} />
                         <AiComponent aiDisplay={aiDisplay} aiTextOrImage={aiTextOrImage} />
                     </div>

@@ -12,12 +12,12 @@ const AiSidebar = (props) => {
             <div>
                 {/*<div className={"border-b-2 border-sky-300 rounded-2xl mt-2"}></div>*/}
                 <div
-                    className={`${aiTextOrImage && window.innerWidth>1024? `${bgColor[0]}` : `${bgColor[1]}`} my-1 py-4 cursor-pointer rounded-2xl text-lg mt-2`}
+                    className={`${aiTextOrImage && window.innerWidth>768? `${bgColor[0]}` : `${bgColor[1]}`} my-1 py-4 cursor-pointer rounded-2xl text-lg mt-2`}
                     onClick={() => handleAiChange(1)}>Gemini 3 Flash
                 </div>
                 {/*<div className={"border-b-2 border-sky-300 rounded-2xl"}></div>*/}
                 <div
-                    className={`${!aiTextOrImage && window.innerWidth>1024? `${bgColor[0]}` : `${bgColor[1]}`} my-1 py-4 rounded-2xl pl-4 cursor-pointer text-lg`}
+                    className={`${!aiTextOrImage && window.innerWidth>768? `${bgColor[0]}` : `${bgColor[1]}`} my-1 py-4 rounded-2xl pl-4 cursor-pointer text-lg`}
                     onClick={() => handleAiChange(2)}>AI Image Generator
                 </div>
                 {/*<div className={"border-b-2 border-sky-300 rounded-2xl"}></div>*/}

@@ -432,11 +432,11 @@ function ChatComponent(props) {
 
     return (
         <div
-            className={`${mobileChatDisplay ? "flex" : "hidden"} ${chatDisplay ? "lg:flex" : "lg:hidden"} ${bgColor[2]} lg:rounded-3xl w-full h-[100dvh] md:h-[90dvh] flex flex-col p-6 pt-3`}>
+            className={`${mobileChatDisplay ? "flex" : "hidden"} ${chatDisplay ? "md:flex" : "md:hidden"} ${bgColor[2]} md:rounded-3xl w-full h-[100dvh] md:h-[90dvh] flex flex-col p-6 pt-3`}>
             <div className={"flex justify-between content-center mb-3 mt-4 md:mt-1"}>
                 <div className={"flex"}>
                     <div
-                        className={`${mobileChatDisplay ? "block" : "hidden"} lg:hidden ${bgColor[0]} rounded-xl px-2 mr-2 flex content-center`}
+                        className={`${mobileChatDisplay ? "block" : "hidden"} md:hidden ${bgColor[0]} rounded-xl px-2 mr-2 flex content-center`}
                         onClick={handleChatBack}>
                         <button>
                             <ArrowBackIcon />
@@ -472,7 +472,7 @@ function ChatComponent(props) {
                 </div>
             </div>
             <div
-                className={`${bgColor[1]} overflow-clip flex-grow rounded-3xl lg:rounded-2xl flex flex-col p-4 min-h-0`}>
+                className={`${bgColor[1]} overflow-clip flex-grow rounded-3xl md:rounded-2xl flex flex-col p-4 min-h-0`}>
                 <div className={"my-2 px-4 custom-scrollbar overflow-scroll pt-2 flex-grow"}>
                     {chats === null || chats === undefined || chats[currentContact?._id]?.length === 0 ? "" : chats[currentContact?._id]?.map((item, index) => {
                         const conditionForDate = handleConditionForDate(index);
@@ -489,7 +489,7 @@ function ChatComponent(props) {
                     <div ref={messagesEndRef} />
                 </div>
                 <form onSubmit={(e) => handleMessage(e, "text", inputMessage)} aria-disabled={currentContact == null}
-                    className={`${currentContact == null ? "hidden" : "flex"} justify-center space-x-1.5 lg:space-x-4`}>
+                    className={`${currentContact == null ? "hidden" : "flex"} justify-center space-x-1.5 md:space-x-4`}>
                     <div className={"relative flex"} ref={attachRef}>
                         <div
                             className={`absolute ${attachDisplay ? "block" : "hidden"} ${emojiDisplay ? "bottom-[285px]" : "bottom-[60px]"} space-x-8 flex text-center ${bgColor[2]} shadow-md rounded-t-2xl rounded-br-2xl p-4 pl-6 z-20 left-6`}

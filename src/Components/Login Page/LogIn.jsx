@@ -21,7 +21,7 @@ function LogIn() {
         const themeColorMeta = document.getElementById('theme-color');
 
         if (cookies["web-token"]) {
-            if(themeColorMeta && window.innerWidth<=1024){
+            if(themeColorMeta && window.innerWidth<=768){
                 themeColorMeta.setAttribute('content', "#E0F2FE");
             }else if(themeColorMeta){
                 themeColorMeta.setAttribute('content', "#7DD3FC");
