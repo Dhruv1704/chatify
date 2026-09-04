@@ -179,7 +179,7 @@ const AiComponent = (props) => {
                     </button>
                 </div>
                 <div className={'font-semibold mb-5 mt-2 self-center text-xl ml-2'}>
-                    {aiTextOrImage ? "ChatGPT-4 (32k)" : "AI Image Generator (Lexica)"}
+                    {aiTextOrImage ? "Gemini 3.8" : "AI Image Generator"}
                 </div>
             </div>
             <div className={`${bgColor[1]} overflow-clip flex-grow rounded-3xl md:rounded-2xl flex flex-col p-4 min-h-0`}>

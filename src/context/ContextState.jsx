@@ -314,19 +314,39 @@ const ContextState = (props) => {
         return json;
     }
 
-    const aiImage = async (image) => {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/ai/drawImage`, {
+    const aiImage = async (prompt) => {
+        const url = `${import.meta.env.VITE_IMAGE_API}`;
+        try{
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache',
+                    'Ocp-Apim-Subscription-Key': import.meta.env.VITE_IMAGE_AI_KEY
+                },
+                body: JSON.stringify(prompt)
+            })
+            const data = await response.json();
+            return {type: "success", message: "Image found", url: data.output}
+        }catch(e){
+            return {type: "error", message: "No image found"}
+        }
+    }
+
+    const aiImageGeneration = async (prompt)=>{
+        const res = await fetch(
+        `${import.meta.env.VITE_CLOUDFLARE_IMAGE_GENERATION_API}`,{
             method: "POST",
             headers: {
-                'content-Type': 'application/json',
-                'web-token': cookies["web-token"]
+                'Authorization':`Bearer ${import.meta.env.VITE_CLOUDFLARE_IMAGE_GENERATION_AI}`,
+                'content-Type': 'application/jpeg',
             },
             body: JSON.stringify({
-                image
+                prompt
             })
         })
-        const json = await res.json();
-        return json;
+        const blob = await res.blob();
+        return blob;
     }
 
     const subscribeToTopicFCM = async (token) => {
@@ -446,7 +466,8 @@ const ContextState = (props) => {
             deleteSelectedChats,
             tst,
             bgColor,
-            setBgColor
+            setBgColor,
+            aiImageGeneration
         }}>
             {props.children}
         </Context.Provider>

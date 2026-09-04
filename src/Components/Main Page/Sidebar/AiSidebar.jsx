@@ -13,7 +13,7 @@ const AiSidebar = (props) => {
                 {/*<div className={"border-b-2 border-sky-300 rounded-2xl mt-2"}></div>*/}
                 <div
                     className={`${aiTextOrImage && window.innerWidth>768? `${bgColor[0]}` : `${bgColor[1]}`} my-1 py-4 cursor-pointer rounded-2xl text-lg mt-2`}
-                    onClick={() => handleAiChange(1)}>Gemini 3 Flash
+                    onClick={() => handleAiChange(1)}>Gemini 3.8
                 </div>
                 {/*<div className={"border-b-2 border-sky-300 rounded-2xl"}></div>*/}
                 <div
