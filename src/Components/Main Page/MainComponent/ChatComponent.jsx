@@ -112,7 +112,6 @@ function ChatComponent(props) {
             if (err) {
                 return console.error("Error updatign presence set.");
             }
-            console.log("This client has updated the presence set.");
         });
     }
     const handleChatOnBlur = () => {
@@ -130,7 +129,6 @@ function ChatComponent(props) {
         }
         return () => {
             client.channels.get(currentContact?._id).presence.unsubscribe();
-            console.log("Unsubscribed from presence", currentContact)
         }
         // eslint-disable-next-line
     }, [currentContact]);
@@ -145,7 +143,6 @@ function ChatComponent(props) {
         const textarea = document.getElementById('chat-input');
         try {
             const url = await getDownloadURL(storageRef);
-            console.log("File already exists at", url);
             handleMessage(event, type, url, file);
             textarea.disabled = false;
             return true;
@@ -190,7 +187,6 @@ function ChatComponent(props) {
                 () => {
                     // Upload completed successfully, now we can get the download URL
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        console.log('File available at', downloadURL);
                         setUploadProgress(0);
                         setDisplayUploadBubble(false)
                         textarea.disabled = true;
